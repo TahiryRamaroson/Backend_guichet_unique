@@ -39,8 +39,7 @@
               "ViewState": "AQIAABsAAAAAAAAAAAAAADMAAABgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-19T06:42:04.389Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -58,7 +57,7 @@
               "RelativeDocumentMoniker": "Controllers\\ProfilsController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\ProfilsController.cs",
               "RelativeToolTip": "Controllers\\ProfilsController.cs",
-              "ViewState": "AQIAADUAAAAAAAAAAAAIwDsAAAAqAAAA",
+              "ViewState": "AQIAABEAAAAAAAAAAAAowBsAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-21T06:07:39.097Z",
               "EditorCaption": ""
@@ -85,8 +84,7 @@
               "RelativeToolTip": "Models\\Profil.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T05:41:24.216Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-21T05:41:24.216Z"
             }
           ]
         }

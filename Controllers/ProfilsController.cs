@@ -25,7 +25,20 @@ namespace Backend_guichet_unique.Controllers
 
 		}
 
-        [HttpGet]
+		[HttpGet("page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<Profil>>> GetPagedProfils(int pageNumber = 1)
+		{
+            int pageSize = 10;
+			var profils = await _context.Profils
+			.Include(p => p.Utilisateurs)
+			.Skip((pageNumber - 1) * pageSize)
+			.Take(pageSize)
+			.ToListAsync();
+
+			return profils;
+		}
+
+		[HttpGet]
         public async Task<ActionResult<IEnumerable<Profil>>> GetProfils()
         {
 			var profils = await _context.Profils

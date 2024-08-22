@@ -5,8 +5,24 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowSpecificOrigin",
+	policy =>
+	{
+		policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+		policy.WithOrigins("http://localhost:5174").AllowAnyHeader().AllowAnyMethod();
+	});
+});
+
+var cultureInfo = new CultureInfo("fr-FR");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 // Add services to the container.
 
@@ -29,7 +45,42 @@ builder.Services.AddAuthentication(options =>
 	};
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdministrateurPolicy", policy => policy.RequireRole("Administrateur"));
+	options.AddPolicy("IntervenantPolicy", policy => policy.RequireRole("Intervenant sociaux"));
+	options.AddPolicy("ResponsablePolicy", policy => policy.RequireRole("Responsable guichet unique"));
+});
+
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "GU_API", Version = "v1" });
+
+	// Ajouter la configuration pour le token JWT
+	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		In = ParameterLocation.Header,
+		Description = "Veuillez entrer le token JWT avec le mot clé 'Bearer' suivi d'un espace et du token. Exemple : 'Bearer {token}'",
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer"
+	});
+
+	c.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+				{
+					Reference = new OpenApiReference
+					{
+						Type = ReferenceType.SecurityScheme,
+						Id = "Bearer"
+					}
+				},
+			new string[] {}
+		}
+	});
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -52,7 +103,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+app.UseCors("AllowSpecificOrigin");
+
 app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseAuthentication();
 

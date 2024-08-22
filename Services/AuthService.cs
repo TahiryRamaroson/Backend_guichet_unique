@@ -24,8 +24,11 @@ namespace Backend_guichet_unique.Services
 
 			var claims = new[]
 			{
-				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+				new Claim(JwtRegisteredClaimNames.Sub, user.Nom + " " + user.Prenom),
 				new Claim("utilisateur", JsonSerializer.Serialize(user)),
+				new Claim(ClaimTypes.Role, user.Profil.Nom),
+				new Claim("profil", user.Profil.Nom),
+				new Claim("idutilisateur", user.Id.ToString()),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 			};
 

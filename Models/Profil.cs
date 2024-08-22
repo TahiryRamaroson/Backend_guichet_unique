@@ -8,9 +8,9 @@ public partial class Profil
 {
     public int Id { get; set; }
 
-    public string? Nom { get; set; }
+    public string Nom { get; set; } = null!;
 
     public string? Description { get; set; }
-	[JsonIgnore]
-	public virtual ICollection<Utilisateur> Utilisateurs { get; set; } = new List<Utilisateur>();
+    [JsonIgnore]
+    public virtual ICollection<Utilisateur> Utilisateurs { get; set; } = new List<Utilisateur>();
 }

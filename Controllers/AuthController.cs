@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Security.Cryptography;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -25,18 +26,53 @@ namespace Backend_guichet_unique.Controllers
 			_mapper = mapper;
 		}
 
-		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromBody] LoginDTO auth)
+		[HttpGet("admin")]
+		[Authorize(Policy = "AdministrateurPolicy")]
+		public IActionResult GetAdminData()
+		{
+			return Ok("This is admin data.");
+		}
+
+		[HttpGet("intervenant")]
+		[Authorize(Policy = "IntervenantPolicy")]
+		public IActionResult GetUserData()
+		{
+			return Ok("This is intervenant data.");
+		}
+
+		[HttpPost("utilisateur/login")]
+		public async Task<IActionResult> LoginUtilisateur([FromBody] LoginDTO auth)
 		{
 			var hashedPassword = GetHashSha256(auth.MotDePasse);
 			var user = await _context.Utilisateurs
 				.Include(u => u.IdProfilNavigation)
-				.FirstOrDefaultAsync(u => u.Email == auth.Email && u.MotDePasse == hashedPassword && u.Statut == 5);
+				.FirstOrDefaultAsync(u => u.Email == auth.Email && u.MotDePasse == hashedPassword && u.IdProfilNavigation.Nom != "Administrateur");
 
-			if (auth == null || user == null)
-			{
-				return Unauthorized();
-			}
+			if (auth == null) return Unauthorized();
+
+			if (user == null) return Ok(new { error = "Email ou mot de passe incorrect" });
+
+			if (user.Statut == 0) return Ok(new { error = "Votre compte a été désactivé" });
+
+			var userDto = _mapper.Map<UtilisateurDTO>(user);
+
+			var token = _authService.GenerateJwtToken(userDto);
+			return Ok(new { Token = token });
+		}
+
+		[HttpPost("admin/login")]
+		public async Task<IActionResult> LoginAdmin([FromBody] LoginDTO auth)
+		{
+			var hashedPassword = GetHashSha256(auth.MotDePasse);
+			var user = await _context.Utilisateurs
+				.Include(u => u.IdProfilNavigation)
+				.FirstOrDefaultAsync(u => u.Email == auth.Email && u.MotDePasse == hashedPassword && u.IdProfilNavigation.Nom == "Administrateur");
+
+			if (auth == null) return Unauthorized();
+
+			if (user == null) return Ok(new { error = "Email ou mot de passe incorrect" });
+
+			if (user.Statut == 0) return Ok(new { error = "Votre compte a été désactivé" });
 
 			var userDto = _mapper.Map<UtilisateurDTO>(user);
 

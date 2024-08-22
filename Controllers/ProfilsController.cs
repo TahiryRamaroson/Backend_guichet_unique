@@ -49,16 +49,17 @@ namespace Backend_guichet_unique.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProfil(int id, Profil profil)
+        public async Task<IActionResult> PutProfil(int id, ProfilDTO profilDto)
         {
-            if (id != profil.Id)
-            {
-                return BadRequest();
-            }
+			var existingProfil = await _context.Profils.FindAsync(id);
+			if (existingProfil == null)
+			{
+				return NotFound();
+			}
 
-            _context.Entry(profil).State = EntityState.Modified;
+			_mapper.Map(profilDto, existingProfil);
 
-            try
+			try
             {
                 await _context.SaveChangesAsync();
             }

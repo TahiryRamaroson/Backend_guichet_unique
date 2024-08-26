@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Backend_guichet_unique.Models;
 using AutoMapper;
 using Backend_guichet_unique.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "AdministrateurPolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class ProfilsController : ControllerBase
     {
@@ -25,17 +27,42 @@ namespace Backend_guichet_unique.Controllers
 
 		}
 
-		[HttpGet("page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<Profil>>> GetPagedProfils(int pageNumber = 1)
+		[HttpPost("filtre/page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<Profil>>> GetFilteredProfils(FiltreProfilDTO filtreProfilDTO, int pageNumber = 1)
 		{
-            int pageSize = 10;
-			var profils = await _context.Profils
+			int pageSize = 10;
+			var text = filtreProfilDTO.text.ToLower();
+
+			var query = _context.Profils
 			.Include(p => p.Utilisateurs)
+			.Where(p => p.Nom.ToLower().Contains(text) || p.Description.ToLower().Contains(text));
+
+			var totalItems = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var profils = await query
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)
 			.ToListAsync();
 
-			return profils;
+			return Ok(new { Profils = profils, TotalPages = totalPages });
+		}
+
+		[HttpGet("page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<Profil>>> GetPagedProfils(int pageNumber = 1)
+		{
+			int pageSize = 10;
+			var totalItems = await _context.Profils.CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var profils = await _context.Profils
+			.Include(p => p.Utilisateurs)
+			.OrderByDescending(p => p.Id)
+			.Skip((pageNumber - 1) * pageSize)
+			.Take(pageSize)
+			.ToListAsync();
+
+			return Ok(new { Profils = profils, TotalPages = totalPages });
 		}
 
 		[HttpGet]
@@ -88,15 +115,22 @@ namespace Backend_guichet_unique.Controllers
                 }
             }
 
-            return NoContent();
-        }
+			return Ok(new { status = "200" });
+		}
 
         [HttpPost]
         public async Task<ActionResult<Profil>> PostProfil(ProfilDTO profilDto)
         {
 			var profil = _mapper.Map<Profil>(profilDto);
 			_context.Profils.Add(profil);
-            await _context.SaveChangesAsync();
+			try 
+            {
+				await _context.SaveChangesAsync();
+			} 
+            catch 
+            {
+                return Ok(new { error = "Ce profil existe déjà" });
+            }
 
             return CreatedAtAction("GetProfil", new { id = profil.Id }, profil);
         }
@@ -109,11 +143,17 @@ namespace Backend_guichet_unique.Controllers
             {
                 return NotFound();
             }
+            try 
+            {
+				_context.Profils.Remove(profil);
+				await _context.SaveChangesAsync();
+			}
+            catch 
+            {
+				return Ok(new { error = "Ce profil ne peut plus être supprimé" });
+			}
 
-            _context.Profils.Remove(profil);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(new {status = "200"});
         }
 
         private bool ProfilExists(int id)

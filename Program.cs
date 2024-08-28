@@ -91,8 +91,9 @@ builder.Services.AddDbContext<GuichetUniqueContext>(options =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddAutoMapper(typeof(ProfilService));
-builder.Services.AddAutoMapper(typeof(UtilisateurService));
+builder.Services.AddAutoMapper(typeof(ProfilMapper));
+builder.Services.AddAutoMapper(typeof(UtilisateurMapper));
+builder.Services.AddAutoMapper(typeof(RegionMapper));
 
 var app = builder.Build();
 

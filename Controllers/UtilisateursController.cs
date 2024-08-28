@@ -10,10 +10,12 @@ using Backend_guichet_unique.Models;
 using Backend_guichet_unique.Models.DTO;
 using AutoMapper;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "AdministrateurPolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class UtilisateursController : ControllerBase
     {
@@ -150,7 +152,14 @@ namespace Backend_guichet_unique.Controllers
             utilisateur.MotDePasse = GetHashSha256(utilisateur.MotDePasse);
 
 			_context.Utilisateurs.Add(utilisateur);
-            await _context.SaveChangesAsync();
+			try 
+			{
+				await _context.SaveChangesAsync();
+			} 
+			catch 
+			{
+				return Ok(new { error = "Email déjà utilisé par un utilisateur" });
+			}
 
             return CreatedAtAction("GetUtilisateur", new { id = utilisateur.Id }, utilisateur);
         }

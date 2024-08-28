@@ -240,3 +240,6 @@ D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Microsoft.Identit
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.IO.Packaging.dll

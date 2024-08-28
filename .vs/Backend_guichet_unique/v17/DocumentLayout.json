@@ -54,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
@@ -92,19 +92,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "FiltreProfilDTO.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreProfilDTO.cs",
-              "RelativeDocumentMoniker": "Models\\DTO\\FiltreProfilDTO.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreProfilDTO.cs",
-              "RelativeToolTip": "Models\\DTO\\FiltreProfilDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-27T05:10:26.433Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
               "Title": "FiltreUtilisateurDTO.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreUtilisateurDTO.cs",
@@ -113,8 +100,32 @@
               "RelativeToolTip": "Models\\DTO\\FiltreUtilisateurDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-27T05:09:36.328Z",
+              "WhenOpened": "2024-08-27T05:09:36.328Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UtilisateursController.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\UtilisateursController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UtilisateursController.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\UtilisateursController.cs",
+              "RelativeToolTip": "Controllers\\UtilisateursController.cs",
+              "ViewState": "AQIAAEUAAAAAAAAAAAAwwFIAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-26T06:39:03.716Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FiltreProfilDTO.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreProfilDTO.cs",
+              "RelativeDocumentMoniker": "Models\\DTO\\FiltreProfilDTO.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreProfilDTO.cs",
+              "RelativeToolTip": "Models\\DTO\\FiltreProfilDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-27T05:10:26.433Z"
             },
             {
               "$type": "Document",
@@ -130,29 +141,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UtilisateursController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\UtilisateursController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UtilisateursController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\UtilisateursController.cs",
-              "RelativeToolTip": "Controllers\\UtilisateursController.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAIwCcAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-26T06:39:03.716Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "ProfilsController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\ProfilsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProfilsController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\ProfilsController.cs",
               "RelativeToolTip": "Controllers\\ProfilsController.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAAQwCoAAAAcAAAA",
+              "ViewState": "AQIAACQAAAAAAAAAAAAYwCoAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T06:07:39.097Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-21T06:07:39.097Z"
             },
             {
               "$type": "Document",

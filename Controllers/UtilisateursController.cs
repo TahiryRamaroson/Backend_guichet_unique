@@ -42,11 +42,14 @@ namespace Backend_guichet_unique.Controllers
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
 			var utilisateurs = await query
+			.Include(u => u.IdProfilNavigation)
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)
 			.ToListAsync();
 
-			return Ok(new { Utilisateurs = utilisateurs, TotalPages = totalPages });
+			var utilisateursDto = _mapper.Map<IEnumerable<UtilisateurDTO>>(utilisateurs);
+
+			return Ok(new { Utilisateurs = utilisateursDto, TotalPages = totalPages });
 		}
 
 		[HttpGet("page/{pageNumber}")]

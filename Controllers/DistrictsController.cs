@@ -11,10 +11,12 @@ using AutoMapper;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "AdministrateurPolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class DistrictsController : ControllerBase
     {

@@ -29,16 +29,16 @@ namespace Backend_guichet_unique.Controllers
         }
 
 		[HttpPost("filtre/page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<Profil>>> GetFilteredUtilisateurs(FiltreUtilisateurDTO filtreUtilisateurDTO, int pageNumber = 1)
+		public async Task<ActionResult<IEnumerable<Utilisateur>>> GetFilteredUtilisateurs(FiltreUtilisateurDTO filtreUtilisateurDTO, int pageNumber = 1)
 		{
 			int pageSize = 10;
 			var text = filtreUtilisateurDTO.text.ToLower();
 
 			var query = _context.Utilisateurs
-			.Include(p => p.IdProfilNavigation)
-			.Where(p => (p.Nom.ToLower().Contains(text) || p.Prenom.ToLower().Contains(text) || p.Matricule.ToLower().Contains(text))
-				&& (filtreUtilisateurDTO.idProfil == -1 || p.IdProfil == filtreUtilisateurDTO.idProfil)
-				&& (filtreUtilisateurDTO.statut == -1 || p.Statut == filtreUtilisateurDTO.statut));
+			.Include(u => u.IdProfilNavigation)
+			.Where(u => (u.Nom.ToLower().Contains(text) || u.Prenom.ToLower().Contains(text) || u.Matricule.ToLower().Contains(text))
+				&& (filtreUtilisateurDTO.idProfil == -1 || u.IdProfil == filtreUtilisateurDTO.idProfil)
+				&& (filtreUtilisateurDTO.statut == -1 || u.Statut == filtreUtilisateurDTO.statut));
 
 			var totalItems = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -135,7 +135,6 @@ namespace Backend_guichet_unique.Controllers
         }
 
         // POST: api/Utilisateurs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Utilisateur>> PostUtilisateur(UtilisateurPutDTO utilisateurDto)
         {

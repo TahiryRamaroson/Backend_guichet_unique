@@ -94,6 +94,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddAutoMapper(typeof(ProfilMapper));
 builder.Services.AddAutoMapper(typeof(UtilisateurMapper));
 builder.Services.AddAutoMapper(typeof(RegionMapper));
+builder.Services.AddAutoMapper(typeof(DistrictMapper));
 
 var app = builder.Build();
 

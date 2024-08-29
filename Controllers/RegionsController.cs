@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Backend_guichet_unique.Models;
 using Backend_guichet_unique.Models.DTO;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "AdministrateurPolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class RegionsController : ControllerBase
     {
@@ -28,6 +30,10 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost("import/csv")]
 		public async Task<ActionResult> PostRegionsCsv(IFormFile file)
 		{
+			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			{
+				return Ok(new { error = "Le fichier doit être un fichier CSV" });
+			}
 			using (var stream = file.OpenReadStream())
 			{
 				using (var reader = new System.IO.StreamReader(stream))
@@ -49,7 +55,15 @@ namespace Backend_guichet_unique.Controllers
 						};
 						_context.Regions.Add(region);
 					}
-					await _context.SaveChangesAsync();
+					try
+					{
+						await _context.SaveChangesAsync();
+					}
+					catch (DbUpdateException ex)
+					{
+						var existingRegionId = ex.Entries.First().Entity is Region existingRegion ? existingRegion.Id : (int?)null;
+						return Ok(new { error = $"La région avec l'id {existingRegionId} existe déjà" });
+					}
 				}
 			}
 			return Ok(new { status = "200" });
@@ -59,6 +73,10 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost("import/excel")]
 		public async Task<ActionResult> PostRegionsExcel(IFormFile file)
 		{
+			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			{
+				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
+			}
 			using (var stream = file.OpenReadStream())
 			{
 				using (var document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(stream, false))
@@ -76,7 +94,15 @@ namespace Backend_guichet_unique.Controllers
 						};
 						_context.Regions.Add(region);
 					}
-					await _context.SaveChangesAsync();
+					try
+					{
+						await _context.SaveChangesAsync();
+					}
+					catch (DbUpdateException ex)
+					{
+						var existingRegionId = ex.Entries.First().Entity is Region existingRegion ? existingRegion.Id : (int?)null;
+						return Ok(new { error = $"La région avec l'id {existingRegionId} existe déjà" });
+					}
 				}
 			}
 			return Ok(new { status = "200" });

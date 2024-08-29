@@ -96,6 +96,7 @@ builder.Services.AddAutoMapper(typeof(UtilisateurMapper));
 builder.Services.AddAutoMapper(typeof(RegionMapper));
 builder.Services.AddAutoMapper(typeof(DistrictMapper));
 builder.Services.AddAutoMapper(typeof(CommuneMapper));
+builder.Services.AddAutoMapper(typeof(FokontanyMapper));
 
 var app = builder.Build();
 

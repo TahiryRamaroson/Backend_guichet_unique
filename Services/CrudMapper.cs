@@ -10,6 +10,9 @@ namespace Backend_guichet_unique.Services
 		{
 			CreateMap<TypeLien, TypeLienFormDTO>();
 			CreateMap<TypeLienFormDTO, TypeLien>();
+
+			CreateMap<AntecedentMedicaux, AntecedentMedicauxFormDTO>();
+			CreateMap<AntecedentMedicauxFormDTO, AntecedentMedicaux>();
 		}
 	}
 }

@@ -18,19 +18,19 @@ namespace Backend_guichet_unique.Controllers
 	[Authorize(Policy = "AdministrateurPolicy")]
 	[Route("api/[controller]")]
     [ApiController]
-    public class TypeLiensController : ControllerBase
+    public class AntecedentMedicauxController : ControllerBase
     {
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
 
-		public TypeLiensController(GuichetUniqueContext context, IMapper mapper)
+		public AntecedentMedicauxController(GuichetUniqueContext context, IMapper mapper)
         {
             _context = context;
 			_mapper = mapper;
 		}
 
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> ImportTypeLiensCSV(IFormFile file)
+		public async Task<ActionResult> ImportAntecedentMedicauxCSV(IFormFile file)
 		{
 			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
@@ -50,12 +50,12 @@ namespace Backend_guichet_unique.Controllers
 						continue;
 					}
 					var values = line.Split(',');
-					var typeLien = new TypeLien();
+					var antecedentMedicaux = new AntecedentMedicaux();
 
-					typeLien.Id = int.Parse(values[0]);
-					typeLien.Nom = values[1];
+					antecedentMedicaux.Id = int.Parse(values[0]);
+					antecedentMedicaux.Nom = values[1];
 
-					_context.TypeLiens.Add(typeLien);
+					_context.AntecedentMedicauxes.Add(antecedentMedicaux);
 				}
 
 				try
@@ -64,8 +64,8 @@ namespace Backend_guichet_unique.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					var existingTypeLienId = ex.Entries.First().Entity is TypeLien existingTypeLien ? existingTypeLien.Id : (int?)null;
-					return Ok(new { error = $"Le Type_Lien avec l'id {existingTypeLienId} existe déjà" });
+					var existingAntecedentMedicauxId = ex.Entries.First().Entity is AntecedentMedicaux existingAntecedentMedicaux ? existingAntecedentMedicaux.Id : (int?)null;
+					return Ok(new { error = $"L'Antécedent Medicaux avec l'id {existingAntecedentMedicauxId} existe déjà" });
 				}
 			}
 
@@ -73,7 +73,7 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> ImportTypeLiensExcel(IFormFile file)
+		public async Task<ActionResult> ImportAntecedentMedicauxExcel(IFormFile file)
 		{
 			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
@@ -90,12 +90,12 @@ namespace Backend_guichet_unique.Controllers
 				foreach (var row in sheetData.Elements<Row>().Skip(1))
 				{
 					var cells = row.Elements<Cell>().ToList();
-					var typeLien = new TypeLien();
+					var antecedentMedicaux = new AntecedentMedicaux();
 
-					typeLien.Id = int.Parse(cells.ElementAt(0).CellValue.Text);
-					typeLien.Nom = cells.ElementAt(1).CellValue.Text;
+					antecedentMedicaux.Id = int.Parse(cells.ElementAt(0).CellValue.Text);
+					antecedentMedicaux.Nom = cells.ElementAt(1).CellValue.Text;
 
-					_context.TypeLiens.Add(typeLien);
+					_context.AntecedentMedicauxes.Add(antecedentMedicaux);
 				}
 
 				try
@@ -104,8 +104,8 @@ namespace Backend_guichet_unique.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					var existingTypeLienId = ex.Entries.First().Entity is TypeLien existingTypeLien ? existingTypeLien.Id : (int?)null;
-					return Ok(new { error = $"Le Type_Lien avec l'id {existingTypeLienId} existe déjà" });
+					var existingAntecedentMedicauxId = ex.Entries.First().Entity is AntecedentMedicaux existingAntecedentMedicaux ? existingAntecedentMedicaux.Id : (int?)null;
+					return Ok(new { error = $"L' Antécedent Medicaux avec l'id {existingAntecedentMedicauxId} existe déjà" });
 				}
 			}
 
@@ -113,9 +113,9 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpGet("export/excel")]
-		public async Task<ActionResult> ExportTypeLiensExcel()
+		public async Task<ActionResult> ExportAntecedentMedicauxExcel()
 		{
-			var typeLiens = await _context.TypeLiens
+			var antecedentMedicauxes = await _context.AntecedentMedicauxes
 			.ToListAsync();
 
 			var stream = new System.IO.MemoryStream();
@@ -131,7 +131,7 @@ namespace Backend_guichet_unique.Controllers
 				{
 					Id = document.WorkbookPart.GetIdOfPart(worksheetPart),
 					SheetId = 1,
-					Name = "Type_Lien"
+					Name = "Antecedent_Medicaux"
 				};
 				sheets.Append(sheet);
 
@@ -144,12 +144,12 @@ namespace Backend_guichet_unique.Controllers
 				);
 				sheetData.AppendChild(headerRow);
 
-				foreach (var typeLien in typeLiens)
+				foreach (var antecedentMedicaux in antecedentMedicauxes)
 				{
 					var row = new Row();
 					row.Append(
-					new Cell() { CellValue = new CellValue(typeLien.Id.ToString()), DataType = CellValues.Number },
-					new Cell() { CellValue = new CellValue(typeLien.Nom), DataType = CellValues.String }
+					new Cell() { CellValue = new CellValue(antecedentMedicaux.Id.ToString()), DataType = CellValues.Number },
+					new Cell() { CellValue = new CellValue(antecedentMedicaux.Nom), DataType = CellValues.String }
 					);
 					sheetData.AppendChild(row);
 				}
@@ -158,97 +158,97 @@ namespace Backend_guichet_unique.Controllers
 			stream.Position = 0;
 			var content = new FileContentResult(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 			{
-				FileDownloadName = "TypeLiens" + DateTime.Now.ToString() + ".xlsx"
+				FileDownloadName = "antecedentMedicaux" + DateTime.Now.ToString() + ".xlsx"
 			};
 
 			return content;
 		}
 
 		[HttpGet("export/csv")]
-		public async Task<IActionResult> ExportTypeLiens()
+		public async Task<IActionResult> ExportAntecedentMedicaux()
 		{
-			var typeLiens = await _context.TypeLiens
+			var antecedentMedicauxes = await _context.AntecedentMedicauxes
 				.ToListAsync();
 
 			var builder = new System.Text.StringBuilder();
 			builder.AppendLine("Id,Nom");
 
-			foreach (var typeLien in typeLiens)
+			foreach (var antecedentMedicaux in antecedentMedicauxes)
 			{
-				builder.AppendLine($"{typeLien.Id},{typeLien.Nom}");
+				builder.AppendLine($"{antecedentMedicaux.Id},{antecedentMedicaux.Nom}");
 			}
 
-			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "typeLien" + DateTime.Now.ToString() + ".csv");
+			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "antecedentMedicaux" + DateTime.Now.ToString() + ".csv");
 		}
 
 		[HttpPost("filtre/page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<TypeLien>>> GetFilteredTypeLiens(TypeLienFormDTO typeLienDto, int pageNumber = 1)
+		public async Task<ActionResult<IEnumerable<AntecedentMedicaux>>> GetFilteredAntecedentMedicaux(AntecedentMedicauxFormDTO antecedentMedicauxDto, int pageNumber = 1)
 		{
 			int pageSize = 10;
-			var text = typeLienDto.Nom.ToLower();
+			var text = antecedentMedicauxDto.Nom.ToLower();
 
-			var query = _context.TypeLiens
-			.Where(t => (t.Nom.ToLower().Contains(text)));
+			var query = _context.AntecedentMedicauxes
+			.Where(a => (a.Nom.ToLower().Contains(text)));
 
 			var totalItems = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-			var typeLiens = await query
+			var antecedentMedicauxes = await query
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)
 			.ToListAsync();
 
-			return Ok(new { TypeLiens = typeLiens, TotalPages = totalPages });
+			return Ok(new { AntecedentMedicaux = antecedentMedicauxes, TotalPages = totalPages });
 		}
 
 		[HttpGet("page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<TypeLien>>> GetPagedTypeLiens(int pageNumber = 1)
+		public async Task<ActionResult<IEnumerable<AntecedentMedicaux>>> GetPagedAntecedentMedicaux(int pageNumber = 1)
 		{
 			int pageSize = 10;
-			var totalItems = await _context.TypeLiens.CountAsync();
+			var totalItems = await _context.AntecedentMedicauxes.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-			var typeLiens = await _context.TypeLiens
-				.OrderByDescending(t => t.Id)
+			var antecedentMedicauxes = await _context.AntecedentMedicauxes
+				.OrderByDescending(a => a.Id)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)
 				.ToListAsync();
 
-			return Ok(new { TypeLien = typeLiens, TotalPages = totalPages });
+			return Ok(new { AntecedentMedicaux = antecedentMedicauxes, TotalPages = totalPages });
 		}
 
-		// GET: api/TypeLiens
+		// GET: api/AntecedentMedicaux
 		[HttpGet]
-        public async Task<ActionResult<IEnumerable<TypeLien>>> GetTypeLiens()
+        public async Task<ActionResult<IEnumerable<AntecedentMedicaux>>> GetAntecedentMedicauxes()
         {
-            return await _context.TypeLiens.ToListAsync();
+            return await _context.AntecedentMedicauxes.ToListAsync();
         }
 
-        // GET: api/TypeLiens/5
+        // GET: api/AntecedentMedicaux/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TypeLien>> GetTypeLien(int id)
+        public async Task<ActionResult<AntecedentMedicaux>> GetAntecedentMedicaux(int id)
         {
-            var typeLien = await _context.TypeLiens.FindAsync(id);
+            var antecedentMedicaux = await _context.AntecedentMedicauxes.FindAsync(id);
 
-            if (typeLien == null)
+            if (antecedentMedicaux == null)
             {
                 return NotFound();
             }
 
-            return typeLien;
+            return antecedentMedicaux;
         }
 
-        // PUT: api/TypeLiens/5
+        // PUT: api/AntecedentMedicaux/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTypeLien(int id, TypeLienFormDTO typeLienDto)
+        public async Task<IActionResult> PutAntecedentMedicaux(int id, AntecedentMedicauxFormDTO antecedentMedicauxDto)
         {
-			var existingTypeLien = await _context.TypeLiens.FindAsync(id);
-			if (existingTypeLien == null)
+			var existingAntecedentMedicaux = await _context.AntecedentMedicauxes.FindAsync(id);
+			if (existingAntecedentMedicaux == null)
 			{
 				return NotFound();
 			}
 
-			_mapper.Map(typeLienDto, existingTypeLien);
+			_mapper.Map(antecedentMedicauxDto, existingAntecedentMedicaux);
 
 			try
             {
@@ -256,7 +256,7 @@ namespace Backend_guichet_unique.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TypeLienExists(id))
+                if (!AntecedentMedicauxExists(id))
                 {
                     return NotFound();
                 }
@@ -269,36 +269,36 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { status = "200" });
 		}
 
-        // POST: api/TypeLiens
+        // POST: api/AntecedentMedicaux
         [HttpPost]
-        public async Task<ActionResult<TypeLien>> PostTypeLien(TypeLienFormDTO typeLienDto)
+        public async Task<ActionResult<AntecedentMedicaux>> PostAntecedentMedicaux(AntecedentMedicauxFormDTO antecedentMedicauxDto)
         {
-			var typeLien = _mapper.Map<TypeLien>(typeLienDto);
-			_context.TypeLiens.Add(typeLien);
+			var antecedentMedicaux = _mapper.Map<AntecedentMedicaux>(antecedentMedicauxDto);
+			_context.AntecedentMedicauxes.Add(antecedentMedicaux);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTypeLien", new { id = typeLien.Id }, typeLien);
+            return CreatedAtAction("GetAntecedentMedicaux", new { id = antecedentMedicaux.Id }, antecedentMedicaux);
         }
 
-        // DELETE: api/TypeLiens/5
+        // DELETE: api/AntecedentMedicaux/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTypeLien(int id)
+        public async Task<IActionResult> DeleteAntecedentMedicaux(int id)
         {
-            var typeLien = await _context.TypeLiens.FindAsync(id);
-            if (typeLien == null)
+            var antecedentMedicaux = await _context.AntecedentMedicauxes.FindAsync(id);
+            if (antecedentMedicaux == null)
             {
                 return NotFound();
             }
 
-            _context.TypeLiens.Remove(typeLien);
+            _context.AntecedentMedicauxes.Remove(antecedentMedicaux);
             await _context.SaveChangesAsync();
 
 			return Ok(new { status = "200" });
 		}
 
-        private bool TypeLienExists(int id)
+        private bool AntecedentMedicauxExists(int id)
         {
-            return _context.TypeLiens.Any(e => e.Id == id);
+            return _context.AntecedentMedicauxes.Any(e => e.Id == id);
         }
     }
 }

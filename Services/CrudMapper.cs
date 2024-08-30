@@ -22,6 +22,9 @@ namespace Backend_guichet_unique.Services
 
 			CreateMap<Models.Action, ActionFormDTO>();
 			CreateMap<ActionFormDTO, Models.Action>();
+
+			CreateMap<MotifMigration, MotifMigrationFormDTO>();
+			CreateMap<MotifMigrationFormDTO, MotifMigration>();
 		}
 	}
 }

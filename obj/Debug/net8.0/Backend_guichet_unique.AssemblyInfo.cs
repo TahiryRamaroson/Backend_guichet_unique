@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Backend_guichet_unique")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9747847c250bf4f9189681105922fa13ae8820eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cbd2a21b221737bfc59f8f549e1fe665a69321d7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Backend_guichet_unique")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Backend_guichet_unique")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

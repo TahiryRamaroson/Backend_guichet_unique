@@ -19,6 +19,9 @@ namespace Backend_guichet_unique.Services
 
 			CreateMap<CategoriePlainte, CategoriePlainteFormDTO>();
 			CreateMap<CategoriePlainteFormDTO, CategoriePlainte>();
+
+			CreateMap<Models.Action, ActionFormDTO>();
+			CreateMap<ActionFormDTO, Models.Action>();
 		}
 	}
 }

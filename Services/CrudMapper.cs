@@ -13,6 +13,9 @@ namespace Backend_guichet_unique.Services
 
 			CreateMap<AntecedentMedicaux, AntecedentMedicauxFormDTO>();
 			CreateMap<AntecedentMedicauxFormDTO, AntecedentMedicaux>();
+
+			CreateMap<CauseDece, CauseDeceFormDTO>();
+			CreateMap<CauseDeceFormDTO, CauseDece>();
 		}
 	}
 }

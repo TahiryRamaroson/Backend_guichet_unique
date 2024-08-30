@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\causedecescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\causedecescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\categorieplaintescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\categorieplaintescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\typelienscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -39,8 +39,7 @@
               "ViewState": "AQIAAE4AAAAAAAAAAAAAAGMAAAAzAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-19T06:42:04.389Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -58,7 +57,7 @@
               "RelativeDocumentMoniker": "Services\\CrudMapper.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Services\\CrudMapper.cs",
               "RelativeToolTip": "Services\\CrudMapper.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAsAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAA2AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-30T06:01:05.854Z",
               "EditorCaption": ""
@@ -66,14 +65,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "CauseDecesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CauseDecesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CauseDecesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CauseDecesController.cs",
-              "RelativeToolTip": "Controllers\\CauseDecesController.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAAqwBEAAAAtAAAA",
+              "Title": "CategoriePlaintesController.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CategoriePlaintesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CategoriePlaintesController.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CategoriePlaintesController.cs",
+              "RelativeToolTip": "Controllers\\CategoriePlaintesController.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAmwBEAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-30T07:16:20.389Z",
+              "WhenOpened": "2024-08-30T07:49:20.33Z",
               "EditorCaption": ""
             },
             {
@@ -84,7 +83,7 @@
               "RelativeDocumentMoniker": "Controllers\\TypeLiensController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\TypeLiensController.cs",
               "RelativeToolTip": "Controllers\\TypeLiensController.cs",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAABEAAAABAAAA",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABEAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-30T05:40:55.914Z",
               "EditorCaption": ""

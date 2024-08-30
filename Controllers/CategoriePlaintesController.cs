@@ -18,19 +18,19 @@ namespace Backend_guichet_unique.Controllers
 	[Authorize(Policy = "AdministrateurPolicy")]
 	[Route("api/[controller]")]
     [ApiController]
-    public class TypeLiensController : ControllerBase
+    public class CategoriePlaintesController : ControllerBase
     {
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
 
-		public TypeLiensController(GuichetUniqueContext context, IMapper mapper)
+		public CategoriePlaintesController(GuichetUniqueContext context, IMapper mapper)
         {
             _context = context;
 			_mapper = mapper;
 		}
 
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> ImportTypeLiensCSV(IFormFile file)
+		public async Task<ActionResult> ImportCategoriePlaintesCSV(IFormFile file)
 		{
 			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
@@ -50,12 +50,12 @@ namespace Backend_guichet_unique.Controllers
 						continue;
 					}
 					var values = line.Split(',');
-					var typeLien = new TypeLien();
+					var categoriePlainte = new CategoriePlainte();
 
-					typeLien.Id = int.Parse(values[0]);
-					typeLien.Nom = values[1];
+					categoriePlainte.Id = int.Parse(values[0]);
+					categoriePlainte.Nom = values[1];
 
-					_context.TypeLiens.Add(typeLien);
+					_context.CategoriePlaintes.Add(categoriePlainte);
 				}
 
 				try
@@ -64,8 +64,8 @@ namespace Backend_guichet_unique.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					var existingTypeLienId = ex.Entries.First().Entity is TypeLien existingTypeLien ? existingTypeLien.Id : (int?)null;
-					return Ok(new { error = $"Le Type_Lien avec l'id {existingTypeLienId} existe déjà" });
+					var existingCategoriePlainteId = ex.Entries.First().Entity is CategoriePlainte existingCategoriePlainte ? existingCategoriePlainte.Id : (int?)null;
+					return Ok(new { error = $"La Categorie_Plainte avec l'id {existingCategoriePlainteId} existe déjà" });
 				}
 			}
 
@@ -73,7 +73,7 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> ImportTypeLiensExcel(IFormFile file)
+		public async Task<ActionResult> ImportCategoriePlaintesExcel(IFormFile file)
 		{
 			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
@@ -90,12 +90,12 @@ namespace Backend_guichet_unique.Controllers
 				foreach (var row in sheetData.Elements<Row>().Skip(1))
 				{
 					var cells = row.Elements<Cell>().ToList();
-					var typeLien = new TypeLien();
+					var categoriePlainte = new CategoriePlainte();
 
-					typeLien.Id = int.Parse(cells.ElementAt(0).CellValue.Text);
-					typeLien.Nom = cells.ElementAt(1).CellValue.Text;
+					categoriePlainte.Id = int.Parse(cells.ElementAt(0).CellValue.Text);
+					categoriePlainte.Nom = cells.ElementAt(1).CellValue.Text;
 
-					_context.TypeLiens.Add(typeLien);
+					_context.CategoriePlaintes.Add(categoriePlainte);
 				}
 
 				try
@@ -104,8 +104,8 @@ namespace Backend_guichet_unique.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					var existingTypeLienId = ex.Entries.First().Entity is TypeLien existingTypeLien ? existingTypeLien.Id : (int?)null;
-					return Ok(new { error = $"Le Type_Lien avec l'id {existingTypeLienId} existe déjà" });
+					var existingCategoriePlainteId = ex.Entries.First().Entity is CategoriePlainte existingCategoriePlainte ? existingCategoriePlainte.Id : (int?)null;
+					return Ok(new { error = $"La Categorie_Plainte avec l'id {existingCategoriePlainteId} existe déjà" });
 				}
 			}
 
@@ -113,9 +113,9 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpGet("export/excel")]
-		public async Task<ActionResult> ExportTypeLiensExcel()
+		public async Task<ActionResult> ExportCategoriePlaintesExcel()
 		{
-			var typeLiens = await _context.TypeLiens
+			var categoriePlaintes = await _context.CategoriePlaintes
 			.ToListAsync();
 
 			var stream = new System.IO.MemoryStream();
@@ -131,7 +131,7 @@ namespace Backend_guichet_unique.Controllers
 				{
 					Id = document.WorkbookPart.GetIdOfPart(worksheetPart),
 					SheetId = 1,
-					Name = "Type_Lien"
+					Name = "Categorie_Plainte"
 				};
 				sheets.Append(sheet);
 
@@ -144,12 +144,12 @@ namespace Backend_guichet_unique.Controllers
 				);
 				sheetData.AppendChild(headerRow);
 
-				foreach (var typeLien in typeLiens)
+				foreach (var categoriePlainte in categoriePlaintes)
 				{
 					var row = new Row();
 					row.Append(
-					new Cell() { CellValue = new CellValue(typeLien.Id.ToString()), DataType = CellValues.Number },
-					new Cell() { CellValue = new CellValue(typeLien.Nom), DataType = CellValues.String }
+					new Cell() { CellValue = new CellValue(categoriePlainte.Id.ToString()), DataType = CellValues.Number },
+					new Cell() { CellValue = new CellValue(categoriePlainte.Nom), DataType = CellValues.String }
 					);
 					sheetData.AppendChild(row);
 				}
@@ -158,97 +158,97 @@ namespace Backend_guichet_unique.Controllers
 			stream.Position = 0;
 			var content = new FileContentResult(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 			{
-				FileDownloadName = "TypeLiens" + DateTime.Now.ToString() + ".xlsx"
+				FileDownloadName = "CategoriePlainte" + DateTime.Now.ToString() + ".xlsx"
 			};
 
 			return content;
 		}
 
 		[HttpGet("export/csv")]
-		public async Task<IActionResult> ExportTypeLiens()
+		public async Task<IActionResult> ExportCategoriePlaintes()
 		{
-			var typeLiens = await _context.TypeLiens
+			var categoriePlaintes = await _context.CategoriePlaintes
 				.ToListAsync();
 
 			var builder = new System.Text.StringBuilder();
 			builder.AppendLine("Id,Nom");
 
-			foreach (var typeLien in typeLiens)
+			foreach (var categoriePlainte in categoriePlaintes)
 			{
-				builder.AppendLine($"{typeLien.Id},{typeLien.Nom}");
+				builder.AppendLine($"{categoriePlainte.Id},{categoriePlainte.Nom}");
 			}
 
-			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "typeLien" + DateTime.Now.ToString() + ".csv");
+			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "CategoriePlainte" + DateTime.Now.ToString() + ".csv");
 		}
 
 		[HttpPost("filtre/page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<TypeLien>>> GetFilteredTypeLiens(TypeLienFormDTO typeLienDto, int pageNumber = 1)
+		public async Task<ActionResult<IEnumerable<CategoriePlainte>>> GetFilteredCategoriePlaintes(CategoriePlainteFormDTO categoriePlainteDto, int pageNumber = 1)
 		{
 			int pageSize = 10;
-			var text = typeLienDto.Nom.ToLower();
+			var text = categoriePlainteDto.Nom.ToLower();
 
-			var query = _context.TypeLiens
-			.Where(t => (t.Nom.ToLower().Contains(text)));
+			var query = _context.CategoriePlaintes
+			.Where(c => (c.Nom.ToLower().Contains(text)));
 
 			var totalItems = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-			var typeLiens = await query
+			var categoriePlaintes = await query
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)
 			.ToListAsync();
 
-			return Ok(new { TypeLien = typeLiens, TotalPages = totalPages });
+			return Ok(new { CategoriePlainte = categoriePlaintes, TotalPages = totalPages });
 		}
 
 		[HttpGet("page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<TypeLien>>> GetPagedTypeLiens(int pageNumber = 1)
+		public async Task<ActionResult<IEnumerable<CategoriePlainte>>> GetPagedCategoriePlaintes(int pageNumber = 1)
 		{
 			int pageSize = 10;
-			var totalItems = await _context.TypeLiens.CountAsync();
+			var totalItems = await _context.CategoriePlaintes.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-			var typeLiens = await _context.TypeLiens
-				.OrderByDescending(t => t.Id)
+			var categoriePlaintes = await _context.CategoriePlaintes
+				.OrderByDescending(c => c.Id)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)
 				.ToListAsync();
 
-			return Ok(new { TypeLien = typeLiens, TotalPages = totalPages });
+			return Ok(new { CategoriePlainte = categoriePlaintes, TotalPages = totalPages });
 		}
 
-		// GET: api/TypeLiens
+		// GET: api/CategoriePlaintes
 		[HttpGet]
-        public async Task<ActionResult<IEnumerable<TypeLien>>> GetTypeLiens()
+        public async Task<ActionResult<IEnumerable<CategoriePlainte>>> GetCategoriePlaintes()
         {
-            return await _context.TypeLiens.ToListAsync();
+            return await _context.CategoriePlaintes.ToListAsync();
         }
 
-        // GET: api/TypeLiens/5
+        // GET: api/CategoriePlaintes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TypeLien>> GetTypeLien(int id)
+        public async Task<ActionResult<CategoriePlainte>> GetCategoriePlainte(int id)
         {
-            var typeLien = await _context.TypeLiens.FindAsync(id);
+            var categoriePlainte = await _context.CategoriePlaintes.FindAsync(id);
 
-            if (typeLien == null)
+            if (categoriePlainte == null)
             {
                 return NotFound();
             }
 
-            return typeLien;
+            return categoriePlainte;
         }
 
-        // PUT: api/TypeLiens/5
+        // PUT: api/CategoriePlaintes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTypeLien(int id, TypeLienFormDTO typeLienDto)
+        public async Task<IActionResult> PutCategoriePlainte(int id, CategoriePlainteFormDTO categoriePlainteDto)
         {
-			var existingTypeLien = await _context.TypeLiens.FindAsync(id);
-			if (existingTypeLien == null)
+			var existingCategoriePlainte = await _context.CategoriePlaintes.FindAsync(id);
+			if (existingCategoriePlainte == null)
 			{
 				return NotFound();
 			}
 
-			_mapper.Map(typeLienDto, existingTypeLien);
+			_mapper.Map(categoriePlainteDto, existingCategoriePlainte);
 
 			try
             {
@@ -256,7 +256,7 @@ namespace Backend_guichet_unique.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TypeLienExists(id))
+                if (!CategoriePlainteExists(id))
                 {
                     return NotFound();
                 }
@@ -269,36 +269,36 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { status = "200" });
 		}
 
-        // POST: api/TypeLiens
+        // POST: api/CategoriePlaintes
         [HttpPost]
-        public async Task<ActionResult<TypeLien>> PostTypeLien(TypeLienFormDTO typeLienDto)
+        public async Task<ActionResult<CategoriePlainte>> PostCategoriePlainte(CategoriePlainteFormDTO categoriePlainteDto)
         {
-			var typeLien = _mapper.Map<TypeLien>(typeLienDto);
-			_context.TypeLiens.Add(typeLien);
+			var categoriePlainte = _mapper.Map<CategoriePlainte>(categoriePlainteDto);
+			_context.CategoriePlaintes.Add(categoriePlainte);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTypeLien", new { id = typeLien.Id }, typeLien);
+            return CreatedAtAction("GetCategoriePlainte", new { id = categoriePlainte.Id }, categoriePlainte);
         }
 
-        // DELETE: api/TypeLiens/5
+        // DELETE: api/CategoriePlaintes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTypeLien(int id)
+        public async Task<IActionResult> DeleteCategoriePlainte(int id)
         {
-            var typeLien = await _context.TypeLiens.FindAsync(id);
-            if (typeLien == null)
+            var categoriePlainte = await _context.CategoriePlaintes.FindAsync(id);
+            if (categoriePlainte == null)
             {
                 return NotFound();
             }
 
-            _context.TypeLiens.Remove(typeLien);
+            _context.CategoriePlaintes.Remove(categoriePlainte);
             await _context.SaveChangesAsync();
 
 			return Ok(new { status = "200" });
 		}
 
-        private bool TypeLienExists(int id)
+        private bool CategoriePlainteExists(int id)
         {
-            return _context.TypeLiens.Any(e => e.Id == id);
+            return _context.CategoriePlaintes.Any(e => e.Id == id);
         }
     }
 }

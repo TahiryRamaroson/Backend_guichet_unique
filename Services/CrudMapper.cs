@@ -16,6 +16,9 @@ namespace Backend_guichet_unique.Services
 
 			CreateMap<CauseDece, CauseDeceFormDTO>();
 			CreateMap<CauseDeceFormDTO, CauseDece>();
+
+			CreateMap<CategoriePlainte, CategoriePlainteFormDTO>();
+			CreateMap<CategoriePlainteFormDTO, CategoriePlainte>();
 		}
 	}
 }

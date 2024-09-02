@@ -184,6 +184,7 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost("filtre/page/{pageNumber}")]
 		public async Task<ActionResult<IEnumerable<MotifMigration>>> GetFilteredMotifMigrations(MotifMigrationFormDTO motifMigrationDto, int pageNumber = 1)
 		{
+
 			int pageSize = 10;
 			var text = motifMigrationDto.Nom.ToLower();
 
@@ -221,7 +222,41 @@ namespace Backend_guichet_unique.Controllers
 		[HttpGet]
         public async Task<ActionResult<IEnumerable<MotifMigration>>> GetMotifMigrations()
         {
-            return await _context.MotifMigrations.ToListAsync();
+			// récuperer le token de l'utilisateur qui a fait la requête
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			// décoder le token
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			// récuperer l'id de l'utilisateur
+			var id = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			// récuperer l'url qui a appelé l'api
+			var url = Request.Headers["Referer"].ToString();
+
+			// récuperer la date et heure de la requête
+			var date = DateTime.Now;
+
+			// récuperer le nom de ce controlleur dynamiquement
+			var controller = this.ControllerContext.ActionDescriptor.ControllerName;
+
+			// insertion de l'historique de l'application
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = "GET";
+			historiqueApplication.Composant = controller;
+			historiqueApplication.UrlAction = url;
+			historiqueApplication.DateAction = date;
+			historiqueApplication.IdUtilisateur = int.Parse(id);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+			await _context.SaveChangesAsync();
+
+			Console.WriteLine("IdUtilisateur: " + id);
+			Console.WriteLine("Url: " + url);
+			Console.WriteLine("Date: " + date);
+			Console.WriteLine("Controller: " + controller);
+
+
+			return await _context.MotifMigrations.ToListAsync();
         }
 
         // GET: api/MotifMigrations/5

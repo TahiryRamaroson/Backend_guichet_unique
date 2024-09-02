@@ -22,11 +22,13 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
+		private readonly IConfiguration _configuration;
 
-		public CauseDecesController(GuichetUniqueContext context, IMapper mapper)
-        {
-            _context = context;
+		public CauseDecesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		{
+			_context = context;
 			_mapper = mapper;
+			_configuration = configuration;
 		}
 
 		[HttpPost("import/csv")]
@@ -57,6 +59,20 @@ namespace Backend_guichet_unique.Controllers
 
 					_context.CauseDeces.Add(causeDece);
 				}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Import"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
 
 				try
 				{
@@ -97,6 +113,20 @@ namespace Backend_guichet_unique.Controllers
 
 					_context.CauseDeces.Add(causeDece);
 				}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Import"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
 
 				try
 				{
@@ -161,6 +191,22 @@ namespace Backend_guichet_unique.Controllers
 				FileDownloadName = "CauseDeces" + DateTime.Now.ToString() + ".xlsx"
 			};
 
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
 			return content;
 		}
 
@@ -177,6 +223,22 @@ namespace Backend_guichet_unique.Controllers
 			{
 				builder.AppendLine($"{causeDece.Id},{causeDece.Nom}");
 			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "CauseDeces" + DateTime.Now.ToString() + ".csv");
 		}
@@ -250,6 +312,20 @@ namespace Backend_guichet_unique.Controllers
 
 			_mapper.Map(causeDeceDto, existingCauseDece);
 
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Update"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
 			try
             {
                 await _context.SaveChangesAsync();
@@ -275,7 +351,22 @@ namespace Backend_guichet_unique.Controllers
         {
 			var causeDece = _mapper.Map<CauseDece>(causeDeceDto);
 			_context.CauseDeces.Add(causeDece);
-            await _context.SaveChangesAsync();
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Create"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCauseDece", new { id = causeDece.Id }, causeDece);
         }
@@ -291,7 +382,22 @@ namespace Backend_guichet_unique.Controllers
             }
 
             _context.CauseDeces.Remove(causeDece);
-            await _context.SaveChangesAsync();
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Delete"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return Ok(new { status = "200" });
 		}

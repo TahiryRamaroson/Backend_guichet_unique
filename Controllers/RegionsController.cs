@@ -19,11 +19,13 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
+		private readonly IConfiguration _configuration;
 
-		public RegionsController(GuichetUniqueContext context, IMapper mapper)
-        {
-            _context = context;
+		public RegionsController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		{
+			_context = context;
 			_mapper = mapper;
+			_configuration = configuration;
 		}
 
 		// fonction qui reçoit un fichier csv des regions et les ajoute à la base de données
@@ -55,6 +57,21 @@ namespace Backend_guichet_unique.Controllers
 						};
 						_context.Regions.Add(region);
 					}
+
+					var token = Request.Headers["Authorization"].ToString().Substring(7);
+					var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+					var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+					var historiqueApplication = new HistoriqueApplication();
+					historiqueApplication.Action = _configuration["Action:Import"];
+					historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+					historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+					historiqueApplication.DateAction = DateTime.Now;
+					historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+					_context.HistoriqueApplications.Add(historiqueApplication);
+
 					try
 					{
 						await _context.SaveChangesAsync();
@@ -94,6 +111,21 @@ namespace Backend_guichet_unique.Controllers
 						};
 						_context.Regions.Add(region);
 					}
+
+					var token = Request.Headers["Authorization"].ToString().Substring(7);
+					var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+					var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+					var historiqueApplication = new HistoriqueApplication();
+					historiqueApplication.Action = _configuration["Action:Import"];
+					historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+					historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+					historiqueApplication.DateAction = DateTime.Now;
+					historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+					_context.HistoriqueApplications.Add(historiqueApplication);
+
 					try
 					{
 						await _context.SaveChangesAsync();
@@ -154,6 +186,23 @@ namespace Backend_guichet_unique.Controllers
 			}
 
 			stream.Position = 0;
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
 			return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "regions" + DateTime.Now.ToString() + ".xlsx");
 		}
 
@@ -167,6 +216,23 @@ namespace Backend_guichet_unique.Controllers
 			{
 				csv += $"{region.Id},{region.Nom}\n";
 			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
 			return File(System.Text.Encoding.UTF8.GetBytes(csv), "text/csv", "regions" + DateTime.Now.ToString() + ".csv");
 		}
 
@@ -239,6 +305,20 @@ namespace Backend_guichet_unique.Controllers
 
 			_mapper.Map(regionDto, existingRegion);
 
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Update"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
 			try
             {
                 await _context.SaveChangesAsync();
@@ -264,9 +344,24 @@ namespace Backend_guichet_unique.Controllers
         {
 			var region = _mapper.Map<Region>(regionDto);
 			_context.Regions.Add(region);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRegion", new { id = region.Id }, region);
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Create"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
+			return CreatedAtAction("GetRegion", new { id = region.Id }, region);
         }
 
         // DELETE: api/Regions/5
@@ -280,7 +375,22 @@ namespace Backend_guichet_unique.Controllers
             }
 
             _context.Regions.Remove(region);
-            await _context.SaveChangesAsync();
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Delete"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return Ok(new { status = "200" });
 		}

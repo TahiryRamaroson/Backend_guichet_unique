@@ -22,11 +22,13 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
+		private readonly IConfiguration _configuration;
 
-		public MotifMigrationsController(GuichetUniqueContext context, IMapper mapper)
-        {
-            _context = context;
+		public MotifMigrationsController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		{
+			_context = context;
 			_mapper = mapper;
+			_configuration = configuration;
 		}
 
 		[HttpPost("import/csv")]
@@ -57,6 +59,20 @@ namespace Backend_guichet_unique.Controllers
 
 					_context.MotifMigrations.Add(motifMigration);
 				}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Import"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
 
 				try
 				{
@@ -97,6 +113,20 @@ namespace Backend_guichet_unique.Controllers
 
 					_context.MotifMigrations.Add(motifMigration);
 				}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Import"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
 
 				try
 				{
@@ -161,6 +191,22 @@ namespace Backend_guichet_unique.Controllers
 				FileDownloadName = "motifMigration" + DateTime.Now.ToString() + ".xlsx"
 			};
 
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
 			return content;
 		}
 
@@ -177,6 +223,22 @@ namespace Backend_guichet_unique.Controllers
 			{
 				builder.AppendLine($"{motifMigration.Id},{motifMigration.Nom}");
 			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "motifMigration" + DateTime.Now.ToString() + ".csv");
 		}
@@ -222,40 +284,6 @@ namespace Backend_guichet_unique.Controllers
 		[HttpGet]
         public async Task<ActionResult<IEnumerable<MotifMigration>>> GetMotifMigrations()
         {
-			// récuperer le token de l'utilisateur qui a fait la requête
-			var token = Request.Headers["Authorization"].ToString().Substring(7);
-			// décoder le token
-			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-			// récuperer l'id de l'utilisateur
-			var id = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
-
-			// récuperer l'url qui a appelé l'api
-			var url = Request.Headers["Referer"].ToString();
-
-			// récuperer la date et heure de la requête
-			var date = DateTime.Now;
-
-			// récuperer le nom de ce controlleur dynamiquement
-			var controller = this.ControllerContext.ActionDescriptor.ControllerName;
-
-			// insertion de l'historique de l'application
-			var historiqueApplication = new HistoriqueApplication();
-			historiqueApplication.Action = "GET";
-			historiqueApplication.Composant = controller;
-			historiqueApplication.UrlAction = url;
-			historiqueApplication.DateAction = date;
-			historiqueApplication.IdUtilisateur = int.Parse(id);
-
-			_context.HistoriqueApplications.Add(historiqueApplication);
-			await _context.SaveChangesAsync();
-
-			Console.WriteLine("IdUtilisateur: " + id);
-			Console.WriteLine("Url: " + url);
-			Console.WriteLine("Date: " + date);
-			Console.WriteLine("Controller: " + controller);
-
-
 			return await _context.MotifMigrations.ToListAsync();
         }
 
@@ -285,6 +313,20 @@ namespace Backend_guichet_unique.Controllers
 
 			_mapper.Map(motifMigrationDto, existingMotifMigration);
 
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Update"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
 			try
             {
                 await _context.SaveChangesAsync();
@@ -310,7 +352,22 @@ namespace Backend_guichet_unique.Controllers
         {
 			var motifMigration = _mapper.Map<MotifMigration>(motifMigrationDto);
 			_context.MotifMigrations.Add(motifMigration);
-            await _context.SaveChangesAsync();
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = "Ajout";
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMotifMigration", new { id = motifMigration.Id }, motifMigration);
         }
@@ -326,7 +383,22 @@ namespace Backend_guichet_unique.Controllers
             }
 
             _context.MotifMigrations.Remove(motifMigration);
-            await _context.SaveChangesAsync();
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Delete"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return Ok(new { status = "200" });
 		}

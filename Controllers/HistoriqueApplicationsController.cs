@@ -21,11 +21,13 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
+		private readonly IConfiguration _configuration;
 
-		public HistoriqueApplicationsController(GuichetUniqueContext context, IMapper mapper)
-        {
-            _context = context;
+		public HistoriqueApplicationsController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		{
+			_context = context;
 			_mapper = mapper;
+			_configuration = configuration;
 		}
 
 		[HttpPost("export/excel")]
@@ -88,6 +90,22 @@ namespace Backend_guichet_unique.Controllers
 				FileDownloadName = "historiqueApplication" + DateTime.Now.ToString() + ".xlsx"
 			};
 
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var newhistoriqueApplication = new HistoriqueApplication();
+			newhistoriqueApplication.Action = _configuration["Action:Export"];
+			newhistoriqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			newhistoriqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			newhistoriqueApplication.DateAction = DateTime.Now;
+			newhistoriqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(newhistoriqueApplication);
+
+			await _context.SaveChangesAsync();
+
 			return content;
 		}
 
@@ -107,6 +125,22 @@ namespace Backend_guichet_unique.Controllers
 			{
 				builder.AppendLine($"{historiqueApplication.IdUtilisateurNavigation.Nom + " " + historiqueApplication.IdUtilisateurNavigation.Prenom},{historiqueApplication.IdUtilisateurNavigation.IdProfilNavigation.Nom},{historiqueApplication.Composant},{historiqueApplication.Action},{historiqueApplication.DateAction},{historiqueApplication.UrlAction}");
 			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var newhistoriqueApplication = new HistoriqueApplication();
+			newhistoriqueApplication.Action = _configuration["Action:Export"];
+			newhistoriqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			newhistoriqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			newhistoriqueApplication.DateAction = DateTime.Now;
+			newhistoriqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(newhistoriqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "historiqueApplication" + DateTime.Now.ToString() + ".csv");
 		}

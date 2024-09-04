@@ -76,7 +76,7 @@ namespace Backend_guichet_unique.Controllers
 
 		// GET: api/Utilisateurs
 		[HttpGet]
-        public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
+        public async Task<ActionResult<IEnumerable<UtilisateurDTO>>> GetUtilisateurs()
         {
 			var utilisateurs = await _context.Utilisateurs
 		        .Include(u => u.IdProfilNavigation)
@@ -108,6 +108,7 @@ namespace Backend_guichet_unique.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUtilisateur(int id, UtilisateurPutDTO utilisateurDto)
         {
+			utilisateurDto.MotDePasse = GetHashSha256(utilisateurDto.MotDePasse);
 
 			var existingUtilisateur = await _context.Utilisateurs.FindAsync(id);
 			if (existingUtilisateur == null)

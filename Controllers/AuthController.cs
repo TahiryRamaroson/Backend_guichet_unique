@@ -43,12 +43,12 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost("utilisateur/login")]
 		public async Task<IActionResult> LoginUtilisateur([FromBody] LoginDTO auth)
 		{
+			if (auth == null) return Unauthorized();
+
 			var hashedPassword = GetHashSha256(auth.MotDePasse);
 			var user = await _context.Utilisateurs
 				.Include(u => u.IdProfilNavigation)
 				.FirstOrDefaultAsync(u => u.Email == auth.Email && u.MotDePasse == hashedPassword && u.IdProfilNavigation.Nom != "Administrateur");
-
-			if (auth == null) return Unauthorized();
 
 			if (user == null) return Ok(new { error = "Email ou mot de passe incorrect" });
 
@@ -63,12 +63,12 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost("admin/login")]
 		public async Task<IActionResult> LoginAdmin([FromBody] LoginDTO auth)
 		{
+			if (auth == null) return Unauthorized();
+
 			var hashedPassword = GetHashSha256(auth.MotDePasse);
 			var user = await _context.Utilisateurs
 				.Include(u => u.IdProfilNavigation)
 				.FirstOrDefaultAsync(u => u.Email == auth.Email && u.MotDePasse == hashedPassword && u.IdProfilNavigation.Nom == "Administrateur");
-
-			if (auth == null) return Unauthorized();
 
 			if (user == null) return Ok(new { error = "Email ou mot de passe incorrect" });
 

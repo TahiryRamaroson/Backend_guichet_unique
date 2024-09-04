@@ -344,9 +344,7 @@ public partial class GuichetUniqueContext : DbContext
                 .HasColumnName("cin");
             entity.Property(e => e.DateNaissance).HasColumnName("date_naissance");
             entity.Property(e => e.IdMenage).HasColumnName("id_menage");
-            entity.Property(e => e.IsChef)
-                .HasMaxLength(50)
-                .HasColumnName("is_chef");
+            entity.Property(e => e.IsChef).HasColumnName("is_chef");
             entity.Property(e => e.Nom)
                 .HasMaxLength(50)
                 .HasColumnName("nom");

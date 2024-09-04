@@ -12,10 +12,12 @@ using System.Security.Cryptography.Pkcs;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "AdministrateurPolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class HistoriqueApplicationsController : ControllerBase
     {
@@ -143,6 +145,19 @@ namespace Backend_guichet_unique.Controllers
 			await _context.SaveChangesAsync();
 
 			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "historiqueApplication" + DateTime.Now.ToString() + ".csv");
+		}
+
+		// fonction pour récupérer les actions dans le fichier de configuration
+		[HttpGet("action")]
+		public ActionResult<IEnumerable<string>> GetActions()
+		{
+			var actions = new List<string>();
+			var actionsConfig = _configuration.GetSection("Action").GetChildren();
+			foreach (var action in actionsConfig)
+			{
+				actions.Add(action.Value);
+			}
+			return Ok(actions);
 		}
 
 		[HttpGet("composant")]

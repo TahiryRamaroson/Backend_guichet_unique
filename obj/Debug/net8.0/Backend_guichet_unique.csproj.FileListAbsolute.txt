@@ -267,3 +267,14 @@ D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\runtimes\osx-x64\
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\runtimes\win-x64\native\FastTreeNative.dll
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\runtimes\win-x86\native\FastTreeNative.dll
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\MegaApiClient.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Firebase.Auth.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\FirebaseAdmin.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Firebase.Storage.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Google.Api.Gax.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Google.Api.Gax.Rest.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Google.Apis.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Google.Apis.Auth.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Google.Apis.Core.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.ServiceModel.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.Management.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll

@@ -57,6 +57,14 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
+            "FirebaseAdmin": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "FirebaseStorage.net": {
+              "target": "Package",
+              "version": "[1.0.3, )"
+            },
             "MegaApiClient": {
               "target": "Package",
               "version": "[1.10.4, )"

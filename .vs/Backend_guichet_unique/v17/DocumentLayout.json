@@ -7,28 +7,12 @@
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\naissancescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\megauploader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\megauploader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\naissanceformdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\naissanceformdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\communescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\communescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\services\\naissancemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:services\\naissancemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\naissance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,33 +26,35 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAEkAAAAAAAAAAAAAAFgAAAAAAAAA",
+              "ViewState": "AQIAAEkAAAAAAAAAAAAAAFkAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-19T06:42:04.389Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAIAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-09-02T09:13:11.246Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -80,76 +66,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MegaUploader.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\MegaUploader.cs",
-              "RelativeDocumentMoniker": "Models\\MegaUploader.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\MegaUploader.cs",
-              "RelativeToolTip": "Models\\MegaUploader.cs",
-              "ViewState": "AQIAABcAAAAAAAAAAAAgwCMAAAADAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-04T13:04:01.347Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CommunesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CommunesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CommunesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CommunesController.cs",
-              "RelativeToolTip": "Controllers\\CommunesController.cs",
-              "ViewState": "AQIAAE4BAAAAAAAAAAA0wH0BAAAyAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-04T12:02:16.892Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "NaissanceMapper.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Services\\NaissanceMapper.cs",
-              "RelativeDocumentMoniker": "Services\\NaissanceMapper.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Services\\NaissanceMapper.cs",
-              "RelativeToolTip": "Services\\NaissanceMapper.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-04T11:54:22.274Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "NaissanceFormDTO.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\NaissanceFormDTO.cs",
-              "RelativeDocumentMoniker": "Models\\DTO\\NaissanceFormDTO.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\NaissanceFormDTO.cs",
-              "RelativeToolTip": "Models\\DTO\\NaissanceFormDTO.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAADwvwUAAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-04T11:49:01.773Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "NaissancesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\NaissancesController.cs",
               "RelativeDocumentMoniker": "Controllers\\NaissancesController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\NaissancesController.cs",
               "RelativeToolTip": "Controllers\\NaissancesController.cs",
-              "ViewState": "AQIAAHMAAAAAAAAAAAAwwIYAAAAAAAAA",
+              "ViewState": "AQIAAHQAAAAAAAAAAAAqwIIAAABaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-04T11:13:28.5Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "Naissance.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\Naissance.cs",
               "RelativeDocumentMoniker": "Models\\Naissance.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\Naissance.cs",
               "RelativeToolTip": "Models\\Naissance.cs",
-              "ViewState": "AQIAABsAAAAAAAAAAAAowBgAAAAAAAAA",
+              "ViewState": "AQIAABsAAAAAAAAAAAA7wBgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-04T11:46:46.217Z"
+              "WhenOpened": "2024-09-04T11:46:46.217Z",
+              "EditorCaption": ""
             }
           ]
         }

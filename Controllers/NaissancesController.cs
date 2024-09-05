@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend_guichet_unique.Models;
 using Backend_guichet_unique.Models.DTO;
 using AutoMapper;
+using Firebase.Storage;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -17,15 +18,11 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
         private readonly IMapper _mapper;
-		private readonly MegaUploader _megaUploader;
-        private readonly IConfiguration _configuration;
 
-		public NaissancesController(GuichetUniqueContext context, IMapper mapper, MegaUploader megaUploader, IConfiguration configuration)
+		public NaissancesController(GuichetUniqueContext context, IMapper mapper)
 		{
 			_context = context;
 			_mapper = mapper;
-			_megaUploader = megaUploader;
-			_configuration = configuration;
 		}
 
 		[HttpGet("mere/{idMenage}")]
@@ -118,29 +115,27 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
+			//var firebaseStorage = await new FirebaseStorage("guichet-unique-upload.appspot.com")
+			//	.Child("naissance")
+			//	.Child(naissanceDto.PieceJustificative.FileName)
+			//	.PutAsync(naissanceDto.PieceJustificative.OpenReadStream());
+
 			var naissance = _mapper.Map<Naissance>(naissanceDto);
 
-			var filePath = Path.GetTempFileName();
-
-			using (var stream = new FileStream(filePath, FileMode.Create))
-			{
-				await naissanceDto.PieceJustificative.CopyToAsync(stream);
-			}
-
-			await _megaUploader.LoginAsync(_configuration["MegaApi:Email"], _configuration["MegaApi:PWD"]);
-			var fileId = await _megaUploader.UploadFileAsync(filePath, "Naissance");
-			var shareableLink = await _megaUploader.GetShareableLinkAsync(fileId);
-			naissance.PieceJustificative = shareableLink;
-			await _megaUploader.LogoutAsync();
+            //naissance.PieceJustificative = firebaseStorage;
+            naissance.PieceJustificative = "-----------";
 
 			_context.Naissances.Add(naissance);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetNaissance", new { id = naissance.Id }, naissance);
+			// envoyer un email à henitsoaramaroson@gmail.com pour notifier l'ajout d'une naissance
+
+
+			return CreatedAtAction("GetNaissance", new { id = naissance.Id }, naissance);
         }
 
-        // DELETE: api/Naissances/5
-        [HttpDelete("{id}")]
+            // DELETE: api/Naissances/5
+            [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNaissance(int id)
         {
             var naissance = await _context.Naissances.FindAsync(id);

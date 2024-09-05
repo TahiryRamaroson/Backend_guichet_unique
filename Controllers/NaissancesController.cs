@@ -9,6 +9,9 @@ using Backend_guichet_unique.Models;
 using Backend_guichet_unique.Models.DTO;
 using AutoMapper;
 using Firebase.Storage;
+using Backend_guichet_unique.Services;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -18,11 +21,13 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
         private readonly IMapper _mapper;
+		private readonly EmailService _emailService;
 
-		public NaissancesController(GuichetUniqueContext context, IMapper mapper)
+		public NaissancesController(GuichetUniqueContext context, IMapper mapper, EmailService emailService)
 		{
 			_context = context;
 			_mapper = mapper;
+			_emailService = emailService;
 		}
 
 		[HttpGet("mere/{idMenage}")]
@@ -126,9 +131,13 @@ namespace Backend_guichet_unique.Controllers
             naissance.PieceJustificative = "-----------";
 
 			_context.Naissances.Add(naissance);
-            await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
 
-			// envoyer un email à henitsoaramaroson@gmail.com pour notifier l'ajout d'une naissance
+            // envoyer un email à henitsoaramaroson@gmail.com pour notifier l'ajout d'une naissance
+            string toEmail = "taxramaroson2@gmail.com";
+			string subject = "Nouvelle naissance";
+			string body = "Une nouvelle naissance a été enregistrée.";
+			await _emailService.SendEmailAsync(toEmail, subject, body);
 
 
 			return CreatedAtAction("GetNaissance", new { id = naissance.Id }, naissance);

@@ -278,3 +278,7 @@ D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\Google.Apis.Core.
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.ServiceModel.dll
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.Management.dll
 D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\MailKit.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\MimeKit.dll
+D:\ITU\S6\Stage\Projet\Backend_guichet_unique\bin\Debug\net8.0\System.Formats.Asn1.dll

@@ -88,6 +88,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MegaUploader>();
+builder.Services.AddSingleton<EmailService>();
 
 builder.Services.AddDbContext<GuichetUniqueContext>(options =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));

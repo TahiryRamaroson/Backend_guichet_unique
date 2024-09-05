@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Globalization;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,9 +84,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<MegaUploader>();
 
 builder.Services.AddDbContext<GuichetUniqueContext>(options =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
@@ -100,6 +102,7 @@ builder.Services.AddAutoMapper(typeof(FokontanyMapper));
 builder.Services.AddAutoMapper(typeof(CrudMapper));
 builder.Services.AddAutoMapper(typeof(HistoriqueApplicationMapper));
 builder.Services.AddAutoMapper(typeof(MenageMapper));
+builder.Services.AddAutoMapper(typeof(NaissanceMapper));
 
 var app = builder.Build();
 

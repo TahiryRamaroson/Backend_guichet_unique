@@ -9,10 +9,13 @@ using Backend_guichet_unique.Models;
 using Backend_guichet_unique.Models.DTO;
 using AutoMapper;
 using DocumentFormat.OpenXml.ExtendedProperties;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "IntervenantPolicy")]
+	[Authorize(Policy = "ResponsablePolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class MenagesController : ControllerBase
     {

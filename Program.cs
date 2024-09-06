@@ -51,6 +51,9 @@ builder.Services.AddAuthorization(options =>
 	options.AddPolicy("AdministrateurPolicy", policy => policy.RequireRole("Administrateur"));
 	options.AddPolicy("IntervenantPolicy", policy => policy.RequireRole("Intervenant sociaux"));
 	options.AddPolicy("ResponsablePolicy", policy => policy.RequireRole("Responsable guichet unique"));
+	options.AddPolicy("IntervenantOuResponsablePolicy", policy =>
+		policy.RequireAssertion(context =>
+			context.User.IsInRole("Intervenant sociaux") || context.User.IsInRole("Responsable guichet unique")));
 });
 
 builder.Services.AddSwaggerGen(c =>

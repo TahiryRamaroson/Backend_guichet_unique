@@ -21,7 +21,9 @@ public partial class Dece
 
     public int? IdResponsable { get; set; }
 
-    public virtual CauseDece IdCauseDecesNavigation { get; set; } = null!;
+    public int Statut { get; set; }
+
+	public virtual CauseDece IdCauseDecesNavigation { get; set; } = null!;
 
     public virtual Individu IdDefuntNavigation { get; set; } = null!;
 

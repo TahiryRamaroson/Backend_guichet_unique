@@ -154,8 +154,9 @@ public partial class GuichetUniqueContext : DbContext
             entity.Property(e => e.IdIntervenant).HasColumnName("id_intervenant");
             entity.Property(e => e.IdResponsable).HasColumnName("id_responsable");
             entity.Property(e => e.PieceJustificative).HasColumnName("piece_justificative");
+			entity.Property(e => e.Statut).HasColumnName("statut");
 
-            entity.HasOne(d => d.IdCauseDecesNavigation).WithMany(p => p.Deces)
+			entity.HasOne(d => d.IdCauseDecesNavigation).WithMany(p => p.Deces)
                 .HasForeignKey(d => d.IdCauseDeces)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("deces_id_cause_deces_fkey");
@@ -355,8 +356,9 @@ public partial class GuichetUniqueContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("prenom");
             entity.Property(e => e.Sexe).HasColumnName("sexe");
+            entity.Property(e => e.Statut).HasColumnName("statut");
 
-            entity.HasOne(d => d.IdMenageNavigation).WithMany(p => p.Individus)
+			entity.HasOne(d => d.IdMenageNavigation).WithMany(p => p.Individus)
                 .HasForeignKey(d => d.IdMenage)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("individu_id_menage_fkey");

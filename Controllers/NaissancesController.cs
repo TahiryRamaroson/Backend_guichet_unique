@@ -535,7 +535,8 @@ namespace Backend_guichet_unique.Controllers
 						DateNaissance = naissance.DateNaissance,
 						IdMenage = naissance.IdMenage,
 						NumActeNaissance = naissance.NumActeNaissance,
-						IsChef = -1
+						IsChef = -1,
+						Statut = 1
 					};
 					_context.Individus.Add(individu);
 
@@ -631,7 +632,8 @@ namespace Backend_guichet_unique.Controllers
 							DateNaissance = naissance.DateNaissance,
 							IdMenage = naissance.IdMenage,
 							NumActeNaissance = naissance.NumActeNaissance,
-							IsChef = -1
+							IsChef = -1,
+							Statut = 1
 						};
 						_context.Individus.Add(individu);
 

@@ -23,7 +23,9 @@ public partial class Individu
     public int IsChef { get; set; }
 
     public int IdMenage { get; set; }
-    [JsonIgnore]
+
+	public int Statut { get; set; }
+	[JsonIgnore]
     public virtual ICollection<Dece> Deces { get; set; } = new List<Dece>();
 	[JsonIgnore]
 	public virtual ICollection<Grossesse> Grossesses { get; set; } = new List<Grossesse>();

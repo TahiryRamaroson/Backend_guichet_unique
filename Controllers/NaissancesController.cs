@@ -354,15 +354,21 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<Individu>>> GetMere(int idMenage)
 		{
 			var mere = await _context.Individus
-				.Where(i => (i.IdMenage == idMenage && i.Sexe == 0))
+				.Where(i => i.IdMenage == idMenage && i.Sexe == 0)
+				.Join(_context.Grossesses,
+					  individu => individu.Id,
+					  grossesse => grossesse.IdMere,
+					  (individu, grossesse) => new { Individu = individu, Grossesse = grossesse })
+				.Where(joined => joined.Grossesse.StatutGrossesse == 0 && joined.Grossesse.Statut == 5)
+				.Select(joined => joined.Individu)
 				.ToListAsync();
 
-			if (mere == null)
+			if (mere == null || !mere.Any())
 			{
-				return NotFound();
+				return Ok(new { error = "Aucune femme de ce ménage n’a été enregistrée comme étant enceinte" });
 			}
 
-			return mere;
+			return Ok(mere);
 		}
 
 		[HttpGet("pere/{idMenage}")]
@@ -562,6 +568,15 @@ namespace Backend_guichet_unique.Controllers
 							IdTypeLien = 2
 						};
 						_context.LienParentes.Add(lienMere);
+
+						var grossesse = await _context.Grossesses
+							.FirstOrDefaultAsync(g => g.IdMere == naissance.IdMere && g.StatutGrossesse == 0);
+
+						if (grossesse != null)
+						{
+							grossesse.Statut = 5;
+							_context.Entry(grossesse).State = EntityState.Modified;
+						}
 					}
 
 					await _context.SaveChangesAsync();
@@ -659,6 +674,15 @@ namespace Backend_guichet_unique.Controllers
 								IdTypeLien = 2
 							};
 							_context.LienParentes.Add(lienMere);
+
+							var grossesse = await _context.Grossesses
+								.FirstOrDefaultAsync(g => g.IdMere == naissance.IdMere && g.StatutGrossesse == 0);
+
+							if (grossesse != null)
+							{
+								grossesse.Statut = 5;
+								_context.Entry(grossesse).State = EntityState.Modified;
+							}
 						}
 					}
 
@@ -694,15 +718,16 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPut("refuser/{id}")]
 		public async Task<IActionResult> RejectNaissance(int id)
 		{
-			var naissance = await _context.Naissances.FindAsync(id);
-			naissance.Statut = -5;
-
-			_context.Entry(naissance).State = EntityState.Modified;
-
 			var token = Request.Headers["Authorization"].ToString().Substring(7);
 			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
 			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
 			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var naissance = await _context.Naissances.FindAsync(id);
+			naissance.Statut = -5;
+			naissance.IdResponsable = int.Parse(idu);
+
+			_context.Entry(naissance).State = EntityState.Modified;
 
 			var historiqueApplication = new HistoriqueApplication();
 			historiqueApplication.Action = _configuration["Action:Reject"];
@@ -736,18 +761,19 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPut("refuser")]
 		public async Task<IActionResult> RejectNaissances([FromBody] List<int> ids)
 		{
-			foreach (var id in ids)
-			{
-				var naissance = await _context.Naissances.FindAsync(id);
-				naissance.Statut = -5;
-
-				_context.Entry(naissance).State = EntityState.Modified;
-			}
-
 			var token = Request.Headers["Authorization"].ToString().Substring(7);
 			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
 			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
 			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			foreach (var id in ids)
+			{
+				var naissance = await _context.Naissances.FindAsync(id);
+				naissance.Statut = -5;
+				naissance.IdResponsable = int.Parse(idu);
+
+				_context.Entry(naissance).State = EntityState.Modified;
+			}
 
 			var historiqueApplication = new HistoriqueApplication();
 			historiqueApplication.Action = _configuration["Action:Reject"];
@@ -774,6 +800,16 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost]
         public async Task<ActionResult<Naissance>> PostNaissance(NaissanceFormDTO naissanceDto)
         {
+			if (naissanceDto.PieceJustificative.Length < 0 || naissanceDto.PieceJustificative == null)
+			{
+				return Ok(new { error = "La pièce justificative est obligatoire" });
+			}
+
+			if (naissanceDto.DateNaissance > DateOnly.FromDateTime(DateTime.Now))
+			{
+				return Ok(new { error = "La date de naissance doit être inférieure à la date du jour" });
+			}
+
 			if (naissanceDto.PieceJustificative.Length > 10485760) // (10 MB)
 			{
 				return Ok(new { error = "Le fichier est trop volumineux." });

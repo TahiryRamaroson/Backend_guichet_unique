@@ -19,7 +19,9 @@ public partial class Grossesse
 
     public int Statut { get; set; }
 
-    public int IdMere { get; set; }
+    public int StatutGrossesse { get; set; }
+
+	public int IdMere { get; set; }
 
     public int IdIntervenant { get; set; }
 

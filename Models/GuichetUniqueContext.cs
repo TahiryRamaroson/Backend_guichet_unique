@@ -228,8 +228,9 @@ public partial class GuichetUniqueContext : DbContext
             entity.Property(e => e.PieceJustificative).HasColumnName("piece_justificative");
             entity.Property(e => e.RisqueComplication).HasColumnName("risque_complication");
             entity.Property(e => e.Statut).HasColumnName("statut");
+			entity.Property(e => e.StatutGrossesse).HasColumnName("statut_grossesse");
 
-            entity.HasOne(d => d.IdIntervenantNavigation).WithMany(p => p.GrossesseIdIntervenantNavigations)
+			entity.HasOne(d => d.IdIntervenantNavigation).WithMany(p => p.GrossesseIdIntervenantNavigations)
                 .HasForeignKey(d => d.IdIntervenant)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("grossesse_id_intervenant_fkey");

@@ -594,15 +594,16 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPut("refuser/{id}")]
 		public async Task<IActionResult> RejectDece(int id)
 		{
-			var dece = await _context.Deces.FindAsync(id);
-			dece.Statut = -5;
-
-			_context.Entry(dece).State = EntityState.Modified;
-
 			var token = Request.Headers["Authorization"].ToString().Substring(7);
 			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
 			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
 			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var dece = await _context.Deces.FindAsync(id);
+			dece.Statut = -5;
+			dece.IdResponsable = int.Parse(idu);
+
+			_context.Entry(dece).State = EntityState.Modified;
 
 			var historiqueApplication = new HistoriqueApplication();
 			historiqueApplication.Action = _configuration["Action:Reject"];
@@ -636,18 +637,19 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPut("refuser")]
 		public async Task<IActionResult> RejectDeces([FromBody] List<int> ids)
 		{
-			foreach (var id in ids)
-			{
-				var dece = await _context.Deces.FindAsync(id);
-				dece.Statut = -5;
-
-				_context.Entry(dece).State = EntityState.Modified;
-			}
-
 			var token = Request.Headers["Authorization"].ToString().Substring(7);
 			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
 			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
 			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			foreach (var id in ids)
+			{
+				var dece = await _context.Deces.FindAsync(id);
+				dece.Statut = -5;
+				dece.IdResponsable = int.Parse(idu);
+
+				_context.Entry(dece).State = EntityState.Modified;
+			}
 
 			var historiqueApplication = new HistoriqueApplication();
 			historiqueApplication.Action = _configuration["Action:Reject"];
@@ -674,6 +676,16 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost]
         public async Task<ActionResult<Dece>> PostDece(DeceFormDTO deceDto)
         {
+			if (deceDto.PieceJustificative.Length < 0 || deceDto.PieceJustificative == null)
+			{
+				return Ok(new { error = "La pièce justificative est obligatoire" });
+			}
+
+			if (deceDto.DateDeces > DateOnly.FromDateTime(DateTime.Now))
+			{
+				return Ok(new { error = "La date de décès doit être inférieure à la date du jour" });
+			}
+
 			if (deceDto.PieceJustificative.Length > 10485760) // (10 MB)
 			{
 				return Ok(new { error = "Le fichier est trop volumineux." });

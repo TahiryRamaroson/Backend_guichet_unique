@@ -108,6 +108,7 @@ builder.Services.AddAutoMapper(typeof(HistoriqueApplicationMapper));
 builder.Services.AddAutoMapper(typeof(MenageMapper));
 builder.Services.AddAutoMapper(typeof(NaissanceMapper));
 builder.Services.AddAutoMapper(typeof(DecesMapper));
+builder.Services.AddAutoMapper(typeof(GrossesseMapper));
 
 var app = builder.Build();
 

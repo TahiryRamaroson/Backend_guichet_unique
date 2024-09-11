@@ -18,7 +18,7 @@
 
 		public int StatutGrossesse { get; set; }
 
-		public Individu Mere { get; set; }
+		public IndividuDTO Mere { get; set; }
 
 		public Utilisateur Intervenant { get; set; }
 

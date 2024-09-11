@@ -815,7 +815,7 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage("guichet-unique-upload.appspot.com")
+			//var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
 			//	.Child("naissance")
 			//	.Child(naissanceDto.PieceJustificative.FileName)
 			//	.PutAsync(naissanceDto.PieceJustificative.OpenReadStream());

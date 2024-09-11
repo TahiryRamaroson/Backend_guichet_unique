@@ -13,9 +13,9 @@ public partial class MigrationSortante
 
     public int StatutDepart { get; set; }
 
-    public DateTime? DureeAbsence { get; set; }
+    public double? DureeAbsence { get; set; }
 
-    public int NouveauMenage { get; set; }
+    public int? NouveauMenage { get; set; }
 
     public string? Adresse { get; set; }
 
@@ -27,7 +27,7 @@ public partial class MigrationSortante
 
     public int IdIndividu { get; set; }
 
-    public int IdFokontanyDestination { get; set; }
+    public int? IdFokontanyDestination { get; set; }
 
     public int IdIntervenant { get; set; }
 

@@ -109,6 +109,7 @@ builder.Services.AddAutoMapper(typeof(MenageMapper));
 builder.Services.AddAutoMapper(typeof(NaissanceMapper));
 builder.Services.AddAutoMapper(typeof(DecesMapper));
 builder.Services.AddAutoMapper(typeof(GrossesseMapper));
+builder.Services.AddAutoMapper(typeof(MigrationSortanteMapper));
 
 var app = builder.Build();
 

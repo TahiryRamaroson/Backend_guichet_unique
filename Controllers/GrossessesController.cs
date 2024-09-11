@@ -479,6 +479,7 @@ namespace Backend_guichet_unique.Controllers
 			var grossesses = await query
 				.Where(n => n.Statut != -5)
 				.Include(grossesse => grossesse.IdMereNavigation)
+					.ThenInclude(m => m.IdMenageNavigation)
 				.Include(grossesse => grossesse.IdIntervenantNavigation)
 				.Include(grossesse => grossesse.IdResponsableNavigation)
 				.Include(grossesse => grossesse.IdAntecedentMedicauxes)
@@ -507,6 +508,7 @@ namespace Backend_guichet_unique.Controllers
 			var grossesses = await _context.Grossesses
 				.Where(grossesse => grossesse.Statut != -5)
 				.Include(grossesse => grossesse.IdMereNavigation)
+					.ThenInclude(m => m.IdMenageNavigation)
 				.Include(grossesse => grossesse.IdIntervenantNavigation)
 				.Include(grossesse => grossesse.IdResponsableNavigation)
 				.Include(grossesse => grossesse.IdAntecedentMedicauxes)
@@ -524,7 +526,8 @@ namespace Backend_guichet_unique.Controllers
         {
             var grossesses = await _context.Grossesses
                 .Include(grossesse => grossesse.IdMereNavigation)
-                .Include(grossesse => grossesse.IdIntervenantNavigation)
+					.ThenInclude(m => m.IdMenageNavigation)
+				.Include(grossesse => grossesse.IdIntervenantNavigation)
 				.Include(grossesse => grossesse.IdResponsableNavigation)
 				.Include(grossesse => grossesse.IdAntecedentMedicauxes)
 				.ToListAsync();
@@ -539,6 +542,7 @@ namespace Backend_guichet_unique.Controllers
         {
 			var grossesse = await _context.Grossesses
 				.Include(grossesse => grossesse.IdMereNavigation)
+					.ThenInclude(m => m.IdMenageNavigation)
 				.Include(grossesse => grossesse.IdIntervenantNavigation)
 				.Include(grossesse => grossesse.IdResponsableNavigation)
 				.Include(grossesse => grossesse.IdAntecedentMedicauxes)
@@ -775,7 +779,7 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage("guichet-unique-upload.appspot.com")
+			//var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
 			//	.Child("grossesse")
 			//	.Child(grossesseDto.PieceJustificative.FileName)
 			//	.PutAsync(grossesseDto.PieceJustificative.OpenReadStream());

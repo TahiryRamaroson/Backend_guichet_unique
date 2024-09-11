@@ -479,9 +479,7 @@ public partial class GuichetUniqueContext : DbContext
                 .HasColumnName("adresse");
             entity.Property(e => e.DateDepart).HasColumnName("date_depart");
             entity.Property(e => e.Destination).HasColumnName("destination");
-            entity.Property(e => e.DureeAbsence)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("duree_absence");
+            entity.Property(e => e.DureeAbsence).HasColumnName("duree_absence");
             entity.Property(e => e.IdFokontanyDestination).HasColumnName("id_fokontany_destination");
             entity.Property(e => e.IdIndividu).HasColumnName("id_individu");
             entity.Property(e => e.IdIntervenant).HasColumnName("id_intervenant");
@@ -494,7 +492,6 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.HasOne(d => d.IdFokontanyDestinationNavigation).WithMany(p => p.MigrationSortantes)
                 .HasForeignKey(d => d.IdFokontanyDestination)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("migration_sortante_id_fokontany_destination_fkey");
 
             entity.HasOne(d => d.IdIndividuNavigation).WithMany(p => p.MigrationSortantes)

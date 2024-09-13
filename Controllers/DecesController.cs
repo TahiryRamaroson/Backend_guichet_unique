@@ -351,7 +351,7 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<Individu>>> GetDefunt(int idMenage)
 		{
 			var defunt = await _context.Individus
-				.Where(i => (i.IdMenage == idMenage))
+				.Where(i => i.IdMenage == idMenage && i.Statut == 1)
 				.ToListAsync();
 
 			if (defunt == null)

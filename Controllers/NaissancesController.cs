@@ -354,7 +354,7 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<Individu>>> GetMere(int idMenage)
 		{
 			var mere = await _context.Individus
-				.Where(i => i.IdMenage == idMenage && i.Sexe == 0)
+				.Where(i => i.IdMenage == idMenage && i.Sexe == 0 && i.Statut == 1)
 				.Join(_context.Grossesses,
 					  individu => individu.Id,
 					  grossesse => grossesse.IdMere,
@@ -375,7 +375,7 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<Individu>>> GetPere(int idMenage)
 		{
 			var pere = await _context.Individus
-				.Where(i => (i.IdMenage == idMenage && i.Sexe == 1))
+				.Where(i => i.IdMenage == idMenage && i.Sexe == 1 && i.Statut == 1)
                 .ToListAsync();
 
 			if (pere == null)

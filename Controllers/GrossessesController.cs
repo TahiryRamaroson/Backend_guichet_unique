@@ -424,7 +424,7 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<Individu>>> GetMere(int idMenage)
 		{
 			var mere = await _context.Individus
-				.Where(i => i.IdMenage == idMenage && i.Sexe == 0)
+				.Where(i => i.IdMenage == idMenage && i.Sexe == 0 && i.Statut == 1)
 				.GroupJoin(_context.Grossesses,
 					individu => individu.Id,
 					grossesse => grossesse.IdMere,

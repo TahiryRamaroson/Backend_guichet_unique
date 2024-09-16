@@ -433,9 +433,7 @@ public partial class GuichetUniqueContext : DbContext
             entity.Property(e => e.IdResponsable).HasColumnName("id_responsable");
             entity.Property(e => e.PieceJustificative).HasColumnName("piece_justificative");
             entity.Property(e => e.Statut).HasColumnName("statut");
-            entity.Property(e => e.StatutResidence)
-                .HasMaxLength(50)
-                .HasColumnName("statut_residence");
+            entity.Property(e => e.StatutResidence).HasColumnName("statut_residence");
 
             entity.HasOne(d => d.IdAncienMenageNavigation).WithMany(p => p.MigrationEntranteIdAncienMenageNavigations)
                 .HasForeignKey(d => d.IdAncienMenage)

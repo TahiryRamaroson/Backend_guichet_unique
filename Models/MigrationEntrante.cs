@@ -9,7 +9,7 @@ public partial class MigrationEntrante
 
     public DateOnly DateArrivee { get; set; }
 
-    public string StatutResidence { get; set; } = null!;
+    public int StatutResidence { get; set; }
 
     public DateOnly? DateRentree { get; set; }
 

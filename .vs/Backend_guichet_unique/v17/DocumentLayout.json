@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\migrationentrantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\migrationentrantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\migrationentrante.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\migrationentrante.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\migrationentrantedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\migrationentrantedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\migrationsortantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\migrationsortantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\decescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\decescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\utilisateurscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\utilisateurscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\individudto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\individudto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\filtremigrationentrantedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\filtremigrationentrantedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,24 +38,25 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAGAAAAAAAAAAAAAAAG8AAABAAAAA",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAAAG4AAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-19T06:42:04.389Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -72,53 +77,67 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UtilisateursController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\UtilisateursController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UtilisateursController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\UtilisateursController.cs",
-              "RelativeToolTip": "Controllers\\UtilisateursController.cs",
-              "ViewState": "AQIAAJUAAAAAAAAAAAAswKYAAABEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-13T04:59:06.6Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IndividuDTO.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\IndividuDTO.cs",
-              "RelativeDocumentMoniker": "Models\\DTO\\IndividuDTO.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\IndividuDTO.cs",
-              "RelativeToolTip": "Models\\DTO\\IndividuDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-10T13:32:57.244Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "DecesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\DecesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\DecesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\DecesController.cs",
-              "RelativeToolTip": "Controllers\\DecesController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABIAAAABAAAA",
+              "Title": "MigrationEntrante.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\MigrationEntrante.cs",
+              "RelativeDocumentMoniker": "Models\\MigrationEntrante.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\MigrationEntrante.cs",
+              "RelativeToolTip": "Models\\MigrationEntrante.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-10T07:15:53.709Z",
+              "WhenOpened": "2024-09-16T09:15:01.43Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "MigrationEntrantesController.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationEntrantesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MigrationEntrantesController.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationEntrantesController.cs",
+              "RelativeToolTip": "Controllers\\MigrationEntrantesController.cs",
+              "ViewState": "AQIAAJMCAAAAAAAAAAAIwBQDAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-16T05:15:44.807Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MigrationSortantesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationSortantesController.cs",
               "RelativeDocumentMoniker": "Controllers\\MigrationSortantesController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationSortantesController.cs",
               "RelativeToolTip": "Controllers\\MigrationSortantesController.cs",
-              "ViewState": "AQIAAI0CAAAAAAAAAAAmwOkCAAAgAAAA",
+              "ViewState": "AQIAABQAAAAAAAAAAAAxwH0AAAADAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-10T11:18:30.543Z",
+              "WhenOpened": "2024-09-16T06:09:50.506Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FiltreMigrationEntranteDTO.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreMigrationEntranteDTO.cs",
+              "RelativeDocumentMoniker": "Models\\DTO\\FiltreMigrationEntranteDTO.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\FiltreMigrationEntranteDTO.cs",
+              "RelativeToolTip": "Models\\DTO\\FiltreMigrationEntranteDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-16T07:17:30.174Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MigrationEntranteDTO.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\MigrationEntranteDTO.cs",
+              "RelativeDocumentMoniker": "Models\\DTO\\MigrationEntranteDTO.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\MigrationEntranteDTO.cs",
+              "RelativeToolTip": "Models\\DTO\\MigrationEntranteDTO.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAA1wBoAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-16T06:40:15.73Z",
               "EditorCaption": ""
             }
           ]

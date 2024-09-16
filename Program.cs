@@ -110,6 +110,7 @@ builder.Services.AddAutoMapper(typeof(NaissanceMapper));
 builder.Services.AddAutoMapper(typeof(DecesMapper));
 builder.Services.AddAutoMapper(typeof(GrossesseMapper));
 builder.Services.AddAutoMapper(typeof(MigrationSortanteMapper));
+builder.Services.AddAutoMapper(typeof(MigrationEntranteMapper));
 
 var app = builder.Build();
 

@@ -768,19 +768,19 @@ namespace Backend_guichet_unique.Controllers
 
 			_context.MigrationSortantes.Add(migrationSortante);
 
-			//var token = Request.Headers["Authorization"].ToString().Substring(7);
-			//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-			//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-			//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
-			//var historiqueApplication = new HistoriqueApplication();
-			//historiqueApplication.Action = _configuration["Action:Create"];
-			//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
-			//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
-			//historiqueApplication.DateAction = DateTime.Now;
-			//historiqueApplication.IdUtilisateur = int.Parse(idu);
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Create"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
 
-			//_context.HistoriqueApplications.Add(historiqueApplication);
+			_context.HistoriqueApplications.Add(historiqueApplication);
 
 			await _context.SaveChangesAsync();
 

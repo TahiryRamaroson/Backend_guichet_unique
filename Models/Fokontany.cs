@@ -19,4 +19,6 @@ public partial class Fokontany
 	public virtual ICollection<MigrationSortante> MigrationSortantes { get; set; } = new List<MigrationSortante>();
 	[JsonIgnore]
 	public virtual ICollection<Naissance> Naissances { get; set; } = new List<Naissance>();
+	[JsonIgnore]
+	public virtual ICollection<Plainte> Plaintes { get; set; } = new List<Plainte>();
 }

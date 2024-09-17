@@ -596,10 +596,16 @@ public partial class GuichetUniqueContext : DbContext
             entity.Property(e => e.IdIntervenant).HasColumnName("id_intervenant");
             entity.Property(e => e.IdResponsable).HasColumnName("id_responsable");
             entity.Property(e => e.IdVictime).HasColumnName("id_victime");
-            entity.Property(e => e.Statut).HasColumnName("statut");
+			entity.Property(e => e.IdFokontanyFait).HasColumnName("id_fokontany_fait");
+			entity.Property(e => e.Statut).HasColumnName("statut");
             entity.Property(e => e.StatutTraitement).HasColumnName("statut_traitement");
 
-            entity.HasOne(d => d.IdCategoriePlainteNavigation).WithMany(p => p.Plaintes)
+			entity.HasOne(d => d.IdFokontanyFaitNavigation).WithMany(p => p.Plaintes)
+				.HasForeignKey(d => d.IdFokontanyFait)
+				.OnDelete(DeleteBehavior.ClientSetNull)
+				.HasConstraintName("plainte_id_fokontany_fait_fkey");
+
+			entity.HasOne(d => d.IdCategoriePlainteNavigation).WithMany(p => p.Plaintes)
                 .HasForeignKey(d => d.IdCategoriePlainte)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("plainte_id_categorie_plainte_fkey");

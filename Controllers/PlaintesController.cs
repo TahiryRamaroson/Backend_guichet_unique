@@ -13,6 +13,14 @@ using Microsoft.ML.Trainers;
 using System.Numerics;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Google;
+using AutoMapper;
+using Backend_guichet_unique.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
+using Npgsql;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -21,14 +29,18 @@ namespace Backend_guichet_unique.Controllers
     public class PlaintesController : ControllerBase
     {
         private readonly GuichetUniqueContext _context;
+		private readonly IMapper _mapper;
+		public IConfiguration _configuration;
 
-        public PlaintesController(GuichetUniqueContext context)
-        {
-            _context = context;
-        }
+		public PlaintesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		{
+			_context = context;
+			_mapper = mapper;
+			_configuration = configuration;
+		}
 
-		[HttpPost("entrainement")]
-		public async Task<ActionResult> EntrainerModel()
+		[HttpPost("entrainementCSV")]
+		public async Task<ActionResult> EntrainerModelCsv()
 		{
 			// Charger le contexte de machine learning
 			var mlContext = new MLContext();
@@ -58,6 +70,63 @@ namespace Backend_guichet_unique.Controllers
 			.Append(mlContext.Transforms.Concatenate("Features", "Features"))
 			.Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy())
 			.Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+
+			// Entraîner le modèle
+			ITransformer model = pipeline.Fit(data);
+
+			// Enregistrer le modèle
+			using (var fileStream = new FileStream("model.zip", FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
+				mlContext.Model.Save(model, data.Schema, fileStream);
+			}
+
+			return Ok(new { status = "200" });
+		}
+
+		[HttpPost("entrainementDatabase")]
+		public async Task<ActionResult> EntrainerModelDatabase()
+		{
+			// Charger le contexte de machine learning
+			var mlContext = new MLContext();
+
+			var plaintes = await _context.Plaintes
+					.Select(p => new PlainteModel
+					{
+						Description = p.Description,
+						Label = (uint)p.IdCategoriePlainte
+					})
+					.ToListAsync();
+
+			// afficher dans la console les plaintes
+			foreach (var plainte in plaintes)
+			{
+				Console.WriteLine($"Description : {plainte.Description} - Label : {plainte.Label}");
+			}
+
+			var data = mlContext.Data.LoadFromEnumerable(plaintes);
+
+				// Créer un pipeline de transformation de données et d'entraînement
+				var pipeline = mlContext.Transforms.Text.FeaturizeText("Features", new TextFeaturizingEstimator.Options
+				{
+					OutputTokensColumnName = "Tokens",
+					CaseMode = TextNormalizingEstimator.CaseMode.Lower,
+					KeepDiacritics = false,
+					KeepPunctuations = false,
+					StopWordsRemoverOptions = new StopWordsRemovingEstimator.Options
+					{
+						Language = TextFeaturizingEstimator.Language.French
+					},
+					WordFeatureExtractor = new WordBagEstimator.Options
+					{
+						NgramLength = 1,
+						UseAllLengths = true,
+						Weighting = NgramExtractingEstimator.WeightingCriteria.TfIdf
+					}
+				}, nameof(PlainteModel.Description))
+				.Append(mlContext.Transforms.Conversion.MapValueToKey("Label", nameof(PlainteModel.Label)))
+				.Append(mlContext.Transforms.Concatenate("Features", "Features"))
+				.Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy())
+				.Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
 			// Entraîner le modèle
 			ITransformer model = pipeline.Fit(data);
@@ -118,83 +187,806 @@ namespace Backend_guichet_unique.Controllers
 			}
 		}
 
+		[HttpPost("import/csv")]
+		public async Task<ActionResult> PlainteCSV(IFormFile file)
+		{
+			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			{
+				return Ok(new { error = "Le fichier doit être un fichier CSV" });
+			}
+
+			var stream = file.OpenReadStream();
+			using (var reader = new System.IO.StreamReader(stream))
+			{
+				string line;
+				bool isFirstLine = true;
+				var columnMapping = new Dictionary<string, int>();
+				var properties = typeof(Plainte).GetProperties()
+					.Where(p => !p.PropertyType.IsClass || p.PropertyType == typeof(string))
+					.Where(p => p.Name != "HistoriqueActionPlaintes")
+					.ToList();
+
+				while ((line = reader.ReadLine()) != null)
+				{
+					var values = line.Split(',');
+
+					if (isFirstLine)
+					{
+						for (int i = 0; i < values.Length; i++)
+						{
+							columnMapping[values[i]] = i;
+						}
+						isFirstLine = false;
+						continue;
+					}
+
+					var plainte = new Plainte();
+
+					foreach (var property in properties)
+					{
+						if (columnMapping.TryGetValue(property.Name, out int columnIndex))
+						{
+							var cellValue = values[columnIndex];
+							object convertedValue = null;
+
+							if (property.PropertyType == typeof(DateOnly))
+							{
+								convertedValue = DateOnly.Parse(cellValue);
+							}
+							else if (property.PropertyType == typeof(int))
+							{
+								convertedValue = int.Parse(cellValue);
+							}
+							else if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+							{
+								var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+								convertedValue = string.IsNullOrEmpty(cellValue) ? null : Convert.ChangeType(cellValue, underlyingType);
+							}
+							else
+							{
+								convertedValue = Convert.ChangeType(cellValue, property.PropertyType);
+							}
+
+							property.SetValue(plainte, convertedValue);
+						}
+					}
+
+					_context.Plaintes.Add(plainte);
+					await _context.SaveChangesAsync();
+				}
+
+				//var token = Request.Headers["Authorization"].ToString().Substring(7);
+				//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				//var historiqueApplication = new HistoriqueApplication();
+				//historiqueApplication.Action = _configuration["Action:Import"];
+				//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				//historiqueApplication.DateAction = DateTime.Now;
+				//historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				//_context.HistoriqueApplications.Add(historiqueApplication);
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateException ex)
+				{
+					var existingPlainteId = ex.Entries.First().Entity is Plainte existingPlainte ? existingPlainte.Id : (int?)null;
+					return Ok(new { error = $"La plainte avec l'id {existingPlainteId} existe déjà" });
+				}
+			}
+
+			return Ok(new { status = "200" });
+		}
+
+		[HttpPost("import/excel")]
+		public async Task<ActionResult> ImportPlainteExcel(IFormFile file)
+		{
+			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			{
+				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
+			}
+
+			var stream = file.OpenReadStream();
+			using (var document = SpreadsheetDocument.Open(stream, false))
+			{
+				var workbookPart = document.WorkbookPart;
+				var worksheetPart = workbookPart.WorksheetParts.First();
+				var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+				var rows = sheetData.Elements<Row>().ToList();
+
+				// Get the header row
+				var headerRow = rows.First();
+				var headerCells = headerRow.Elements<Cell>().ToList();
+				var columnMapping = new Dictionary<string, int>();
+
+				for (int i = 0; i < headerCells.Count; i++)
+				{
+					var cellValue = GetCellValue(document, headerCells[i]);
+					columnMapping[cellValue] = i;
+				}
+
+				var properties = typeof(Plainte).GetProperties()
+					.Where(p => !p.PropertyType.IsClass || p.PropertyType == typeof(string))
+					.Where(p => p.Name != "HistoriqueActionPlaintes")
+					.ToList();
+
+				foreach (var row in rows.Skip(1))
+				{
+					var cells = row.Elements<Cell>().ToList();
+					var plainte = new Plainte();
+
+					foreach (var property in properties)
+					{
+						if (columnMapping.TryGetValue(property.Name, out int columnIndex))
+						{
+							var cellValue = GetCellValue(document, cells[columnIndex]);
+							object convertedValue = null;
+
+							if (property.PropertyType == typeof(DateOnly))
+							{
+								convertedValue = DateOnly.Parse(cellValue);
+							}
+							else if (property.PropertyType == typeof(int))
+							{
+								convertedValue = int.Parse(cellValue);
+							}
+							else if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+							{
+								var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+								convertedValue = string.IsNullOrEmpty(cellValue) ? null : Convert.ChangeType(cellValue, underlyingType);
+							}
+							else
+							{
+								convertedValue = Convert.ChangeType(cellValue, property.PropertyType);
+							}
+
+							property.SetValue(plainte, convertedValue);
+						}
+					}
+
+					_context.Plaintes.Add(plainte);
+					await _context.SaveChangesAsync();
+				}
+
+				//var token = Request.Headers["Authorization"].ToString().Substring(7);
+				//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				//var historiqueApplication = new HistoriqueApplication();
+				//historiqueApplication.Action = _configuration["Action:Import"];
+				//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				//historiqueApplication.DateAction = DateTime.Now;
+				//historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				//_context.HistoriqueApplications.Add(historiqueApplication);
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateException ex)
+				{
+					var existingPlainteId = ex.Entries.First().Entity is Plainte existingPlainte ? existingPlainte.Id : (int?)null;
+					return Ok(new { error = $"La plainte avec l'id {existingPlainteId} existe déjà" });
+				}
+			}
+
+			return Ok(new { status = "200" });
+		}
+
+		private string GetCellValue(SpreadsheetDocument document, Cell cell)
+		{
+			var value = cell.CellValue?.Text;
+			if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+			{
+				return document.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(int.Parse(value)).InnerText;
+			}
+			return value;
+		}
+
+		[HttpGet("export/excel")]
+		public async Task<ActionResult> ExportPlainteExcel()
+		{
+			var plaintes = await _context.Plaintes.ToListAsync();
+
+			var properties = typeof(Plainte).GetProperties()
+				.Where(p => !p.PropertyType.IsClass || p.PropertyType == typeof(string))
+				.ToList();
+
+			var stream = new System.IO.MemoryStream();
+			using (var document = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook))
+			{
+				var workbookPart = document.AddWorkbookPart();
+				workbookPart.Workbook = new Workbook();
+				var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+				worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+				var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+				var sheet = new Sheet()
+				{
+					Id = document.WorkbookPart.GetIdOfPart(worksheetPart),
+					SheetId = 1,
+					Name = "Plainte"
+				};
+				sheets.Append(sheet);
+
+				var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+				// Add header row
+				var headerRow = new Row();
+				foreach (var property in properties.Where(p => p.Name != "HistoriqueActionPlaintes"))
+				{
+					headerRow.Append(new Cell() { CellValue = new CellValue(property.Name), DataType = CellValues.String });
+				}
+				sheetData.AppendChild(headerRow);
+
+				// Add data rows
+				foreach (var plainte in plaintes)
+				{
+					var row = new Row();
+					foreach (var property in properties.Where(p => p.Name != "HistoriqueActionPlaintes"))
+					{
+						var value = property.GetValue(plainte)?.ToString() ?? string.Empty;
+						row.Append(new Cell() { CellValue = new CellValue(value), DataType = CellValues.String });
+					}
+					sheetData.AppendChild(row);
+				}
+			}
+
+			stream.Position = 0;
+			var content = new FileContentResult(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+			{
+				FileDownloadName = "plainte" + DateTime.Now.ToString() + ".xlsx"
+			};
+
+			//var token = Request.Headers["Authorization"].ToString().Substring(7);
+			//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			//var historiqueApplication = new HistoriqueApplication();
+			//historiqueApplication.Action = _configuration["Action:Export"];
+			//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			//historiqueApplication.DateAction = DateTime.Now;
+			//historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			//_context.HistoriqueApplications.Add(historiqueApplication);
+
+			//await _context.SaveChangesAsync();
+
+			return content;
+		}
+
+		[HttpGet("export/csv")]
+		public async Task<IActionResult> ExportPlaintes()
+		{
+			var plaintes = await _context.Plaintes
+				.ToListAsync();
+
+			var builder = new System.Text.StringBuilder();
+
+			var properties = typeof(Plainte).GetProperties()
+				.Where(p => !p.PropertyType.IsClass || p.PropertyType == typeof(string))
+				.ToList();
+
+			builder.AppendLine(string.Join(",", properties
+				.Where(p => p.Name != "HistoriqueActionPlaintes")
+				.Select(p => p.Name)));
+
+			foreach (var plainte in plaintes)
+			{
+				var values = properties
+					.Where(p => p.Name != "HistoriqueActionPlaintes")
+					.Select(p => p.GetValue(plainte)?.ToString() ?? string.Empty)
+					.ToList();
+				builder.AppendLine(string.Join(",", values));
+			}
+
+			//var token = Request.Headers["Authorization"].ToString().Substring(7);
+			//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			//var historiqueApplication = new HistoriqueApplication();
+			//historiqueApplication.Action = _configuration["Action:Export"];
+			//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			//historiqueApplication.DateAction = DateTime.Now;
+			//historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			//_context.HistoriqueApplications.Add(historiqueApplication);
+
+			//await _context.SaveChangesAsync();
+
+			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "plainte" + DateTime.Now.ToString() + ".csv");
+		}
+
+		[HttpGet("victime/{idMenage}")]
+		public async Task<ActionResult<IEnumerable<Individu>>> GetVictime(int idMenage)
+		{
+			var victime = await _context.Individus
+				.Where(i => i.IdMenage == idMenage && i.Statut == 1)
+				.ToListAsync();
+
+			if (victime == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(victime);
+		}
+
+		[HttpPost("filtre/valide/page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetFilteredPlaintes(FiltrePlainteValideDTO filtrePlainteValideDto, int pageNumber = 1)
+		{
+			int pageSize = 10;
+
+			var query = _context.Plaintes.AsQueryable();
+
+			if (!string.IsNullOrEmpty(filtrePlainteValideDto.NumeroMenage))
+			{
+				query = query.Where(p => p.IdVictimeNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtrePlainteValideDto.NumeroMenage));
+			}
+
+			if (filtrePlainteValideDto.StatutTraitement != -1)
+			{
+				query = query.Where(p => p.StatutTraitement == filtrePlainteValideDto.StatutTraitement);
+			}
+
+			if (filtrePlainteValideDto.idCategoriePlainte != -1)
+			{
+				query = query.Where(p => p.IdCategoriePlainte == filtrePlainteValideDto.idCategoriePlainte);
+			}
+
+			if (filtrePlainteValideDto.DateFait.HasValue)
+			{
+				query = query.Where(p => p.DateFait.Equals(filtrePlainteValideDto.DateFait));
+			}
+
+			var totalItems = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var plaintes = await query
+				.Where(p => p.Statut == 5)
+				.Include(p => p.IdVictimeNavigation)
+					.ThenInclude(v => v.IdMenageNavigation)
+				.Include(p => p.IdIntervenantNavigation)
+				.Include(p => p.IdResponsableNavigation)
+				.Include(p => p.HistoriqueActionPlaintes)
+					.ThenInclude(h => h.IdActions)
+				.Include(p => p.IdCategoriePlainteNavigation)
+				.Include(p => p.IdFokontanyFaitNavigation)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToListAsync();
+
+			var plaintesDto = _mapper.Map<IEnumerable<PlainteDTO>>(plaintes);
+			return Ok(new { Plainte = plaintesDto, TotalPages = totalPages });
+		}
+
+		[HttpPost("filtre/page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetFilteredPlaintes(FiltrePlainteDTO filtrePlainteDto, int pageNumber = 1)
+		{
+			int pageSize = 10;
+
+			var query = _context.Plaintes.AsQueryable();
+
+			if (!string.IsNullOrEmpty(filtrePlainteDto.NumeroMenage))
+			{
+				query = query.Where(p => p.IdVictimeNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtrePlainteDto.NumeroMenage));
+			}
+
+			if (filtrePlainteDto.Statut != -1)
+			{
+				query = query.Where(p => p.Statut == filtrePlainteDto.Statut);
+			}
+
+			if (filtrePlainteDto.idCategoriePlainte != -1)
+			{
+				query = query.Where(p => p.IdCategoriePlainte == filtrePlainteDto.idCategoriePlainte);
+			}
+
+			if (filtrePlainteDto.DateFait.HasValue)
+			{
+				query = query.Where(p => p.DateFait.Equals(filtrePlainteDto.DateFait));
+			}
+
+			var totalItems = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var plaintes = await query
+				.Where(p => p.Statut != -5)
+				.Include(p => p.IdVictimeNavigation)
+					.ThenInclude(m => m.IdMenageNavigation)
+				.Include(p => p.IdIntervenantNavigation)
+				.Include(p => p.IdResponsableNavigation)
+				.Include(p => p.HistoriqueActionPlaintes)
+				.Include(p => p.IdCategoriePlainteNavigation)
+				.Include(p => p.IdFokontanyFaitNavigation)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToListAsync();
+
+			var plaintesDto = _mapper.Map<IEnumerable<PlainteDTO>>(plaintes);
+			return Ok(new { Plainte = plaintesDto, TotalPages = totalPages });
+		}
+
+		[HttpGet("valide/page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetPagedPlaintesValide(int pageNumber = 1)
+		{
+			int pageSize = 10;
+			var totalItems = await _context.Plaintes.Where(m => m.Statut == 5).CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var plaintes = await _context.Plaintes
+				.Where(p => p.Statut == 5)
+				.Include(p => p.IdVictimeNavigation)
+					.ThenInclude(v => v.IdMenageNavigation)
+				.Include(p => p.IdIntervenantNavigation)
+				.Include(p => p.IdResponsableNavigation)
+				.Include(p => p.HistoriqueActionPlaintes)
+					.ThenInclude(h => h.IdActions)
+				.Include(p => p.IdCategoriePlainteNavigation)
+				.Include(p => p.IdFokontanyFaitNavigation)
+				.OrderByDescending(n => n.Id)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToListAsync();
+
+			var plaintesDto = _mapper.Map<IEnumerable<PlainteDTO>>(plaintes);
+			return Ok(new { Plainte = plaintesDto, TotalPages = totalPages });
+		}
+
+		[HttpGet("page/{pageNumber}")]
+		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetPagedPlaintes(int pageNumber = 1)
+		{
+			int pageSize = 10;
+			var totalItems = await _context.Plaintes.Where(m => m.Statut != 5).CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var plaintes = await _context.Plaintes
+				.Where(p => p.Statut != 5)
+				.Include(p => p.IdVictimeNavigation)
+					.ThenInclude(m => m.IdMenageNavigation)
+				.Include(p => p.IdIntervenantNavigation)
+				.Include(p => p.IdResponsableNavigation)
+				.Include(p => p.HistoriqueActionPlaintes)
+				.Include(p => p.IdCategoriePlainteNavigation)
+				.Include(p => p.IdFokontanyFaitNavigation)
+				.OrderByDescending(n => n.Id)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToListAsync();
+
+			var plaintesDto = _mapper.Map<IEnumerable<PlainteDTO>>(plaintes);
+			return Ok(new { Plainte = plaintesDto, TotalPages = totalPages });
+		}
+
 		// GET: api/Plaintes
 		[HttpGet]
-        public async Task<ActionResult<IEnumerable<Plainte>>> GetPlaintes()
+        public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetPlaintes()
         {
-            return await _context.Plaintes.ToListAsync();
-        }
+			var plaintes = await _context.Plaintes
+				.Include(p => p.IdVictimeNavigation)
+					.ThenInclude(v => v.IdMenageNavigation)
+				.Include(p => p.IdIntervenantNavigation)
+				.Include(p => p.IdResponsableNavigation)
+				.Include(p => p.HistoriqueActionPlaintes)
+				    .ThenInclude(h => h.IdActions)
+				.Include(p => p.IdCategoriePlainteNavigation)
+				.Include(p => p.IdFokontanyFaitNavigation)
+				.ToListAsync();
+
+			var plaintesDto = _mapper.Map<IEnumerable<PlainteDTO>>(plaintes);
+
+			return Ok(plaintesDto);
+		}
 
         // GET: api/Plaintes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Plainte>> GetPlainte(int id)
+        public async Task<ActionResult<PlainteDTO>> GetPlainte(int id)
         {
-            var plainte = await _context.Plaintes.FindAsync(id);
+			var plainte = await _context.Plaintes
+				.Include(p => p.IdVictimeNavigation)
+					.ThenInclude(v => v.IdMenageNavigation)
+				.Include(p => p.IdIntervenantNavigation)
+				.Include(p => p.IdResponsableNavigation)
+				.Include(p => p.HistoriqueActionPlaintes)
+					.ThenInclude(h => h.IdActions)
+				.Include(p => p.IdCategoriePlainteNavigation)
+				.Include(p => p.IdFokontanyFaitNavigation)
+				.FirstOrDefaultAsync(p => p.Id == id);
 
-            if (plainte == null)
-            {
-                return NotFound();
-            }
+			if (plainte == null)
+			{
+				return NotFound();
+			}
 
-            return plainte;
-        }
+			var plainteDto = _mapper.Map<PlainteDTO>(plainte);
+			return Ok(plainteDto);
+		}
 
-        // PUT: api/Plaintes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlainte(int id, Plainte plainte)
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPut("valider/{id}")]
+		public async Task<IActionResult> ValidatePlainte(int id)
+		{
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			using (var transaction = await _context.Database.BeginTransactionAsync())
+			{
+				try
+				{
+					var plainte = await _context.Plaintes.FindAsync(id);
+
+					if (plainte == null)
+					{
+						return NotFound();
+					}
+
+					plainte.Statut = 5;
+					plainte.IdResponsable = int.Parse(idu);
+
+					_context.Entry(plainte).State = EntityState.Modified;
+
+					await _context.SaveChangesAsync();
+					await transaction.CommitAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					await transaction.RollbackAsync();
+					if (!PlainteExists(id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				catch (Exception)
+				{
+					await transaction.RollbackAsync();
+					throw;
+				}
+			}
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Validate"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+			await _context.SaveChangesAsync();
+
+			return Ok(new { status = "200" });
+		}
+
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPut("valider")]
+		public async Task<IActionResult> ValidatePlaintes([FromBody] List<int> ids)
+		{
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			using (var transaction = await _context.Database.BeginTransactionAsync())
+			{
+				try
+				{
+					foreach (var id in ids)
+					{
+						var plainte = await _context.Plaintes.FindAsync(id);
+
+						if (plainte == null)
+						{
+							return NotFound();
+						}
+
+						plainte.Statut = 5;
+						plainte.IdResponsable = int.Parse(idu);
+
+						_context.Entry(plainte).State = EntityState.Modified;
+
+					}
+					await _context.SaveChangesAsync();
+					await transaction.CommitAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					await transaction.RollbackAsync();
+					return NotFound();
+				}
+				catch (Exception)
+				{
+					await transaction.RollbackAsync();
+					throw;
+				}
+			}
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Validate"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+			await _context.SaveChangesAsync();
+
+			return Ok(new { status = "200" });
+		}
+
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPut("refuser/{id}")]
+		public async Task<IActionResult> RejectPlainte(int id)
+		{
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var plainte = await _context.Plaintes.FindAsync(id);
+
+			if (plainte == null)
+			{
+				return NotFound();
+			}
+
+			plainte.Statut = -5;
+			plainte.IdResponsable = int.Parse(idu);
+
+			_context.Entry(plainte).State = EntityState.Modified;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Reject"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!PlainteExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return Ok(new { status = "200" });
+		}
+
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPut("refuser")]
+		public async Task<IActionResult> RejectPlaintes([FromBody] List<int> ids)
+		{
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			foreach (var id in ids)
+			{
+				var plainte = await _context.Plaintes.FindAsync(id);
+
+				if (plainte == null)
+				{
+					return NotFound();
+				}
+
+				plainte.Statut = -5;
+				plainte.IdResponsable = int.Parse(idu);
+
+				_context.Entry(plainte).State = EntityState.Modified;
+			}
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Reject"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return NotFound();
+			}
+
+			return Ok(new { status = "200" });
+		}
+
+		[Authorize(Policy = "IntervenantPolicy")]
+		[HttpPost]
+        public async Task<ActionResult<Plainte>> PostPlainte(PlainteFormDTO plainteDto)
         {
-            if (id != plainte.Id)
-            {
-                return BadRequest();
-            }
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
-            _context.Entry(plainte).State = EntityState.Modified;
+			var ResultatPrediction = 0;
+			try
+			{
+				var mlContext = new MLContext();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PlainteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+				ITransformer model = mlContext.Model.Load("model.zip", out var modelInputSchema);
 
-            return NoContent();
-        }
+				var predictionEngine = mlContext.Model.CreatePredictionEngine<PlainteModel, PlaintePrediction>(model);
 
-        // POST: api/Plaintes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Plainte>> PostPlainte(Plainte plainte)
-        {
-            _context.Plaintes.Add(plainte);
-            await _context.SaveChangesAsync();
+				var plainteModel = new PlainteModel { Description = plainteDto.Description };
+
+				Console.WriteLine($"Description : ----------------------------- {plainteModel.Description} -----------------------------");
+
+				var prediction = predictionEngine.Predict(plainteModel);
+				ResultatPrediction = (int)prediction.PredictedLabel;
+
+				Console.WriteLine($"Prédiction : ----------------------------- {prediction.PredictedLabel} -----------------------------");
+
+				if (prediction == null)
+				{
+					return BadRequest("La prédiction a échoué.");
+				}
+			}
+			catch (Exception ex)
+			{
+				// Enregistrer l'erreur
+				Console.WriteLine($"Erreur lors de la prédiction : {ex.Message}");
+				return StatusCode(500, "Erreur interne du serveur.");
+			}
+
+			var plainte = new Plainte();
+			plainte.IdVictime = plainteDto.Victime;
+			plainte.IdIntervenant = int.Parse(idu);
+			plainte.Description = plainteDto.Description;
+			plainte.DateFait = DateOnly.FromDateTime(DateTime.Now);
+			plainte.Statut = 0;
+			plainte.StatutTraitement = 0;
+			plainte.IdFokontanyFait = plainteDto.FokontanyFait;
+			plainte.IdCategoriePlainte = ResultatPrediction;
+
+			_context.Plaintes.Add(plainte);
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Create"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPlainte", new { id = plainte.Id }, plainte);
-        }
-
-        // DELETE: api/Plaintes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePlainte(int id)
-        {
-            var plainte = await _context.Plaintes.FindAsync(id);
-            if (plainte == null)
-            {
-                return NotFound();
-            }
-
-            _context.Plaintes.Remove(plainte);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool PlainteExists(int id)

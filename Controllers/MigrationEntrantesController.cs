@@ -15,7 +15,8 @@ using DocumentFormat.OpenXml;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "IntervenantOuResponsablePolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class MigrationEntrantesController : ControllerBase
     {

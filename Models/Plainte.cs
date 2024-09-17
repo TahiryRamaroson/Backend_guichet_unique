@@ -23,9 +23,13 @@ public partial class Plainte
 
     public int IdCategoriePlainte { get; set; }
 
-    public virtual ICollection<HistoriqueActionPlainte> HistoriqueActionPlaintes { get; set; } = new List<HistoriqueActionPlainte>();
+	public int IdFokontanyFait { get; set; }
 
-    public virtual CategoriePlainte IdCategoriePlainteNavigation { get; set; } = null!;
+	public virtual ICollection<HistoriqueActionPlainte> HistoriqueActionPlaintes { get; set; } = new List<HistoriqueActionPlainte>();
+
+	public virtual Fokontany IdFokontanyFaitNavigation { get; set; } = null!;
+
+	public virtual CategoriePlainte IdCategoriePlainteNavigation { get; set; } = null!;
 
     public virtual Utilisateur IdIntervenantNavigation { get; set; } = null!;
 

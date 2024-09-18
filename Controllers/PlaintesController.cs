@@ -24,7 +24,8 @@ using Npgsql;
 
 namespace Backend_guichet_unique.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Policy = "IntervenantOuResponsablePolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class PlaintesController : ControllerBase
     {
@@ -255,19 +256,19 @@ namespace Backend_guichet_unique.Controllers
 					await _context.SaveChangesAsync();
 				}
 
-				//var token = Request.Headers["Authorization"].ToString().Substring(7);
-				//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-				//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-				//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
-				//var historiqueApplication = new HistoriqueApplication();
-				//historiqueApplication.Action = _configuration["Action:Import"];
-				//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
-				//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
-				//historiqueApplication.DateAction = DateTime.Now;
-				//historiqueApplication.IdUtilisateur = int.Parse(idu);
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Import"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
 
-				//_context.HistoriqueApplications.Add(historiqueApplication);
+				_context.HistoriqueApplications.Add(historiqueApplication);
 
 				try
 				{
@@ -353,19 +354,19 @@ namespace Backend_guichet_unique.Controllers
 					await _context.SaveChangesAsync();
 				}
 
-				//var token = Request.Headers["Authorization"].ToString().Substring(7);
-				//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-				//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-				//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
-				//var historiqueApplication = new HistoriqueApplication();
-				//historiqueApplication.Action = _configuration["Action:Import"];
-				//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
-				//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
-				//historiqueApplication.DateAction = DateTime.Now;
-				//historiqueApplication.IdUtilisateur = int.Parse(idu);
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Import"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
 
-				//_context.HistoriqueApplications.Add(historiqueApplication);
+				_context.HistoriqueApplications.Add(historiqueApplication);
 
 				try
 				{
@@ -446,21 +447,21 @@ namespace Backend_guichet_unique.Controllers
 				FileDownloadName = "plainte" + DateTime.Now.ToString() + ".xlsx"
 			};
 
-			//var token = Request.Headers["Authorization"].ToString().Substring(7);
-			//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-			//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-			//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
-			//var historiqueApplication = new HistoriqueApplication();
-			//historiqueApplication.Action = _configuration["Action:Export"];
-			//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
-			//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
-			//historiqueApplication.DateAction = DateTime.Now;
-			//historiqueApplication.IdUtilisateur = int.Parse(idu);
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
 
-			//_context.HistoriqueApplications.Add(historiqueApplication);
+			_context.HistoriqueApplications.Add(historiqueApplication);
 
-			//await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
 
 			return content;
 		}
@@ -490,21 +491,21 @@ namespace Backend_guichet_unique.Controllers
 				builder.AppendLine(string.Join(",", values));
 			}
 
-			//var token = Request.Headers["Authorization"].ToString().Substring(7);
-			//var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-			//var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
-			//var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
-			//var historiqueApplication = new HistoriqueApplication();
-			//historiqueApplication.Action = _configuration["Action:Export"];
-			//historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
-			//historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
-			//historiqueApplication.DateAction = DateTime.Now;
-			//historiqueApplication.IdUtilisateur = int.Parse(idu);
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
 
-			//_context.HistoriqueApplications.Add(historiqueApplication);
+			_context.HistoriqueApplications.Add(historiqueApplication);
 
-			//await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
 
 			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "plainte" + DateTime.Now.ToString() + ".csv");
 		}
@@ -524,6 +525,7 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(victime);
 		}
 
+		[Authorize(Policy = "ResponsablePolicy")]
 		[HttpPost("filtre/valide/page/{pageNumber}")]
 		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetFilteredPlaintes(FiltrePlainteValideDTO filtrePlainteValideDto, int pageNumber = 1)
 		{
@@ -619,6 +621,7 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { Plainte = plaintesDto, TotalPages = totalPages });
 		}
 
+		[Authorize(Policy = "ResponsablePolicy")]
 		[HttpGet("valide/page/{pageNumber}")]
 		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetPagedPlaintesValide(int pageNumber = 1)
 		{
@@ -649,11 +652,11 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetPagedPlaintes(int pageNumber = 1)
 		{
 			int pageSize = 10;
-			var totalItems = await _context.Plaintes.Where(m => m.Statut != 5).CountAsync();
+			var totalItems = await _context.Plaintes.Where(m => m.Statut != -5).CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
 			var plaintes = await _context.Plaintes
-				.Where(p => p.Statut != 5)
+				.Where(p => p.Statut != -5)
 				.Include(p => p.IdVictimeNavigation)
 					.ThenInclude(m => m.IdMenageNavigation)
 				.Include(p => p.IdIntervenantNavigation)
@@ -670,7 +673,6 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { Plainte = plaintesDto, TotalPages = totalPages });
 		}
 
-		// GET: api/Plaintes
 		[HttpGet]
         public async Task<ActionResult<IEnumerable<PlainteDTO>>> GetPlaintes()
         {
@@ -690,7 +692,6 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(plaintesDto);
 		}
 
-        // GET: api/Plaintes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PlainteDTO>> GetPlainte(int id)
         {
@@ -924,6 +925,48 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { status = "200" });
 		}
 
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPut("cloturer/{id}")]
+		public async Task<IActionResult> ClosePlaintes(int id)
+		{
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var plainte = await _context.Plaintes.FindAsync(id);
+
+				if (plainte == null)
+				{
+					return NotFound();
+				}
+
+				plainte.StatutTraitement = 10;
+				plainte.IdResponsable = int.Parse(idu);
+
+				_context.Entry(plainte).State = EntityState.Modified;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Close"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return NotFound();
+			}
+
+			return Ok(new { status = "200" });
+		}
+
 		[Authorize(Policy = "IntervenantPolicy")]
 		[HttpPost]
         public async Task<ActionResult<Plainte>> PostPlainte(PlainteFormDTO plainteDto)
@@ -989,7 +1032,75 @@ namespace Backend_guichet_unique.Controllers
             return CreatedAtAction("GetPlainte", new { id = plainte.Id }, plainte);
         }
 
-        private bool PlainteExists(int id)
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPost("Actions/{idplainte}")]
+		public async Task<ActionResult<IEnumerable<PlainteDTO>>> PostActionPlainte(PlainteActionFormDTO plainteActionDto, int idplainte)
+		{
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			using (var transaction = await _context.Database.BeginTransactionAsync())
+			{
+				try
+				{
+					var historiqueActionPlainte = new HistoriqueActionPlainte();
+					historiqueActionPlainte.IdPlainte = idplainte;
+					historiqueActionPlainte.IdResponsable = int.Parse(idu);
+					historiqueActionPlainte.DateVisite = plainteActionDto.DateVisite;
+					_context.HistoriqueActionPlaintes.Add(historiqueActionPlainte);
+
+					await _context.SaveChangesAsync();
+
+					var plainte = await _context.Plaintes.FindAsync(idplainte);
+					plainte.StatutTraitement = 5;
+					_context.Entry(plainte).State = EntityState.Modified;
+
+					foreach (int idAction in plainteActionDto.Actions)
+                    {
+						var command = _context.Database.GetDbConnection().CreateCommand();
+						command.CommandText = @"
+                    INSERT INTO action_plainte (id_historique_action_plainte, id_action)
+                    VALUES (@historiqueActionPlainteId, @actionId)";
+
+						command.Parameters.Add(new NpgsqlParameter("@historiqueActionPlainteId", historiqueActionPlainte.Id));
+						command.Parameters.Add(new NpgsqlParameter("@actionId", idAction));
+
+						await _context.Database.OpenConnectionAsync();
+						await command.ExecuteNonQueryAsync();
+						await _context.Database.CloseConnectionAsync();
+					}
+
+                    await transaction.CommitAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					await transaction.RollbackAsync();
+					return NotFound();
+				}
+				catch (Exception)
+				{
+					await transaction.RollbackAsync();
+					throw;
+				}
+			}
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Create"];
+			historiqueApplication.Composant = "ActionPlainte";
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
+			return Ok(new { status = "200" });
+		}
+
+		private bool PlainteExists(int id)
         {
             return _context.Plaintes.Any(e => e.Id == id);
         }

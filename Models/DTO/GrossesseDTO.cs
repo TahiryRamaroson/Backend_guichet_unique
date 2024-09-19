@@ -24,6 +24,8 @@
 
 		public Utilisateur? Responsable { get; set; }
 
+		public DateOnly DateSaisie { get; set; }
+
 		public List<AntecedentMedicaux> AntecedentMedicauxes { get; set; } = new List<AntecedentMedicaux>();
 	}
 }

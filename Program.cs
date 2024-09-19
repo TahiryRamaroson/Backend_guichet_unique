@@ -96,6 +96,11 @@ builder.Services.AddSingleton<EmailService>();
 builder.Services.AddDbContext<GuichetUniqueContext>(options =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
+builder.Services.AddMemoryCache(options =>
+{
+	options.SizeLimit = 1024; // Limite de taille en unités arbitraires
+});
+
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddAutoMapper(typeof(ProfilMapper));
 builder.Services.AddAutoMapper(typeof(UtilisateurMapper));

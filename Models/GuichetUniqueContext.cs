@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend_guichet_unique.Models.Statistique;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend_guichet_unique.Models;
@@ -61,7 +62,9 @@ public partial class GuichetUniqueContext : DbContext
 
     public virtual DbSet<Utilisateur> Utilisateurs { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	public virtual DbSet<NaissanceParFokontanyEtRegion> NaissancesParFokontanyEtRegions { get; set; }
+
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=localhost;Database=guichet_unique;Username=postgres;Password=Tahiry1849;Encoding=UTF8");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -128,7 +131,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.ToTable("commune");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+			entity.HasIndex(e => e.IdDistrict).HasDatabaseName("idx_commune_id_district");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdDistrict).HasColumnName("id_district");
             entity.Property(e => e.Nom)
                 .HasMaxLength(100)
@@ -182,7 +187,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.ToTable("district");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+			entity.HasIndex(e => e.IdRegion).HasDatabaseName("idx_district_id_region");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdRegion).HasColumnName("id_region");
             entity.Property(e => e.Nom)
                 .HasMaxLength(100)
@@ -200,7 +207,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.ToTable("fokontany");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+			entity.HasIndex(e => e.IdCommune).HasDatabaseName("idx_fokontany_id_commune");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdCommune).HasColumnName("id_commune");
             entity.Property(e => e.Nom)
                 .HasMaxLength(100)
@@ -222,7 +231,8 @@ public partial class GuichetUniqueContext : DbContext
             entity.Property(e => e.AgeMere).HasColumnName("age_mere");
             entity.Property(e => e.DateAccouchement).HasColumnName("date_accouchement");
             entity.Property(e => e.DerniereRegle).HasColumnName("derniere_regle");
-            entity.Property(e => e.IdIntervenant).HasColumnName("id_intervenant");
+			entity.Property(e => e.DateSaisie).HasColumnName("date_saisie");
+			entity.Property(e => e.IdIntervenant).HasColumnName("id_intervenant");
             entity.Property(e => e.IdMere).HasColumnName("id_mere");
             entity.Property(e => e.IdResponsable).HasColumnName("id_responsable");
             entity.Property(e => e.PieceJustificative).HasColumnName("piece_justificative");
@@ -401,7 +411,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.HasIndex(e => e.NumeroMenage, "menage_numero_menage_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+			entity.HasIndex(e => e.IdFokontany).HasDatabaseName("idx_menage_id_fokontany");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Adresse)
                 .HasMaxLength(50)
                 .HasColumnName("adresse");
@@ -471,7 +483,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.ToTable("migration_sortante");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+			entity.HasIndex(e => e.IdFokontanyDestination).HasDatabaseName("idx_migration_sortante_id_fokontany_destination");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Adresse)
                 .HasMaxLength(50)
                 .HasColumnName("adresse");
@@ -534,7 +548,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.HasIndex(e => e.NumActeNaissance, "naissance_num_acte_naissance_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.HasIndex(n => n.IdFokontany).HasDatabaseName("idx_naissances_id_fokontany");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.DateNaissance).HasColumnName("date_naissance");
             entity.Property(e => e.IdFokontany).HasColumnName("id_fokontany");
             entity.Property(e => e.IdIntervenant).HasColumnName("id_intervenant");
@@ -589,7 +605,9 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.ToTable("plainte");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+			entity.HasIndex(e => e.IdFokontanyFait).HasDatabaseName("idx_plainte_id_fokontany_fait");
+
+			entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.DateFait).HasColumnName("date_fait");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.IdCategoriePlainte).HasColumnName("id_categorie_plainte");
@@ -709,7 +727,13 @@ public partial class GuichetUniqueContext : DbContext
                 .HasConstraintName("utilisateur_id_profil_fkey");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+		modelBuilder.Entity<NaissanceParFokontanyEtRegion>(entity =>
+		{
+            entity.HasNoKey();
+			entity.ToView("naissances_par_region");
+		});
+
+		OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

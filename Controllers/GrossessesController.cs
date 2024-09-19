@@ -787,6 +787,7 @@ namespace Backend_guichet_unique.Controllers
 			var grossesse = _mapper.Map<Grossesse>(grossesseDto);
 
 			grossesse.PieceJustificative = "-----------";
+			grossesse.DateSaisie = DateOnly.FromDateTime(DateTime.Now);
 
 			_context.Grossesses.Add(grossesse);
             await _context.SaveChangesAsync();

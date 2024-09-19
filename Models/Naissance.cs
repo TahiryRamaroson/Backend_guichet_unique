@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace Backend_guichet_unique.Models;
@@ -21,7 +22,7 @@ public partial class Naissance
 
     public int Statut { get; set; }
 
-    public int IdFokontany { get; set; }
+	public int IdFokontany { get; set; }
 
     public int IdMenage { get; set; }
 

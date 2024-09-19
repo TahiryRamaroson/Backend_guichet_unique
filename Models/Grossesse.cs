@@ -27,7 +27,9 @@ public partial class Grossesse
 
     public int? IdResponsable { get; set; }
 
-    public virtual Utilisateur IdIntervenantNavigation { get; set; } = null!;
+	public DateOnly DateSaisie { get; set; }
+
+	public virtual Utilisateur IdIntervenantNavigation { get; set; } = null!;
 
     public virtual Individu IdMereNavigation { get; set; } = null!;
 

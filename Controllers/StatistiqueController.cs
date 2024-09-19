@@ -36,7 +36,7 @@ namespace Backend_guichet_unique.Controllers
 			var naissancesParMois = Enumerable.Repeat(0, 12).ToList();
 
 			var result = await _context.Naissances
-				.Where(n => n.DateNaissance.Year == form.annee)
+				.Where(n => n.DateNaissance.Year == form.annee && n.Statut == 5)
 				.GroupBy(n => n.DateNaissance.Month)
 				.Select(g => new
 				{
@@ -96,7 +96,7 @@ namespace Backend_guichet_unique.Controllers
 
 
 				var result = await _context.Naissances
-					.Where(n => n.DateNaissance.Year == form.annee)
+					.Where(n => n.DateNaissance.Year == form.annee && n.Statut == 5)
 					.Join(_context.Fokontanies.AsNoTracking(), n => n.IdFokontany, f => f.Id, (n, f) => new { n, f })
 					.Join(_context.Communes.AsNoTracking(), nf => nf.f.IdCommune, c => c.Id, (nf, c) => new { nf.n, nf.f, c })
 					.Join(_context.Districts.AsNoTracking(), nfc => nfc.c.IdDistrict, d => d.Id, (nfc, d) => new { nfc.n, nfc.f, nfc.c, d })
@@ -210,7 +210,7 @@ namespace Backend_guichet_unique.Controllers
 				var max = tranche.Max ?? int.MaxValue;
 
 				var count = await _context.Grossesses
-					.Where(g => g.AgeMere >= min && g.AgeMere <= max && g.DateSaisie.Year == form.annee)
+					.Where(g => g.AgeMere >= min && g.AgeMere <= max && g.DateSaisie.Year == form.annee && g.Statut == 5)
 					.CountAsync();
 
 				if(tranche.Min == null)
@@ -250,12 +250,12 @@ namespace Backend_guichet_unique.Controllers
 
 				// Nombre total de grossesses par tranche d'âge
 				var totalGrossesses = await _context.Grossesses
-					.Where(g => g.AgeMere >= min && g.AgeMere <= max && g.DateSaisie.Year == form.annee)
+					.Where(g => g.AgeMere >= min && g.AgeMere <= max && g.DateSaisie.Year == form.annee && g.Statut == 5)
 					.CountAsync();
 
 				// Nombre de grossesses avec complications par tranche d'âge
 				var complications = await _context.Grossesses
-					.Where(g => g.AgeMere >= min && g.AgeMere <= max && g.DateSaisie.Year == form.annee && g.RisqueComplication > 20)
+					.Where(g => g.AgeMere >= min && g.AgeMere <= max && g.DateSaisie.Year == form.annee && g.Statut == 5 && g.RisqueComplication > 20)
 					.CountAsync();
 
 				// Calcul du taux de complication
@@ -277,6 +277,76 @@ namespace Backend_guichet_unique.Controllers
 			}
 
 			return Ok(new { Series = result, Labels = labels });
+		}
+
+		[HttpPost("migration/fluxParMois")]
+		public async Task<ActionResult<List<int>>> GetFluxMigrationParMois(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			// Initialiser une liste avec 12 zéros pour chaque mois
+			var migrationEntranteParMois = Enumerable.Repeat(0, 12).ToList();
+			var migrationSortanteParMois = Enumerable.Repeat(0, 12).ToList();
+
+			var entrante = await _context.MigrationEntrantes
+				.Where(e => e.DateArrivee.Year == form.annee && e.Statut == 5)
+				.GroupBy(e => e.DateArrivee.Month)
+				.Select(g => new
+				{
+					Mois = g.Key,
+					NombreEntrantes = g.Count()
+				})
+				.ToListAsync();
+
+			var sortante = await _context.MigrationSortantes
+				.Where(e => e.DateDepart.Year == form.annee && e.Statut == 5)
+				.GroupBy(e => e.DateDepart.Month)
+				.Select(g => new
+				{
+					Mois = g.Key,
+					NombreSortantes = g.Count()
+				})
+				.ToListAsync();
+
+			// Mettre à jour la liste avec les résultats de la requête
+			foreach (var item in entrante)
+			{
+				migrationEntranteParMois[item.Mois - 1] = item.NombreEntrantes;
+			}
+
+			foreach (var item in sortante)
+			{
+				migrationSortanteParMois[item.Mois - 1] = item.NombreSortantes;
+			}
+
+			return Ok(new { Entrantes = migrationEntranteParMois, Sortantes = migrationSortanteParMois });
+		}
+
+		[HttpPost("migration/MotifPlusFrequent")]
+		public async Task<ActionResult<List<MotifMigrationFrequent>>> GetMotifMigrationPlusFrequent(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var motifs = await _context.MigrationSortantes
+				.Where(m => m.DateDepart.Year == form.annee)
+				.GroupBy(m => new { m.IdMotifMigration, m.IdMotifMigrationNavigation.Nom })
+				.Select(g => new MotifMigrationFrequent
+				{
+					Id = g.Key.IdMotifMigration,
+					Nom = g.Key.Nom,
+					Count = g.Count()
+				})
+				.OrderByDescending(m => m.Count)
+				.Take(3)
+				.ToListAsync();
+
+			return Ok(motifs);
 		}
 	}
 }

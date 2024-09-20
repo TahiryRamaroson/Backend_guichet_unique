@@ -488,6 +488,191 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { Series = result, Labels = labels });
 		}
 
+		[HttpPost("plainte/plusFrequentParRegion")]
+		public async Task<ActionResult<Dictionary<string, RegionDataString>>> GetPlaintePlusFrequentParRegion(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"PlaintePlusFrequentParRegion_{form.annee}";
+			if (!_cache.TryGetValue(cacheKey, out Dictionary<string, RegionDataString> regions))
+			{
+				// Initialiser un dictionnaire avec toutes les régions
+				regions = await _context.Regions
+					.AsNoTracking()
+					.Select(r => new RegionDataString
+					{
+						Region = r.Nom
+					})
+					.ToDictionaryAsync(r => r.Region);
+
+				var result = await _context.Plaintes
+					.Where(p => p.DateFait.Year == form.annee && p.Statut == 5)
+					.Include(p => p.IdFokontanyFaitNavigation)
+					.ThenInclude(f => f.IdCommuneNavigation)
+					.ThenInclude(c => c.IdDistrictNavigation)
+					.ThenInclude(d => d.IdRegionNavigation)
+					.Include(p => p.IdCategoriePlainteNavigation)
+					.ToListAsync();
+
+				// Grouper les plaintes par région et par catégorie
+				var regionDict = result
+					.GroupBy(r => new { Region = r.IdFokontanyFaitNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom, r.IdCategoriePlainteNavigation.Nom })
+					.ToDictionary(g => g.Key, g => g.ToList());
+
+				// Dictionnaire temporaire pour stocker les catégories et leurs comptes
+				var tempCategories = new Dictionary<string, Dictionary<string, int>>();
+
+				foreach (var region in regionDict)
+				{
+					var regionName = region.Key.Region;
+					var category = region.Key.Nom;
+					var count = region.Value.Count;
+
+					if (!tempCategories.ContainsKey(regionName))
+					{
+						tempCategories[regionName] = new Dictionary<string, int>();
+					}
+
+					if (!tempCategories[regionName].ContainsKey(category))
+					{
+						tempCategories[regionName][category] = 0;
+					}
+					tempCategories[regionName][category] += count;
+				}
+
+				// Trouver la catégorie la plus fréquente pour chaque région et mettre à jour la propriété Data
+				foreach (var region in regions)
+				{
+					if (tempCategories.ContainsKey(region.Key))
+					{
+						region.Value.Data = tempCategories[region.Key]
+							.OrderByDescending(c => c.Value)
+							.FirstOrDefault().Key;
+					}
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, regions, cacheEntryOptions);
+			}
+
+			return Ok(regions);
+		}
+
+		[HttpPost("plainte/detailsPlusFrequentParRegion/{annee}/{nomRegion}")]
+		public async Task<ActionResult<RegionDataString>> GetDetailsPlusFrequentParRegion(int annee, string nomRegion)
+		{
+			if (annee == 0)
+			{
+				annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"DetailsPlusFrequentParRegion_{annee}_{nomRegion}";
+			if (!_cache.TryGetValue(cacheKey, out RegionDataString region))
+			{
+				// Initialiser le région, districts, communes et fokontanys
+				region = await _context.Regions
+					.Where(r => r.Nom == nomRegion)
+					.Include(r => r.Districts)
+						.ThenInclude(d => d.Communes)
+							.ThenInclude(c => c.Fokontanies)
+					.AsNoTracking()
+					.Select(r => new RegionDataString
+					{
+						Region = r.Nom,
+						Districts = r.Districts.Select(d => new DistrictDataString
+						{
+							Id = d.Id,
+							Nom = d.Nom,
+							Communes = d.Communes.Select(c => new CommuneDataString
+							{
+								Id = c.Id,
+								Nom = c.Nom,
+								Fokontanies = c.Fokontanies.Select(f => new FokontanyDataString
+								{
+									Id = f.Id,
+									Nom = f.Nom
+								}).ToList()
+							}).ToList()
+						}).ToList()
+					})
+					.FirstOrDefaultAsync();
+
+				// Obtenir les plaintes pour l'année et la région spécifiées
+				var plaintes = await _context.Plaintes
+					.Where(p => p.DateFait.Year == annee && p.Statut == 5 && p.IdFokontanyFaitNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom == nomRegion)
+					.Include(p => p.IdFokontanyFaitNavigation)
+					.Include(p => p.IdCategoriePlainteNavigation)
+					.ToListAsync();
+
+				// Grouper les plaintes par Fokontany et par catégorie
+				var fokontanyDict = plaintes
+					.GroupBy(p => new { p.IdFokontanyFait, p.IdCategoriePlainteNavigation.Nom })
+					.ToDictionary(g => g.Key, g => g.ToList());
+
+				// Dictionnaire temporaire pour stocker les catégories et leurs comptes pour chaque Fokontany
+				var tempCategories = new Dictionary<int, Dictionary<string, int>>();
+
+				foreach (var group in fokontanyDict)
+				{
+					var fokontanyId = group.Key.IdFokontanyFait;
+					var category = group.Key.Nom;
+					var count = group.Value.Count;
+
+					if (!tempCategories.ContainsKey(fokontanyId))
+					{
+						tempCategories[fokontanyId] = new Dictionary<string, int>();
+					}
+
+					if (!tempCategories[fokontanyId].ContainsKey(category))
+					{
+						tempCategories[fokontanyId][category] = 0;
+					}
+					tempCategories[fokontanyId][category] += count;
+				}
+
+				// Mettre à jour la propriété Data avec la catégorie la plus fréquente pour chaque Fokontany
+				foreach (var district in region.Districts)
+				{
+					foreach (var commune in district.Communes)
+					{
+						foreach (var fokontany in commune.Fokontanies)
+						{
+							if (tempCategories.ContainsKey(fokontany.Id))
+							{
+								fokontany.Data = tempCategories[fokontany.Id]
+									.OrderByDescending(c => c.Value)
+									.FirstOrDefault().Key;
+							}
+						}
+					}
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, region, cacheEntryOptions);
+			}
+
+			return Ok(region);
+		}
+
 		[HttpPost("deces/causeParTrancheAge")]
 		public async Task<ActionResult<List<CauseDecesFrequent>>> GetCauseDecesParTrancheAge(StatistiqueFormDTO form)
 		{

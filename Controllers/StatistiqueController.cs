@@ -231,7 +231,7 @@ namespace Backend_guichet_unique.Controllers
 			return Ok( new { Series = result, Colors = couleurs, Labels = labels });
 		}
 
-		[HttpPost("grossesse/ComplicationParTrancheAge")]
+		[HttpPost("grossesse/complicationParTrancheAge")]
 		public async Task<ActionResult> GetComplicationsParTrancheAgeAsync(StatistiqueFormDTO form)
 		{
 			if (form.annee == 0)
@@ -325,7 +325,7 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { Entrantes = migrationEntranteParMois, Sortantes = migrationSortanteParMois });
 		}
 
-		[HttpPost("migration/MotifPlusFrequent")]
+		[HttpPost("migration/motifPlusFrequent")]
 		public async Task<ActionResult<List<MotifMigrationFrequent>>> GetMotifMigrationPlusFrequent(StatistiqueFormDTO form)
 		{
 			if (form.annee == 0)
@@ -347,6 +347,120 @@ namespace Backend_guichet_unique.Controllers
 				.ToListAsync();
 
 			return Ok(motifs);
+		}
+
+		[HttpPost("plainte/nombreParCategorie")]
+		public async Task<ActionResult> GetNombrePlainteParCategorie(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var categories = await _context.CategoriePlaintes.ToListAsync();
+			var result = new List<int>();
+			var labels = new List<string>();
+
+			foreach (var categorie in categories)
+			{
+				var count = await _context.Plaintes
+					.Where(p => p.IdCategoriePlainte == categorie.Id && p.DateFait.Year == form.annee && p.Statut == 5)
+					.CountAsync();
+
+				labels.Add(categorie.Nom);
+				result.Add(count);
+			}
+
+			return Ok(new { Series = result, Labels = labels });
+		}
+
+		[HttpPost("deces/causeParTrancheAge")]
+		public async Task<ActionResult<List<CauseDecesFrequent>>> GetCauseDecesParTrancheAge(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var tranches = _configuration.GetSection("Deces").Get<DecesTrancheAgeSettings>().TrancheAge;
+			var result = new List<CauseDecesFrequent>();
+
+			foreach (var tranche in tranches)
+			{
+				var min = tranche.Min ?? int.MinValue;
+				var max = tranche.Max ?? int.MaxValue;
+
+				var causePrincipale = await _context.Deces
+					.Where(d => d.AgeDefunt >= min && d.AgeDefunt <= max && d.DateDeces.Year == form.annee && d.Statut == 5)
+					.GroupBy(d => d.IdCauseDecesNavigation.Nom)
+					.Select(g => new
+					{
+						CauseDeces = g.Key,
+						Count = g.Count()
+					})
+					.OrderByDescending(g => g.Count)
+					.FirstOrDefaultAsync();
+
+				var cause = new CauseDecesFrequent();
+				cause.TrancheAge = tranche.Min == null ? $"<{max + 1}" : tranche.Max == null ? $"{min - 1}+" : $"{min}-{max}";
+
+				if (causePrincipale != null)
+				{
+					cause.CauseDeces = causePrincipale.CauseDeces;
+					cause.Count = causePrincipale.Count;
+				}
+				result.Add(cause);
+			}
+
+			return Ok(result);
+		}
+
+		[HttpPost("deces/MortaliteParTrancheAge")]
+		public async Task<ActionResult> GetMortaliteParTrancheAgeAsync(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var tranches = _configuration.GetSection("Deces").Get<DecesTrancheAgeSettings>().TrancheAge;
+			var result = new List<double>();
+			var labels = new List<string>();
+
+			foreach (var tranche in tranches)
+			{
+				var min = tranche.Min ?? int.MinValue;
+				var max = tranche.Max ?? int.MaxValue;
+
+				// Nombre total d'individu de cette tranche d'âge
+				var totalIndividu = await _context.Individus
+					.Where(i => (form.annee - i.DateNaissance.Year) >= min && (form.annee - i.DateNaissance.Year) <= max)
+					.CountAsync();
+
+				// Nombre de grossesses avec complications par tranche d'âge
+				var totalDeces = await _context.Deces
+					.Where(d => d.AgeDefunt >= min && d.AgeDefunt <= max && d.DateDeces.Year == form.annee && d.Statut == 5)
+					.CountAsync();
+
+				// Calcul du taux de complication
+				double tauxMortalite = totalIndividu > 0 ? (double)totalDeces / totalIndividu * 100 : 0;
+
+				if (tranche.Min == null)
+				{
+					labels.Add($"<{max + 1}");
+				}
+				else if (tranche.Max == null)
+				{
+					labels.Add($"{min - 1}+");
+				}
+				else
+				{
+					labels.Add($"{min}-{max}");
+				}
+				result.Add(tauxMortalite);
+			}
+
+			return Ok(new { Series = result, Labels = labels });
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("naissance/nombreParRegion")]
-		public async Task<ActionResult<Dictionary<string, RegionData>>> GetNaissancesParRegion(StatistiqueFormDTO form)
+		public async Task<ActionResult<Dictionary<string, RegionData>>> GetNombreNaissancesParRegion(StatistiqueFormDTO form)
 		{
 			if (form.annee == 0)
 			{
@@ -65,64 +65,33 @@ namespace Backend_guichet_unique.Controllers
 			var cacheKey = $"NaissancesParRegion_{form.annee}";
 			if (!_cache.TryGetValue(cacheKey, out Dictionary<string, RegionData> regions))
 			{
-				// Initialiser un dictionnaire avec toutes les régions, districts, communes et fokontanys avec 0 naissances
+				// Initialiser un dictionnaire avec toutes les régions
 				regions = await _context.Regions
-					.Include(r => r.Districts)
-						.ThenInclude(d => d.Communes)
-							.ThenInclude(c => c.Fokontanies)
 					.AsNoTracking()
 					.Select(r => new RegionData
 					{
 						Region = r.Nom,
-						Data = 0,
-						Districts = r.Districts.Select(d => new DistrictData
-						{
-							Id = d.Id,
-							Nom = d.Nom,
-							Communes = d.Communes.Select(c => new CommuneData
-								{
-									Id = c.Id,
-									Nom = c.Nom,
-									Fokontanies = c.Fokontanies.Select(f => new FokontanyData
-									{
-										Id = f.Id,
-										Nom = f.Nom,
-										Data = 0
-									}).ToList()
-								}).ToList()
-							}).ToList()
+						Data = 0
 						})
 					.ToDictionaryAsync(r => r.Region);
 
 
 				var result = await _context.Naissances
 					.Where(n => n.DateNaissance.Year == form.annee && n.Statut == 5)
-					.Join(_context.Fokontanies.AsNoTracking(), n => n.IdFokontany, f => f.Id, (n, f) => new { n, f })
-					.Join(_context.Communes.AsNoTracking(), nf => nf.f.IdCommune, c => c.Id, (nf, c) => new { nf.n, nf.f, c })
-					.Join(_context.Districts.AsNoTracking(), nfc => nfc.c.IdDistrict, d => d.Id, (nfc, d) => new { nfc.n, nfc.f, nfc.c, d })
-					.Join(_context.Regions.AsNoTracking(), nfcd => nfcd.d.IdRegion, r => r.Id, (nfcd, r) => new { nfcd.n, nfcd.f, nfcd.c, nfcd.d, r })
+					.Include(n => n.IdFokontanyNavigation)
+					.ThenInclude(f => f.IdCommuneNavigation)
+					.ThenInclude(c => c.IdDistrictNavigation)
+					.ThenInclude(d => d.IdRegionNavigation)
 					.ToListAsync();
 
 				// Mettre à jour le dictionnaire avec les résultats de la requête
-				var regionDict = result.GroupBy(r => r.r.Nom)
+				var regionDict = result.GroupBy(r => r.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom)
 					.ToDictionary(g => g.Key, g => g.ToList());
 
 				foreach (var region in regionDict)
 				{
 					var regionData = regions[region.Key];
 					regionData.Data += region.Value.Count;
-
-					foreach (var item in region.Value)
-					{
-						var district = regionData.Districts.First(d => d.Id == item.d.Id);
-						district.Data += 1;
-
-						var commune = district.Communes.First(c => c.Id == item.c.Id);
-						commune.Data += 1;
-
-						var fokontany = commune.Fokontanies.First(f => f.Id == item.f.Id);
-						fokontany.Data += 1;
-					}
 				}
 
 				// Définir les options de cache
@@ -140,54 +109,199 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(regions);
 		}
 
-		[HttpPost("naissance/view/nombreParRegion")]
-		public async Task<ActionResult<Dictionary<string, RegionData>>> GetNaissancesParRegionView(StatistiqueFormDTO form)
+		[HttpPost("naissance/detailsNombreParRegion/{annee}/{nomRegion}")]
+		public async Task<ActionResult<RegionData>> GetDetailsNombreNaissancesParRegion(int annee, string nomRegion)
+		{
+			if (annee == 0)
+			{
+				annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"DetailsNaissancesParRegion_{annee}_{nomRegion}";
+			if (!_cache.TryGetValue(cacheKey, out RegionData region))
+			{
+				// Initialiser le région, districts, communes et fokontanys avec 0 naissances
+				region = await _context.Regions
+					.Where(r => r.Nom == nomRegion)
+					.Include(r => r.Districts)
+						.ThenInclude(d => d.Communes)
+							.ThenInclude(c => c.Fokontanies)
+					.AsNoTracking()
+					.Select(r => new RegionData
+					{
+						Region = r.Nom,
+						Data = 0,
+						Districts = r.Districts.Select(d => new DistrictData
+						{
+							Id = d.Id,
+							Nom = d.Nom,
+							Communes = d.Communes.Select(c => new CommuneData
+							{
+								Id = c.Id,
+								Nom = c.Nom,
+								Fokontanies = c.Fokontanies.Select(f => new FokontanyData
+								{
+									Id = f.Id,
+									Nom = f.Nom,
+									Data = 0
+								}).ToList()
+							}).ToList()
+						}).ToList()
+					})
+					.FirstOrDefaultAsync();
+
+
+				var result = await _context.Naissances
+					.Where(n => n.DateNaissance.Year == annee && n.Statut == 5)
+					.Join(_context.Fokontanies.AsNoTracking(), n => n.IdFokontany, f => f.Id, (n, f) => new { n, f })
+					.Join(_context.Communes.AsNoTracking(), nf => nf.f.IdCommune, c => c.Id, (nf, c) => new { nf.n, nf.f, c })
+					.Join(_context.Districts.AsNoTracking(), nfc => nfc.c.IdDistrict, d => d.Id, (nfc, d) => new { nfc.n, nfc.f, nfc.c, d })
+					.Join(_context.Regions.AsNoTracking(), nfcd => nfcd.d.IdRegion, r => r.Id, (nfcd, r) => new { nfcd.n, nfcd.f, nfcd.c, nfcd.d, r })
+					.ToListAsync();
+
+				foreach(var item in region.Districts.SelectMany(d => d.Communes.SelectMany(c => c.Fokontanies)))
+				{
+					item.Data = result.Count(r => r.f.Id == item.Id);
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, region, cacheEntryOptions);
+			}
+
+			return Ok(region);
+		}
+
+		[HttpPost("naissance/RepartitionSexeParRegion")]
+		public async Task<ActionResult<Dictionary<string, RegionData>>> GetRepartitionSexeNaissancesParRegion(StatistiqueSexeFormDTO form)
 		{
 			if (form.annee == 0)
 			{
 				form.annee = DateTime.Now.Year;
 			}
 
-			var cacheKey = $"NaissancesParRegionView_{form.annee}";
+			var cacheKey = $"RepartitionParRegion_{form.annee}_{form.sexe}";
 			if (!_cache.TryGetValue(cacheKey, out Dictionary<string, RegionData> regions))
 			{
-				var result = await _context.NaissancesParFokontanyEtRegions.ToListAsync();
+				// Initialiser un dictionnaire avec toutes les régions
+				regions = await _context.Regions
+					.AsNoTracking()
+					.Select(r => new RegionData
+					{
+						Region = r.Nom,
+						Data = 0
+					})
+					.ToDictionaryAsync(r => r.Region);
 
-				regions = result
-					.GroupBy(r => r.RegionNom)
-					.ToDictionary(
-						g => g.Key,
-						g => new RegionData
-						{
-							Region = g.Key,
-							Data = g.Sum(x => x.NombreNaissancesFokontany),
-							Districts = g.GroupBy(d => new { d.DistrictNom})
-								.Select(dg => new DistrictData
-								{
-									Nom = dg.Key.DistrictNom,
-									Communes = dg.GroupBy(c => new { c.CommuneNom})
-										.Select(cg => new CommuneData
-										{
-											Nom = cg.Key.CommuneNom,
-											Fokontanies = cg.Select(f => new FokontanyData
-											{
-												Nom = f.FokontanyNom,
-												Data = f.NombreNaissancesFokontany
-											}).ToList()
-										}).ToList()
-								}).ToList()
-						});
 
+				var result = await _context.Naissances
+					.Where(n => n.DateNaissance.Year == form.annee && n.Statut == 5 && n.Sexe == form.sexe)
+					.Include(n => n.IdFokontanyNavigation)
+					.ThenInclude(f => f.IdCommuneNavigation)
+					.ThenInclude(c => c.IdDistrictNavigation)
+					.ThenInclude(d => d.IdRegionNavigation)
+					.ToListAsync();
+
+				// Mettre à jour le dictionnaire avec les résultats de la requête
+				var regionDict = result.GroupBy(r => r.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom)
+					.ToDictionary(g => g.Key, g => g.ToList());
+
+				foreach (var region in regionDict)
+				{
+					var regionData = regions[region.Key];
+					regionData.Data += region.Value.Count;
+				}
+
+				// Définir les options de cache
 				var cacheEntryOptions = new MemoryCacheEntryOptions
 				{
+					Size = 1,
 					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
 					SlidingExpiration = TimeSpan.FromMinutes(5)
 				};
 
+				// Enregistrer les données dans le cache
 				_cache.Set(cacheKey, regions, cacheEntryOptions);
 			}
 
 			return Ok(regions);
+		}
+
+		[HttpPost("naissance/detailsRepartitionSexeParRegion/{annee}/{nomRegion}/{sexe}")]
+		public async Task<ActionResult<RegionData>> GetDetailsRepartitionSexeNaissanceParRegion(int annee, string nomRegion, int sexe)
+		{
+			if (annee == 0)
+			{
+				annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"DetailsRepartitionSexeParRegion_{annee}_{sexe}_{nomRegion}";
+			if (!_cache.TryGetValue(cacheKey, out RegionData region))
+			{
+				// Initialiser le région, districts, communes et fokontanys avec 0 naissances
+				region = await _context.Regions
+					.Where(r => r.Nom == nomRegion)
+					.Include(r => r.Districts)
+						.ThenInclude(d => d.Communes)
+							.ThenInclude(c => c.Fokontanies)
+					.AsNoTracking()
+					.Select(r => new RegionData
+					{
+						Region = r.Nom,
+						Data = 0,
+						Districts = r.Districts.Select(d => new DistrictData
+						{
+							Id = d.Id,
+							Nom = d.Nom,
+							Communes = d.Communes.Select(c => new CommuneData
+							{
+								Id = c.Id,
+								Nom = c.Nom,
+								Fokontanies = c.Fokontanies.Select(f => new FokontanyData
+								{
+									Id = f.Id,
+									Nom = f.Nom,
+									Data = 0
+								}).ToList()
+							}).ToList()
+						}).ToList()
+					})
+					.FirstOrDefaultAsync();
+
+
+				var result = await _context.Naissances
+					.Where(n => n.DateNaissance.Year == annee && n.Statut == 5 && n.Sexe == sexe)
+					.Join(_context.Fokontanies.AsNoTracking(), n => n.IdFokontany, f => f.Id, (n, f) => new { n, f })
+					.Join(_context.Communes.AsNoTracking(), nf => nf.f.IdCommune, c => c.Id, (nf, c) => new { nf.n, nf.f, c })
+					.Join(_context.Districts.AsNoTracking(), nfc => nfc.c.IdDistrict, d => d.Id, (nfc, d) => new { nfc.n, nfc.f, nfc.c, d })
+					.Join(_context.Regions.AsNoTracking(), nfcd => nfcd.d.IdRegion, r => r.Id, (nfcd, r) => new { nfcd.n, nfcd.f, nfcd.c, nfcd.d, r })
+					.ToListAsync();
+
+				foreach (var item in region.Districts.SelectMany(d => d.Communes.SelectMany(c => c.Fokontanies)))
+				{
+					item.Data = result.Count(r => r.f.Id == item.Id);
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, region, cacheEntryOptions);
+			}
+
+			return Ok(region);
 		}
 
 		[HttpPost("grossesse/nombreParTrancheAge")]

@@ -179,7 +179,7 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(region);
 		}
 
-		[HttpPost("naissance/RepartitionSexeParRegion")]
+		[HttpPost("naissance/repartitionSexeParRegion")]
 		public async Task<ActionResult<Dictionary<string, RegionData>>> GetRepartitionSexeNaissancesParRegion(StatistiqueSexeFormDTO form)
 		{
 			if (form.annee == 0)
@@ -714,7 +714,7 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(result);
 		}
 
-		[HttpPost("deces/MortaliteParTrancheAge")]
+		[HttpPost("deces/mortaliteParTrancheAge")]
 		public async Task<ActionResult> GetMortaliteParTrancheAgeAsync(StatistiqueFormDTO form)
 		{
 			if (form.annee == 0)
@@ -761,5 +761,337 @@ namespace Backend_guichet_unique.Controllers
 
 			return Ok(new { Series = result, Labels = labels });
 		}
+
+		[HttpPost("deces/causeParRegion")]
+		public async Task<ActionResult<Dictionary<string, RegionDataString>>> GetCauseDecesParRegion(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var regions = await _context.Regions
+				.AsNoTracking()
+				.Select(r => new RegionDataString
+				{
+					Region = r.Nom
+				})
+				.ToDictionaryAsync(r => r.Region);
+
+			var causesParRegion = await _context.Deces
+				.Where(d => d.DateDeces.Year == form.annee && d.Statut == 5)
+				.Include(d => d.IdCauseDecesNavigation)
+				.Include(d => d.IdDefuntNavigation)
+				.ThenInclude(i => i.IdMenageNavigation)
+				.ThenInclude(d => d.IdFokontanyNavigation)
+					.ThenInclude(f => f.IdCommuneNavigation)
+					.ThenInclude(c => c.IdDistrictNavigation)
+					.ThenInclude(d => d.IdRegionNavigation)
+				.GroupBy(d => new
+				{
+					RegionName = d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom,
+					CauseName = d.IdCauseDecesNavigation.Nom
+				})
+				.Select(g => new
+				{
+					Region = g.Key.RegionName,
+					CauseDeces = g.Key.CauseName,
+					Count = g.Count()
+				})
+				.ToListAsync();
+
+			var groupedByRegion = causesParRegion
+				.GroupBy(c => c.Region)
+				.Select(g => new
+				{
+					Region = g.Key,
+					CauseDeces = g.OrderByDescending(c => c.Count).First().CauseDeces
+				})
+				.ToList();
+
+			foreach (var item in groupedByRegion)
+			{
+				if (regions.ContainsKey(item.Region))
+				{
+					regions[item.Region].Data = item.CauseDeces;
+				}
+			}
+
+			return Ok(regions);
+		}
+
+		[HttpPost("deces/detailsCauseParRegion/{annee}/{nomRegion}")]
+		public async Task<ActionResult<RegionDataString>> GetCauseDecesParRegion(int annee, string nomRegion)
+		{
+			if (annee == 0)
+			{
+				annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"DetailsCauseParRegion_{annee}_{nomRegion}";
+			if (!_cache.TryGetValue(cacheKey, out RegionDataString region))
+			{
+				// Initialiser le région, districts, communes et fokontanys
+				region = await _context.Regions
+					.Where(r => r.Nom == nomRegion)
+					.Include(r => r.Districts)
+						.ThenInclude(d => d.Communes)
+							.ThenInclude(c => c.Fokontanies)
+					.AsNoTracking()
+					.Select(r => new RegionDataString
+					{
+						Region = r.Nom,
+						Districts = r.Districts.Select(d => new DistrictDataString
+						{
+							Id = d.Id,
+							Nom = d.Nom,
+							Communes = d.Communes.Select(c => new CommuneDataString
+							{
+								Id = c.Id,
+								Nom = c.Nom,
+								Fokontanies = c.Fokontanies.Select(f => new FokontanyDataString
+								{
+									Id = f.Id,
+									Nom = f.Nom
+								}).ToList()
+							}).ToList()
+						}).ToList()
+					})
+					.FirstOrDefaultAsync();
+
+				// Obtenir les décès pour l'année et la région spécifiées
+				var deces = await _context.Deces
+					.Where(d => d.DateDeces.Year == annee && d.Statut == 5 && d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom == nomRegion)
+					.Include(d => d.IdDefuntNavigation)
+						.ThenInclude(i => i.IdMenageNavigation)
+						.ThenInclude(d => d.IdFokontanyNavigation)
+					.Include(d => d.IdCauseDecesNavigation)
+					.ToListAsync();
+
+				// Grouper les décès par Fokontany et par cause de décès
+				var fokontanyDict = deces
+					.GroupBy(d => new { d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.Id, d.IdCauseDecesNavigation.Nom })
+					.ToDictionary(g => g.Key, g => g.ToList());
+
+				// Dictionnaire temporaire pour stocker les causes et leurs comptes pour chaque Fokontany
+				var tempCauses = new Dictionary<int, Dictionary<string, int>>();
+
+				foreach (var group in fokontanyDict)
+				{
+					var fokontanyId = group.Key.Id;
+					var cause = group.Key.Nom;
+					var count = group.Value.Count;
+
+					if (!tempCauses.ContainsKey(fokontanyId))
+					{
+						tempCauses[fokontanyId] = new Dictionary<string, int>();
+					}
+
+					if (!tempCauses[fokontanyId].ContainsKey(cause))
+					{
+						tempCauses[fokontanyId][cause] = 0;
+					}
+					tempCauses[fokontanyId][cause] += count;
+				}
+
+				// Mettre à jour la propriété Data avec la cause la plus fréquente pour chaque Fokontany
+				foreach (var district in region.Districts)
+				{
+					foreach (var commune in district.Communes)
+					{
+						foreach (var fokontany in commune.Fokontanies)
+						{
+							if (tempCauses.ContainsKey(fokontany.Id))
+							{
+								fokontany.Data = tempCauses[fokontany.Id]
+									.OrderByDescending(c => c.Value)
+									.FirstOrDefault().Key;
+							}
+						}
+					}
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, region, cacheEntryOptions);
+			}
+
+			return Ok(region);
+		}
+
+		[HttpPost("deces/tauxMortaliteParRegion")]
+		public async Task<ActionResult<Dictionary<string, RegionData>>> GetTauxMortaliteParRegion(StatistiqueFormDTO form)
+		{
+			if (form.annee == 0)
+			{
+				form.annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"TauxMortaliteParRegion_{form.annee}";
+			if (!_cache.TryGetValue(cacheKey, out Dictionary<string, RegionData> regions))
+			{
+				// Initialiser un dictionnaire avec toutes les régions
+				regions = await _context.Regions
+					.AsNoTracking()
+					.Select(r => new RegionData
+					{
+						Region = r.Nom,
+						Data = 0
+					})
+					.ToDictionaryAsync(r => r.Region);
+
+				// Obtenir les décès pour l'année spécifiée
+				var deces = await _context.Deces
+					.Where(d => d.DateDeces.Year == form.annee && d.Statut == 5)
+					.Include(d => d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation)
+					.ToListAsync();
+
+				// Obtenir la population pour chaque région
+				var populations = await _context.Individus
+					.Where(i => i.DateNaissance.Year <= form.annee)
+					.Include(i => i.IdMenageNavigation)
+						.ThenInclude(m => m.IdFokontanyNavigation)
+						.ThenInclude(f => f.IdCommuneNavigation)
+						.ThenInclude(c => c.IdDistrictNavigation)
+						.ThenInclude(d => d.IdRegionNavigation)
+					.GroupBy(i => i.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom)
+					.Select(g => new
+					{
+						Region = g.Key,
+						Population = g.Count()
+					})
+					.ToDictionaryAsync(g => g.Region, g => g.Population);
+
+				// Grouper les décès par région
+				var decesParRegion = deces
+					.GroupBy(d => d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom)
+					.ToDictionary(g => g.Key, g => g.Count());
+
+				// Calculer le taux de mortalité pour chaque région
+				foreach (var region in regions)
+				{
+					if (decesParRegion.ContainsKey(region.Key) && populations.ContainsKey(region.Key))
+					{
+						var nombreDeces = decesParRegion[region.Key];
+						var population = populations[region.Key];
+						region.Value.Data = (int)Math.Floor((double)nombreDeces / population * 100);
+					}
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, regions, cacheEntryOptions);
+			}
+
+			return Ok(regions);
+		}
+
+		[HttpPost("deces/detailsTauxMortaliteParRegion/{annee}/{nomRegion}")]
+		public async Task<ActionResult<RegionData>> GetDetailsTauxMortaliteParRegion(int annee, string nomRegion)
+		{
+			if (annee == 0)
+			{
+				annee = DateTime.Now.Year;
+			}
+
+			var cacheKey = $"DetailsTauxMortaliteParRegion_{annee}_{nomRegion}";
+			if (!_cache.TryGetValue(cacheKey, out RegionData region))
+			{
+				// Initialiser le région, districts, communes et fokontanys avec 0 taux de mortalité
+				region = await _context.Regions
+					.Where(r => r.Nom == nomRegion)
+					.Include(r => r.Districts)
+						.ThenInclude(d => d.Communes)
+							.ThenInclude(c => c.Fokontanies)
+					.AsNoTracking()
+					.Select(r => new RegionData
+					{
+						Region = r.Nom,
+						Data = 0,
+						Districts = r.Districts.Select(d => new DistrictData
+						{
+							Id = d.Id,
+							Nom = d.Nom,
+							Communes = d.Communes.Select(c => new CommuneData
+							{
+								Id = c.Id,
+								Nom = c.Nom,
+								Fokontanies = c.Fokontanies.Select(f => new FokontanyData
+								{
+									Id = f.Id,
+									Nom = f.Nom,
+									Data = 0
+								}).ToList()
+							}).ToList()
+						}).ToList()
+					})
+					.FirstOrDefaultAsync();
+
+				// Obtenir les décès pour l'année et la région spécifiées
+				var deces = await _context.Deces
+					.Where(d => d.DateDeces.Year == annee && d.Statut == 5 && d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom == nomRegion)
+					.Include(d => d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation)
+					.ToListAsync();
+
+				// Obtenir la population pour chaque Fokontany
+				var populations = await _context.Individus
+					.Where(i => i.DateNaissance.Year <= annee && i.IdMenageNavigation.IdFokontanyNavigation.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom == nomRegion)
+					.Include(i => i.IdMenageNavigation.IdFokontanyNavigation)
+					.GroupBy(i => i.IdMenageNavigation.IdFokontanyNavigation.Nom)
+					.Select(g => new
+					{
+						Fokontany = g.Key,
+						Population = g.Count()
+					})
+					.ToDictionaryAsync(g => g.Fokontany, g => g.Population);
+
+				// Grouper les décès par Fokontany
+				var decesParFokontany = deces
+					.GroupBy(d => d.IdDefuntNavigation.IdMenageNavigation.IdFokontanyNavigation.Nom)
+					.ToDictionary(g => g.Key, g => g.Count());
+
+				// Calculer le taux de mortalité pour chaque Fokontany
+				foreach (var item in region.Districts.SelectMany(d => d.Communes.SelectMany(c => c.Fokontanies)))
+				{
+					if (decesParFokontany.ContainsKey(item.Nom) && populations.ContainsKey(item.Nom))
+					{
+						var nombreDeces = decesParFokontany[item.Nom];
+						var population = populations[item.Nom];
+						Console.WriteLine($"{item.Nom} : {nombreDeces} / {population}");
+						item.Data = (int)Math.Floor((double)nombreDeces / population * 100);
+					}
+				}
+
+				// Définir les options de cache
+				var cacheEntryOptions = new MemoryCacheEntryOptions
+				{
+					Size = 1,
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+					SlidingExpiration = TimeSpan.FromMinutes(5)
+				};
+
+				// Enregistrer les données dans le cache
+				_cache.Set(cacheKey, region, cacheEntryOptions);
+			}
+
+			return Ok(region);
+		}
+
+
+
 	}
 }

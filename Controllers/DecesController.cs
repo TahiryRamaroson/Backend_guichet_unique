@@ -13,6 +13,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using Backend_guichet_unique.Services;
+using Firebase.Storage;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -23,14 +24,12 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
         private readonly IMapper _mapper;
-		private readonly EmailService _emailService;
 		private readonly IConfiguration _configuration;
 
-		public DecesController(GuichetUniqueContext context, IMapper mapper, EmailService emailService, IConfiguration configuration)
+		public DecesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
 			_mapper = mapper;
-			_emailService = emailService;
 			_configuration = configuration;
 		}
 
@@ -691,14 +690,14 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage( _configuration["FirebaseStorage:Bucket"])
-			//	.Child("deces")
-			//	.Child(deceDto.PieceJustificative.FileName)
-			//	.PutAsync(deceDto.PieceJustificative.OpenReadStream());
+			var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
+				.Child("deces")
+				.Child(deceDto.PieceJustificative.FileName)
+				.PutAsync(deceDto.PieceJustificative.OpenReadStream());
 
 			var dece = _mapper.Map<Dece>(deceDto);
 
-            dece.PieceJustificative = "-----------";
+            dece.PieceJustificative = firebaseStorage;
 
 			_context.Deces.Add(dece);
 

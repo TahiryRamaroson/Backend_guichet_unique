@@ -3,40 +3,20 @@
   "WorkspaceRootPath": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\emailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\emailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\decescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\decescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\naissancescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\naissancescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\emailformdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\emailformdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\causedecescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\causedecescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\fokontanycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\fokontanycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\migrationentrantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\migrationentrantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\menagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\menagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\individu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\individu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\statistique\\regiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\statistique\\regiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -50,11 +30,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -63,11 +43,12 @@
               "ViewState": "AQIAAB8AAAAAAAAAAAAAADgAAABCAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-19T06:42:04.389Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 4,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -88,102 +69,42 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "EmailFormDTO.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\EmailFormDTO.cs",
-              "RelativeDocumentMoniker": "Models\\DTO\\EmailFormDTO.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\EmailFormDTO.cs",
-              "RelativeToolTip": "Models\\DTO\\EmailFormDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-24T06:08:52.029Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "EmailController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\EmailController.cs",
-              "RelativeDocumentMoniker": "Controllers\\EmailController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\EmailController.cs",
-              "RelativeToolTip": "Controllers\\EmailController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAADAAAA",
+              "Title": "DecesController.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\DecesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DecesController.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\DecesController.cs",
+              "RelativeToolTip": "Controllers\\DecesController.cs",
+              "ViewState": "AQIAANIBAAAAAAAAAAAcwLsCAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-24T06:04:51.21Z",
+              "WhenOpened": "2024-09-24T07:37:01.557Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NaissancesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\NaissancesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\NaissancesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\NaissancesController.cs",
-              "RelativeToolTip": "Controllers\\NaissancesController.cs",
-              "ViewState": "AQIAABIAAAAAAAAAAAAAAB4AAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T12:03:52.551Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "FokontanyController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\FokontanyController.cs",
               "RelativeDocumentMoniker": "Controllers\\FokontanyController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\FokontanyController.cs",
               "RelativeToolTip": "Controllers\\FokontanyController.cs",
-              "ViewState": "AQIAABQAAAAAAAAAAAAxwDABAAAvAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T10:52:00.875Z"
+              "WhenOpened": "2024-09-24T07:34:55.034Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "MigrationEntrantesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationEntrantesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MigrationEntrantesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationEntrantesController.cs",
-              "RelativeToolTip": "Controllers\\MigrationEntrantesController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAgAAAAoAAAA",
+              "DocumentIndex": 1,
+              "Title": "CauseDecesController.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CauseDecesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CauseDecesController.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CauseDecesController.cs",
+              "RelativeToolTip": "Controllers\\CauseDecesController.cs",
+              "ViewState": "AQIAACIBAAAAAAAAAAAywBEAAABHAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T07:26:42.135Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MenagesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MenagesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MenagesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MenagesController.cs",
-              "RelativeToolTip": "Controllers\\MenagesController.cs",
-              "ViewState": "AQIAAB8AAAAAAAAAAAAQwDoAAAAvAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T07:26:08.09Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Individu.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\Individu.cs",
-              "RelativeDocumentMoniker": "Models\\Individu.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\Individu.cs",
-              "RelativeToolTip": "Models\\Individu.cs",
-              "ViewState": "AQIAAC0AAAAAAAAAAAAAADAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T05:34:42.613Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "RegionData.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\Statistique\\RegionData.cs",
-              "RelativeDocumentMoniker": "Models\\Statistique\\RegionData.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\Statistique\\RegionData.cs",
-              "RelativeToolTip": "Models\\Statistique\\RegionData.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T05:25:02.842Z"
+              "WhenOpened": "2024-09-24T07:34:34.953Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -17,6 +17,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using Backend_guichet_unique.Services;
+using Firebase.Storage;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -28,14 +29,12 @@ namespace Backend_guichet_unique.Controllers
         private readonly GuichetUniqueContext _context;
         private readonly IMapper _mapper;
 		private readonly IConfiguration _configuration;
-		private readonly EmailService _emailService;
 
-		public GrossessesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration, EmailService emailService)
+		public GrossessesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
 			_mapper = mapper;
 			_configuration = configuration;
-			_emailService = emailService;
 		}
 
 		[HttpPost("import/csv")]
@@ -779,14 +778,14 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
-			//	.Child("grossesse")
-			//	.Child(grossesseDto.PieceJustificative.FileName)
-			//	.PutAsync(grossesseDto.PieceJustificative.OpenReadStream());
+			var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
+				.Child("grossesse")
+				.Child(grossesseDto.PieceJustificative.FileName)
+				.PutAsync(grossesseDto.PieceJustificative.OpenReadStream());
 
 			var grossesse = _mapper.Map<Grossesse>(grossesseDto);
 
-			grossesse.PieceJustificative = "-----------";
+			grossesse.PieceJustificative = firebaseStorage;
 			grossesse.DateSaisie = DateOnly.FromDateTime(DateTime.Now);
 
 			_context.Grossesses.Add(grossesse);

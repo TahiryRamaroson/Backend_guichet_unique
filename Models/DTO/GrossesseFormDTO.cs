@@ -10,7 +10,7 @@
 
 		public DateOnly DateAccouchement { get; set; }
 
-		public List<int> AntecedentMedicaux { get; set; } = new List<int>();
+		public List<int>? AntecedentMedicaux { get; set; } = new List<int>();
 
 		public double RisqueComplication { get; set; }
 

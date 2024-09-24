@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-	[Authorize(Policy = "AdministrateurPolicy")]
+	[Authorize(Policy = "IntervenantOuResponsableOuAdlinistrateurPolicy")]
 	[Route("api/[controller]")]
     [ApiController]
     public class AntecedentMedicauxController : ControllerBase

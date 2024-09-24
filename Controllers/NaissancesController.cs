@@ -26,14 +26,12 @@ namespace Backend_guichet_unique.Controllers
     {
         private readonly GuichetUniqueContext _context;
         private readonly IMapper _mapper;
-		private readonly EmailService _emailService;
 		private readonly IConfiguration _configuration;
 
-		public NaissancesController(GuichetUniqueContext context, IMapper mapper, EmailService emailService, IConfiguration configuration)
+		public NaissancesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
 			_mapper = mapper;
-			_emailService = emailService;
 			_configuration = configuration;
 		}
 
@@ -815,15 +813,15 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
-			//	.Child("naissance")
-			//	.Child(naissanceDto.PieceJustificative.FileName)
-			//	.PutAsync(naissanceDto.PieceJustificative.OpenReadStream());
+			var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
+				.Child("naissance")
+				.Child(naissanceDto.PieceJustificative.FileName)
+				.PutAsync(naissanceDto.PieceJustificative.OpenReadStream());
 
 			var naissance = _mapper.Map<Naissance>(naissanceDto);
 
-            //naissance.PieceJustificative = firebaseStorage;
-            naissance.PieceJustificative = "-----------";
+            naissance.PieceJustificative = firebaseStorage;
+            //naissance.PieceJustificative = "-----------";
 
 			_context.Naissances.Add(naissance);
 
@@ -842,12 +840,6 @@ namespace Backend_guichet_unique.Controllers
 			_context.HistoriqueApplications.Add(historiqueApplication);
 
 			await _context.SaveChangesAsync();
-
-            //string toEmail = "taxramaroson2@gmail.com";
-			//string subject = "Nouvelle naissance";
-			//string body = "Une nouvelle naissance a été enregistrée.";
-			//await _emailService.SendEmailAsync(toEmail, subject, body);
-
 
 			return CreatedAtAction("GetNaissance", new { id = naissance.Id }, naissance);
         }

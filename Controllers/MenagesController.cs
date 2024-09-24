@@ -13,8 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-	[Authorize(Policy = "IntervenantPolicy")]
-	[Authorize(Policy = "ResponsablePolicy")]
+	[Authorize(Policy = "IntervenantOuResponsablePolicy")]
 	[Route("api/[controller]")]
     [ApiController]
     public class MenagesController : ControllerBase
@@ -57,7 +56,7 @@ namespace Backend_guichet_unique.Controllers
 
 			if (menage == null)
 			{
-				return NotFound();
+				return Ok(new { error = "Ménage introuvable"});
 			}
 
 			var menageDto = _mapper.Map<MenageDTO>(menage);

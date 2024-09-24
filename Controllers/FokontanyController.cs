@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_guichet_unique.Controllers
 {
-	[Authorize(Policy = "AdministrateurPolicy")]
+	[Authorize(Policy = "IntervenantOuResponsableOuAdlinistrateurPolicy")]
 	[Route("api/[controller]")]
     [ApiController]
     public class FokontanyController : ControllerBase
@@ -303,9 +303,6 @@ namespace Backend_guichet_unique.Controllers
         public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetFokontanies()
         {
 			var fonkotanies = await _context.Fokontanies
-                .Include(f => f.IdCommuneNavigation)
-				.ThenInclude(c => c.IdDistrictNavigation)
-				.ThenInclude(d => d.IdRegionNavigation)
 				.ToListAsync();
 
 			var fonkotaniesDto = _mapper.Map<IEnumerable<FokontanyDTO>>(fonkotanies);

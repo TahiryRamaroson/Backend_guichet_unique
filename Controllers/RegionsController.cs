@@ -279,8 +279,21 @@ namespace Backend_guichet_unique.Controllers
             return await _context.Regions.ToListAsync();
         }
 
-        // GET: api/Regions/5
-        [HttpGet("{id}")]
+		// fonction pour avoir la liste des districts d'une région
+		[HttpGet("{id}/districts")]
+		public async Task<ActionResult<IEnumerable<District>>> GetDistricts(int id)
+		{
+			var region = await _context.Regions.FindAsync(id);
+			if (region == null)
+			{
+				return NotFound();
+			}
+
+			return await _context.Districts.Where(d => d.IdRegion == id).ToListAsync();
+		}
+
+		// GET: api/Regions/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<Region>> GetRegion(int id)
         {
             var region = await _context.Regions.FindAsync(id);

@@ -312,8 +312,21 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(communesDto);
 		}
 
-        // GET: api/Communes/5
-        [HttpGet("{id}")]
+		// fonction pour obtenir la liste des fokontany d'une commune
+		[HttpGet("{id}/fokontany")]
+		public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetFokontanyByCommune(int id)
+		{
+			var fokontany = await _context.Fokontanies
+				.Include(f => f.IdCommuneNavigation)
+				.Where(f => f.IdCommune == id)
+				.ToListAsync();
+
+			var fokontanyDto = _mapper.Map<IEnumerable<FokontanyDTO>>(fokontany);
+			return Ok(fokontanyDto);
+		}
+
+		// GET: api/Communes/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<CommuneDTO>> GetCommune(int id)
         {
 			var commune = await _context.Communes

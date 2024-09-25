@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using Firebase.Storage;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -757,14 +758,14 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage( _configuration["FirebaseStorage:Bucket"])
-			//	.Child("migrationSortante")
-			//	.Child(migrationSortanteDto.PieceJustificative.FileName)
-			//	.PutAsync(migrationSortanteDto.PieceJustificative.OpenReadStream());
+			var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
+				.Child("migrationSortante")
+				.Child(migrationSortanteDto.PieceJustificative.FileName)
+				.PutAsync(migrationSortanteDto.PieceJustificative.OpenReadStream());
 
 			var migrationSortante = _mapper.Map<MigrationSortante>(migrationSortanteDto);
 
-			migrationSortante.PieceJustificative = "-----------";
+			migrationSortante.PieceJustificative = firebaseStorage;
 
 			_context.MigrationSortantes.Add(migrationSortante);
 

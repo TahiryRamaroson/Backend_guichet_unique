@@ -320,8 +320,27 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(districtsDto);
 		}
 
-        // GET: api/Districts/5
-        [HttpGet("{id}")]
+		// fonction pour obtenir la liste des communes d'une district
+		[HttpGet("{id}/communes")]
+		public async Task<ActionResult<IEnumerable<CommuneDTO>>> GetCommunes(int id)
+		{
+			var district = await _context.Districts.FindAsync(id);
+			if (district == null)
+			{
+				return NotFound();
+			}
+
+			var communes = await _context.Communes
+				.Include(c => c.IdDistrictNavigation)
+				.Where(c => c.IdDistrict == id)
+				.ToListAsync();
+
+			var communesDto = _mapper.Map<IEnumerable<CommuneDTO>>(communes);
+			return Ok(communesDto);
+		}
+
+		// GET: api/Districts/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<District>> GetDistrict(int id)
         {
             var district = await _context.Districts

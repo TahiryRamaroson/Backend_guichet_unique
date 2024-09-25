@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using NuGet.Packaging;
+using Firebase.Storage;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -355,30 +357,43 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpGet("individu/{idMenage}")]
-		public async Task<ActionResult<IEnumerable<Individu>>> GetIndividu(int idMenage)
+		public async Task<ActionResult<IEnumerable<MigrationInfoIndividuDTO>>> GetIndividu(int idMenage)
 		{
 			var menage = await _context.Menages.FindAsync(idMenage);
 
 			var migrationSortantes = await _context.MigrationSortantes
-				.Where(m => m.IdFokontanyDestination == menage.IdFokontany && m.Statut == 5)
+				.Where(m => m.IdFokontanyDestination == menage.IdFokontany && m.Statut == 5 && m.NouveauMenage == -10)
 				.ToListAsync();
 
-			var individus = new List<Individu>();
+			var info = new List<MigrationInfoIndividuDTO>();
 			foreach (var migrationSortante in migrationSortantes)
 			{
+				MigrationInfoIndividuDTO migrationInfoIndividu = new MigrationInfoIndividuDTO();
 				var individu = await _context.Individus
 					.Where(i => i.Id == migrationSortante.IdIndividu && i.Statut == 1)
+					.Include(i => i.IdMenageNavigation)
+					.ThenInclude(m => m.IdFokontanyNavigation)
+							.ThenInclude(f => f.IdCommuneNavigation)
+								.ThenInclude(c => c.IdDistrictNavigation)
+									.ThenInclude(d => d.IdRegionNavigation)
 					.ToListAsync();
 
-				individus.AddRange(individu);
+                foreach (var item in individu)
+                {
+					var individuDtos = _mapper.Map<IndividuDTO>(item);
+					migrationInfoIndividu.Individu = individuDtos;
+					migrationInfoIndividu.MigrationSortante = migrationSortante;
+				}
+
+                info.Add(migrationInfoIndividu);
 			}
 
-			if (individus == null)
-			{
-				return NotFound();
-			}
+			//if (individus == null)
+			//{
+			//	return Ok(new { error = "Aucun individu enregistré"});
+			//}
 
-			return Ok(individus);
+			return Ok(info);
 		}
 
 		[HttpPost("filtre/page/{pageNumber}")]
@@ -764,14 +779,14 @@ namespace Backend_guichet_unique.Controllers
 				return Ok(new { error = "Le fichier est trop volumineux." });
 			}
 
-			//var firebaseStorage = await new FirebaseStorage( _configuration["FirebaseStorage:Bucket"])
-			//	.Child("migrationEntrante")
-			//	.migrationEntranteDto.PieceJustificative.FileName)
-			//	.PutAsync(migrationEntranteDto.PieceJustificative.OpenReadStream());
+			var firebaseStorage = await new FirebaseStorage(_configuration["FirebaseStorage:Bucket"])
+				.Child("migrationEntrante")
+				.Child(migrationEntranteDto.PieceJustificative.FileName)
+				.PutAsync(migrationEntranteDto.PieceJustificative.OpenReadStream());
 
 			var migrationEntrante = _mapper.Map<MigrationEntrante>(migrationEntranteDto);
 
-			migrationEntrante.PieceJustificative = "-----------";
+			migrationEntrante.PieceJustificative = firebaseStorage;
 
 			_context.MigrationEntrantes.Add(migrationEntrante);
 

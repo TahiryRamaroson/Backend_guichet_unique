@@ -365,6 +365,11 @@ namespace Backend_guichet_unique.Controllers
 				.Where(m => m.IdFokontanyDestination == menage.IdFokontany && m.Statut == 5 && m.NouveauMenage == -10)
 				.ToListAsync();
 
+			if(migrationSortantes.Count == 0)
+			{
+				return Ok(new { error = "Aucun individu enregistré" });
+			}
+
 			var info = new List<MigrationInfoIndividuDTO>();
 			foreach (var migrationSortante in migrationSortantes)
 			{
@@ -387,11 +392,6 @@ namespace Backend_guichet_unique.Controllers
 
                 info.Add(migrationInfoIndividu);
 			}
-
-			//if (individus == null)
-			//{
-			//	return Ok(new { error = "Aucun individu enregistré"});
-			//}
 
 			return Ok(info);
 		}

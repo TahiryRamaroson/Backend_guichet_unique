@@ -393,13 +393,13 @@ namespace Backend_guichet_unique.Controllers
 
 			if (!string.IsNullOrEmpty(filtreNaissanceDto.NomNouveauNe))
 			{
-				query = query.Where(n => n.NomNouveauNe.ToLower().Contains(filtreNaissanceDto.NomNouveauNe) ||
-										 n.PrenomNouveauNe.ToLower().Contains(filtreNaissanceDto.NomNouveauNe));
+				query = query.Where(n => n.NomNouveauNe.ToLower().Contains(filtreNaissanceDto.NomNouveauNe.ToLower()) ||
+										 n.PrenomNouveauNe.ToLower().Contains(filtreNaissanceDto.NomNouveauNe.ToLower()));
 			}
 
 			if (!string.IsNullOrEmpty(filtreNaissanceDto.NumeroMenage))
 			{
-				query = query.Where(n => n.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreNaissanceDto.NumeroMenage));
+				query = query.Where(n => n.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreNaissanceDto.NumeroMenage.ToLower()));
 			}
 
 			if (filtreNaissanceDto.Statut != -1)

@@ -583,7 +583,7 @@ namespace Backend_guichet_unique.Controllers
 
 			if (!string.IsNullOrEmpty(filtrePlainteDto.NumeroMenage))
 			{
-				query = query.Where(p => p.IdVictimeNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtrePlainteDto.NumeroMenage));
+				query = query.Where(p => p.IdVictimeNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtrePlainteDto.NumeroMenage.ToLower()));
 			}
 
 			if (filtrePlainteDto.Statut != -1)

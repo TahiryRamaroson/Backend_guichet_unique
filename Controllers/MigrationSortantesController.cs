@@ -369,7 +369,7 @@ namespace Backend_guichet_unique.Controllers
 
 			if (!string.IsNullOrEmpty(filtreMigrationSortanteDto.NumeroMenage))
 			{
-				query = query.Where(m => m.IdIndividuNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreMigrationSortanteDto.NumeroMenage));
+				query = query.Where(m => m.IdIndividuNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreMigrationSortanteDto.NumeroMenage.ToLower()));
 			}
 
 			if (filtreMigrationSortanteDto.Statut != -1)
@@ -403,6 +403,9 @@ namespace Backend_guichet_unique.Controllers
 				.Include(m => m.IdIntervenantNavigation)
 				.Include(m => m.IdResponsableNavigation)
 				.Include(m => m.IdFokontanyDestinationNavigation)
+					.ThenInclude(m => m.IdCommuneNavigation)
+						.ThenInclude(m => m.IdDistrictNavigation)
+							.ThenInclude(m => m.IdRegionNavigation)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)
 				.ToListAsync();
@@ -426,6 +429,9 @@ namespace Backend_guichet_unique.Controllers
 				.Include(m => m.IdIntervenantNavigation)
 				.Include(m => m.IdResponsableNavigation)
 				.Include(m => m.IdFokontanyDestinationNavigation)
+					.ThenInclude(m => m.IdCommuneNavigation)
+						.ThenInclude(m => m.IdDistrictNavigation)
+							.ThenInclude(m => m.IdRegionNavigation)
 				.OrderByDescending(n => n.Id)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)

@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\migrationentrantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\migrationentrantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\migrationsortantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\migrationsortantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\migrationinfoindividudto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\migrationinfoindividudto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\grossessescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\grossessescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\migrationsortante.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\migrationsortante.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\controllers\\plaintescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,14 +39,6 @@
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:controllers\\naissancescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\models\\dto\\migrationinfoindividudto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:models\\dto\\migrationinfoindividudto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|d:\\itu\\s6\\stage\\projet\\backend_guichet_unique\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{415C8060-6278-404C-976E-059F428E53B7}|Backend_guichet_unique.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
@@ -50,11 +50,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -88,13 +88,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
+              "Title": "MigrationSortante.cs",
+              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\MigrationSortante.cs",
+              "RelativeDocumentMoniker": "Models\\MigrationSortante.cs",
+              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\MigrationSortante.cs",
+              "RelativeToolTip": "Models\\MigrationSortante.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAIwCMAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-26T13:44:35.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "MigrationSortantesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationSortantesController.cs",
               "RelativeDocumentMoniker": "Controllers\\MigrationSortantesController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationSortantesController.cs",
               "RelativeToolTip": "Controllers\\MigrationSortantesController.cs",
-              "ViewState": "AQIAADQBAAAAAAAAAAAowAAAAAAAAAAA",
+              "ViewState": "AQIAAHUBAAAAAAAAAADwv3UBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-26T11:31:10.33Z",
               "EditorCaption": ""
@@ -107,14 +119,13 @@
               "RelativeDocumentMoniker": "Controllers\\GrossessesController.cs",
               "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\GrossessesController.cs",
               "RelativeToolTip": "Controllers\\GrossessesController.cs",
-              "ViewState": "AQIAACQBAAAAAAAAAAAkwMsBAACPAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAMsBAACPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-26T10:40:28.408Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-26T10:40:28.408Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "CauseDecesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\CauseDecesController.cs",
               "RelativeDocumentMoniker": "Controllers\\CauseDecesController.cs",
@@ -126,7 +137,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "PlaintesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\PlaintesController.cs",
               "RelativeDocumentMoniker": "Controllers\\PlaintesController.cs",
@@ -138,7 +149,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "DecesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\DecesController.cs",
               "RelativeDocumentMoniker": "Controllers\\DecesController.cs",
@@ -150,7 +161,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "NaissancesController.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\NaissancesController.cs",
               "RelativeDocumentMoniker": "Controllers\\NaissancesController.cs",
@@ -162,7 +173,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 1,
               "Title": "MigrationInfoIndividuDTO.cs",
               "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Models\\DTO\\MigrationInfoIndividuDTO.cs",
               "RelativeDocumentMoniker": "Models\\DTO\\MigrationInfoIndividuDTO.cs",
@@ -171,19 +182,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-25T11:17:53.748Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MigrationEntrantesController.cs",
-              "DocumentMoniker": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationEntrantesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MigrationEntrantesController.cs",
-              "ToolTip": "D:\\ITU\\S6\\Stage\\Projet\\Backend_guichet_unique\\Controllers\\MigrationEntrantesController.cs",
-              "RelativeToolTip": "Controllers\\MigrationEntrantesController.cs",
-              "ViewState": "AQIAAPUAAAAAAAAAAAAkwJgBAAB3AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-25T10:37:46.676Z",
-              "EditorCaption": ""
             }
           ]
         }

@@ -405,8 +405,8 @@ namespace Backend_guichet_unique.Controllers
 
 			if (!string.IsNullOrEmpty(filtreMigrationEntranteDto.NumeroMenage))
 			{
-				query = query.Where(m => m.IdAncienMenageNavigation.NumeroMenage.ToLower().Contains(filtreMigrationEntranteDto.NumeroMenage) ||
-										m.IdNouveauMenageNavigation.NumeroMenage.ToLower().Contains(filtreMigrationEntranteDto.NumeroMenage)
+				query = query.Where(m => m.IdAncienMenageNavigation.NumeroMenage.ToLower().Contains(filtreMigrationEntranteDto.NumeroMenage.ToLower()) ||
+										m.IdNouveauMenageNavigation.NumeroMenage.ToLower().Contains(filtreMigrationEntranteDto.NumeroMenage.ToLower())
 									);
 			}
 

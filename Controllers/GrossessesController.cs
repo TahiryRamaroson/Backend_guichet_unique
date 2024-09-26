@@ -457,7 +457,7 @@ namespace Backend_guichet_unique.Controllers
 
 			if (!string.IsNullOrEmpty(filtreGrossesseDto.NumeroMenage))
 			{
-				query = query.Where(g => g.IdMereNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreGrossesseDto.NumeroMenage));
+				query = query.Where(g => g.IdMereNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreGrossesseDto.NumeroMenage.ToLower()));
 			}
 
 			if (filtreGrossesseDto.Statut != -1)

@@ -375,7 +375,7 @@ namespace Backend_guichet_unique.Controllers
 
 			if (!string.IsNullOrEmpty(filtreDeceDto.NumeroMenage))
 			{
-				query = query.Where(d => d.IdDefuntNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreDeceDto.NumeroMenage));
+				query = query.Where(d => d.IdDefuntNavigation.IdMenageNavigation.NumeroMenage.ToLower().Contains(filtreDeceDto.NumeroMenage.ToLower()));
 			}
 
 			if (filtreDeceDto.Statut != -1)

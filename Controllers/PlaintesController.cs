@@ -189,14 +189,14 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> PlainteCSV(IFormFile file)
+		public async Task<ActionResult> PlainteCSV(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier CSV" });
 			}
 
-			var stream = file.OpenReadStream();
+			var stream = import.Fichier.OpenReadStream();
 			using (var reader = new System.IO.StreamReader(stream))
 			{
 				string line;
@@ -285,14 +285,14 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> ImportPlainteExcel(IFormFile file)
+		public async Task<ActionResult> ImportPlainteExcel(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
 			}
 
-			var stream = file.OpenReadStream();
+			var stream = import.Fichier.OpenReadStream();
 			using (var document = SpreadsheetDocument.Open(stream, false))
 			{
 				var workbookPart = document.WorkbookPart;

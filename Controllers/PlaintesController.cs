@@ -32,22 +32,25 @@ namespace Backend_guichet_unique.Controllers
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
 		public IConfiguration _configuration;
+		private readonly IWebHostEnvironment _environment;
 
-		public PlaintesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		public PlaintesController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration, IWebHostEnvironment environment)
 		{
 			_context = context;
 			_mapper = mapper;
 			_configuration = configuration;
+			_environment = environment;
 		}
 
-		[HttpPost("entrainementCSV")]
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPost("entrainement")]
 		public async Task<ActionResult> EntrainerModelCsv()
 		{
 			// Charger le contexte de machine learning
 			var mlContext = new MLContext();
 
 			// Charger les données d'entraînement
-			var data = mlContext.Data.LoadFromTextFile<PlainteModel>("data_entrainement_plainte.csv", hasHeader: true, separatorChar: ',');
+			var data = mlContext.Data.LoadFromTextFile<PlainteModel>("Data/*", hasHeader: true, separatorChar: ',');
 
 			// Créer un pipeline de transformation de données et d'entraînement
 			var pipeline = mlContext.Transforms.Text.FeaturizeText("Features", new TextFeaturizingEstimator.Options
@@ -80,6 +83,22 @@ namespace Backend_guichet_unique.Controllers
 			{
 				mlContext.Model.Save(model, data.Schema, fileStream);
 			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Train"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
 
 			return Ok(new { status = "200" });
 		}
@@ -186,6 +205,59 @@ namespace Backend_guichet_unique.Controllers
 				Console.WriteLine($"Erreur lors de la prédiction : {ex.Message}");
 				return StatusCode(500, "Erreur interne du serveur.");
 			}
+		}
+
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpPost("import/modele")]
+		public async Task<IActionResult> UploadFile(ImportDTO import)
+		{
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			{
+				return Ok(new { error = "Le fichier doit être un fichier CSV" });
+			}
+
+			string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+
+			if (!Directory.Exists(uploadFolder))
+			{
+				Directory.CreateDirectory(uploadFolder);
+			}
+
+			var path = Path.Combine(uploadFolder, import.Fichier.FileName);
+
+			using (var reader = new StreamReader(import.Fichier.OpenReadStream()))
+			{
+				var headerLine = await reader.ReadLineAsync();
+				var headers = headerLine.Split(',');
+
+				if (headers.Length != 2 || headers[0] != "Description" || headers[1] != "Label")
+				{
+					return Ok(new { error = "Structure du fichier CSV incorrecte" });
+				}
+			}
+
+			using (var stream = new FileStream(path, FileMode.Create))
+			{
+				await import.Fichier.CopyToAsync(stream);
+			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Import"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
+			return Ok(new { status = "200" });
 		}
 
 		[HttpPost("import/csv")]
@@ -390,6 +462,39 @@ namespace Backend_guichet_unique.Controllers
 				return document.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(int.Parse(value)).InnerText;
 			}
 			return value;
+		}
+
+		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpGet("export/modele")]
+		public async Task<IActionResult> ExportModeleCsv()
+		{
+			var plaintes = await _context.Plaintes.ToListAsync();
+
+			var builder = new System.Text.StringBuilder();
+			builder.AppendLine("Description,Label");
+
+			foreach (var plainte in plaintes)
+			{
+				builder.AppendLine($"\"{plainte.Description}\",{plainte.IdCategoriePlainte}");
+			}
+
+			var token = Request.Headers["Authorization"].ToString().Substring(7);
+			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+			var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+			var historiqueApplication = new HistoriqueApplication();
+			historiqueApplication.Action = _configuration["Action:Export"];
+			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+			historiqueApplication.DateAction = DateTime.Now;
+			historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+			_context.HistoriqueApplications.Add(historiqueApplication);
+
+			await _context.SaveChangesAsync();
+
+			return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "modele_" + DateTime.Now.ToString("fffffff") + ".csv");
 		}
 
 		[HttpGet("export/excel")]

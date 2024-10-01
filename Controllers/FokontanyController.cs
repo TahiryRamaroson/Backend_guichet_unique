@@ -32,14 +32,14 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> ImportFokontaniesCSV(IFormFile file)
+		public async Task<ActionResult> ImportFokontaniesCSV(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier CSV" });
 			}
 
-			var stream = file.OpenReadStream();
+			var stream = import.Fichier.OpenReadStream();
 			using (var reader = new System.IO.StreamReader(stream))
 			{
 				string line;
@@ -90,13 +90,13 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> ImportFokontaniesExcel(IFormFile file)
+		public async Task<ActionResult> ImportFokontaniesExcel(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
 			}
-			var stream = file.OpenReadStream();
+			var stream = import.Fichier.OpenReadStream();
 			using (var document = SpreadsheetDocument.Open(stream, false))
 			{
 				var workbookPart = document.WorkbookPart;
@@ -259,8 +259,9 @@ namespace Backend_guichet_unique.Controllers
 			.Include(f => f.IdCommuneNavigation)
 			.ThenInclude(c => c.IdDistrictNavigation)
 			.ThenInclude(d => d.IdRegionNavigation)
-			.Where(f => (f.Nom.ToLower().Contains(text))
-				&& (filtreFokontanyDto.idCommune == -1 || f.IdCommune == filtreFokontanyDto.idCommune));
+			.Where(f => f.Nom.ToLower().Contains(text) || f.IdCommuneNavigation.Nom.ToLower().Contains(text) || f.IdCommuneNavigation.IdDistrictNavigation.Nom.ToLower().Contains(text)
+					|| 	f.IdCommuneNavigation.IdDistrictNavigation.IdRegionNavigation.Nom.ToLower().Contains(text)
+			);
 
 			var totalItems = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -309,8 +310,17 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(fonkotaniesDto);
 		}
 
-        // GET: api/Fokontany/5
-        [HttpGet("{id}")]
+		[HttpGet("simple")]
+		public async Task<ActionResult<IEnumerable<Fokontany>>> GetFokontaniesSimple()
+		{
+			var fonkotanies = await _context.Fokontanies
+				.ToListAsync();
+
+			return Ok(fonkotanies);
+		}
+
+		// GET: api/Fokontany/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<FokontanyDTO>> GetFokontany(int id)
         {
 			var fokontany = await _context.Fokontanies

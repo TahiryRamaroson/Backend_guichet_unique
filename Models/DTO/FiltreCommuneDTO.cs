@@ -3,7 +3,5 @@
 	public class FiltreCommuneDTO
 	{
 		public string? text { get; set; }
-
-		public int? idDistrict { get; set; }
 	}
 }

@@ -30,13 +30,13 @@ namespace Backend_guichet_unique.Controllers
 
 		// fonction qui reçoit un fichier csv des regions et les ajoute à la base de données
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> PostRegionsCsv(IFormFile file)
+		public async Task<ActionResult> PostRegionsCsv(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier CSV" });
 			}
-			using (var stream = file.OpenReadStream())
+			using (var stream = import.Fichier.OpenReadStream())
 			{
 				using (var reader = new System.IO.StreamReader(stream))
 				{
@@ -88,13 +88,13 @@ namespace Backend_guichet_unique.Controllers
 
 		// fonction qui reçoit un fichier excel des regions et les ajoute à la base de données
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> PostRegionsExcel(IFormFile file)
+		public async Task<ActionResult> PostRegionsExcel(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
 			}
-			using (var stream = file.OpenReadStream())
+			using (var stream = import.Fichier.OpenReadStream())
 			{
 				using (var document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(stream, false))
 				{

@@ -33,13 +33,13 @@ namespace Backend_guichet_unique.Controllers
 
 		// fonction pour importer un fichier excel des districts en utilisant la bibliothèque DocumentFormat.OpenXml
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> PostDistrictsExcel(IFormFile file)
+		public async Task<ActionResult> PostDistrictsExcel(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
 			}
-			using (var stream = file.OpenReadStream())
+			using (var stream = import.Fichier.OpenReadStream())
 			{
 				using (var spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
 				{
@@ -88,13 +88,13 @@ namespace Backend_guichet_unique.Controllers
 
 		// fonction pour importer un fichier csv des districts
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> PostDistrictsCsv(IFormFile file)
+		public async Task<ActionResult> PostDistrictsCsv(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier CSV" });
 			}
-			using (var stream = file.OpenReadStream())
+			using (var stream = import.Fichier.OpenReadStream())
 			{
 				using (var reader = new System.IO.StreamReader(stream))
 				{
@@ -273,8 +273,7 @@ namespace Backend_guichet_unique.Controllers
 
 			var query = _context.Districts
 			.Include(d => d.IdRegionNavigation)
-			.Where(d => (d.Nom.ToLower().Contains(text))
-				&& (filtreDistrictDTO.idRegion == -1 || d.IdRegion == filtreDistrictDTO.idRegion));
+			.Where(d => d.Nom.ToLower().Contains(text) || d.IdRegionNavigation.Nom.ToLower().Contains(text));
 
 			var totalItems = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);

@@ -33,14 +33,14 @@ namespace Backend_guichet_unique.Controllers
 
 		// fonction pour importer un fichier csv des communes
 		[HttpPost("import/csv")]
-		public async Task<ActionResult> ImportCommunesCSV(IFormFile file)
+		public async Task<ActionResult> ImportCommunesCSV(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier CSV" });
 			}
 
-			var stream = file.OpenReadStream();
+			var stream = import.Fichier.OpenReadStream();
 			using (var reader = new System.IO.StreamReader(stream))
 			{
 				string line;
@@ -92,13 +92,13 @@ namespace Backend_guichet_unique.Controllers
 
 		// fonction pour importer un fichier excel des communes en utilisant DocumentFormat.OpenXml
 		[HttpPost("import/excel")]
-		public async Task<ActionResult> ImportCommunesExcel(IFormFile file)
+		public async Task<ActionResult> ImportCommunesExcel(ImportDTO import)
 		{
-			if (file == null || !file.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+			if (import.Fichier == null || !import.Fichier.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
 			{
 				return Ok(new { error = "Le fichier doit être un fichier XLSX" });
 			}
-			var stream = file.OpenReadStream();
+			var stream = import.Fichier.OpenReadStream();
 			using (var document = SpreadsheetDocument.Open(stream, false))
 			{
 				var workbookPart = document.WorkbookPart;
@@ -262,8 +262,7 @@ namespace Backend_guichet_unique.Controllers
 			var query = _context.Communes
 			.Include(c => c.IdDistrictNavigation)
 			.ThenInclude(d => d.IdRegionNavigation)
-			.Where(c => (c.Nom.ToLower().Contains(text))
-				&& (filtreCommuneDTO.idDistrict == -1 || c.IdDistrict == filtreCommuneDTO.idDistrict));
+			.Where(c => c.Nom.ToLower().Contains(text) || c.IdDistrictNavigation.Nom.ToLower().Contains(text) || c.IdDistrictNavigation.IdRegionNavigation.Nom.ToLower().Contains(text));
 
 			var totalItems = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);

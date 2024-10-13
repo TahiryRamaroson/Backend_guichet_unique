@@ -31,6 +31,21 @@ namespace Backend_guichet_unique.Controllers
 			_configuration = configuration;
 		}
 
+		[HttpGet("menage/{id}")]
+		public async Task<ActionResult<FokontanyDTO>> GetFokontanyMenage(int id)
+		{
+			var fokontany = await _context.Fokontanies
+				.FirstOrDefaultAsync(f => f.Id == id);
+
+			if (fokontany == null)
+			{
+				return NotFound();
+			}
+
+			var fokontanyDto = _mapper.Map<FokontanyDTO>(fokontany);
+			return fokontanyDto;
+		}
+
 		[HttpPost("import/csv")]
 		public async Task<ActionResult> ImportFokontaniesCSV(ImportDTO import)
 		{

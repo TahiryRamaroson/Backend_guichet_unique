@@ -66,6 +66,7 @@ public partial class GuichetUniqueContext : DbContext
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=localhost;Database=guichet_unique;Username=postgres;Password=Tahiry1849;Encoding=UTF8");
+        //=> optionsBuilder.UseNpgsql("Host=ep-tiny-glitter-a5mqdq7j.us-east-2.aws.neon.tech;Database=guichet;Username=guichet_owner;Password=caA5IE4wziHN;SSL Mode=Require;Trust Server Certificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

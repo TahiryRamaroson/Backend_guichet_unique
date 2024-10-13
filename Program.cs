@@ -98,6 +98,7 @@ builder.Services.AddSingleton<EmailService>();
 
 builder.Services.AddDbContext<GuichetUniqueContext>(options =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+	//options.UseNpgsql(builder.Configuration.GetConnectionString("Neon")));
 
 builder.Services.AddMemoryCache(options =>
 {

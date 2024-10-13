@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using Npgsql;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -30,6 +32,414 @@ namespace Backend_guichet_unique.Controllers
             _context = context;
 			_mapper = mapper;
 			_configuration = configuration;
+		}
+
+		[HttpPut("valider")]
+		public async Task<ActionResult<string>> ValiderTousNouveauMenage([FromBody] List<int> ids)
+		{
+			using (var transaction = await _context.Database.BeginTransactionAsync())
+			{
+				try
+				{
+					await _context.Database.OpenConnectionAsync();
+                    foreach (int id in ids)
+                    {
+                    NouveauMenage nouveau = null;
+
+					using (var command = _context.Database.GetDbConnection().CreateCommand())
+					{
+						// Correction de la commande SQL
+						command.CommandText = "SELECT * FROM nouveau_menage WHERE id = @individu";
+						command.Parameters.Add(new NpgsqlParameter("@individu", id));
+
+						using (var reader = await command.ExecuteReaderAsync())
+						{
+							if (await reader.ReadAsync())
+							{
+								// Remplir l'objet NouveauMenage avec les données du lecteur
+								nouveau = new NouveauMenage
+								{
+									Id = reader.GetInt32(reader.GetOrdinal("id")),
+									Menage = reader.GetString(reader.GetOrdinal("menage")),
+									Individu = reader.GetString(reader.GetOrdinal("individu"))
+								};
+							}
+						}
+					}
+
+					if (nouveau == null)
+					{
+						return NotFound(new { status = "404", message = "Nouveau menage not found." });
+					}
+
+					List<string> infoMenage = nouveau.Menage.Split(',').ToList();
+					var menage = new Menage
+					{
+						NumeroMenage = infoMenage[0],
+						Adresse = infoMenage[1],
+						IdFokontany = int.Parse(infoMenage[2])
+					};
+
+					_context.Menages.Add(menage);
+					await _context.SaveChangesAsync();
+					int idmenage = menage.Id;
+
+					List<string> individus = nouveau.Individu.Split(';').ToList();
+					foreach (var individu in individus)
+					{
+						List<string> infoIndividu = individu.Split(',').ToList();
+						var ind = new Individu
+						{
+							Nom = infoIndividu[0],
+							Prenom = infoIndividu[1],
+							DateNaissance = DateOnly.Parse(infoIndividu[2]),
+							Sexe = int.Parse(infoIndividu[3]),
+							NumActeNaissance = infoIndividu[4],
+							Cin = infoIndividu[5],
+							Statut = 1,
+							IsChef = int.Parse(infoIndividu[6]),
+							IdMenage = idmenage
+						};
+
+						_context.Individus.Add(ind);
+					}
+					await _context.SaveChangesAsync();
+
+					using (var commandDelete = _context.Database.GetDbConnection().CreateCommand())
+					{
+						commandDelete.CommandText = "DELETE FROM nouveau_menage WHERE id = @individu";
+						commandDelete.Parameters.Add(new NpgsqlParameter("@individu", id));
+
+						await commandDelete.ExecuteNonQueryAsync();
+					}
+
+					await transaction.CommitAsync();
+					}
+
+					var token = Request.Headers["Authorization"].ToString().Substring(7);
+					var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+					var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+					var historiqueApplication = new HistoriqueApplication();
+					historiqueApplication.Action = _configuration["Action:Validate"];
+					historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+					historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+					historiqueApplication.DateAction = DateTime.Now;
+					historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+					_context.HistoriqueApplications.Add(historiqueApplication);
+					await _context.SaveChangesAsync();
+
+					return Ok(new { status = "200"});
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+					await transaction.RollbackAsync();
+					return StatusCode(500, new { status = "500", error = ex.Message });
+				}
+				finally
+				{
+					await _context.Database.CloseConnectionAsync();
+				}
+			}
+		}
+
+		[HttpPut("refuser")]
+		public async Task<ActionResult<string>> RefuserTousNouveauMenage([FromBody] List<int> ids)
+		{
+            try
+			{
+				await _context.Database.OpenConnectionAsync();
+				foreach (int id in ids)
+				{
+					using (var commandDelete = _context.Database.GetDbConnection().CreateCommand())
+					{
+						commandDelete.CommandText = "DELETE FROM nouveau_menage WHERE id = @individu";
+						commandDelete.Parameters.Add(new NpgsqlParameter("@individu", id));
+
+						await commandDelete.ExecuteNonQueryAsync();
+					}
+				}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Reject"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
+				await _context.SaveChangesAsync();
+
+				return Ok(new { status = "200" });
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return StatusCode(500, new { status = "500", error = ex.Message });
+			}
+			finally
+			{
+				await _context.Database.CloseConnectionAsync();
+			}
+		}
+
+		[HttpPut("valider/{id}")]
+		public async Task<ActionResult<string>> ValiderNouveauMenage(int id)
+		{
+			using (var transaction = await _context.Database.BeginTransactionAsync())
+			{
+				try
+				{
+				await _context.Database.OpenConnectionAsync();
+				NouveauMenage nouveau = null;
+
+				using (var command = _context.Database.GetDbConnection().CreateCommand())
+				{
+					// Correction de la commande SQL
+					command.CommandText = "SELECT * FROM nouveau_menage WHERE id = @individu";
+					command.Parameters.Add(new NpgsqlParameter("@individu", id));
+
+					using (var reader = await command.ExecuteReaderAsync())
+					{
+						if (await reader.ReadAsync())
+						{
+							// Remplir l'objet NouveauMenage avec les données du lecteur
+							nouveau = new NouveauMenage
+							{
+								Id = reader.GetInt32(reader.GetOrdinal("id")),
+								Menage = reader.GetString(reader.GetOrdinal("menage")),
+								Individu = reader.GetString(reader.GetOrdinal("individu"))
+							};
+						}
+					}
+				}
+
+				if (nouveau == null)
+				{
+					return NotFound(new { status = "404", message = "Nouveau menage not found." });
+				}
+
+				List<string> infoMenage = nouveau.Menage.Split(',').ToList();
+				var menage = new Menage
+				{
+					NumeroMenage = infoMenage[0],
+					Adresse = infoMenage[1],
+					IdFokontany = int.Parse(infoMenage[2])
+				};
+
+				_context.Menages.Add(menage);
+				await _context.SaveChangesAsync();
+				int idmenage = menage.Id;
+
+				List<string> individus = nouveau.Individu.Split(';').ToList();
+				foreach (var individu in individus)
+				{
+					List<string> infoIndividu = individu.Split(',').ToList();
+					var ind = new Individu
+					{
+						Nom = infoIndividu[0],
+						Prenom = infoIndividu[1],
+						DateNaissance = DateOnly.Parse(infoIndividu[2]),
+						Sexe = int.Parse(infoIndividu[3]),
+						NumActeNaissance = infoIndividu[4],
+						Cin = infoIndividu[5],
+						Statut = 1,
+						IsChef = int.Parse(infoIndividu[6]),
+						IdMenage = idmenage
+					};
+
+					_context.Individus.Add(ind);
+				}
+				await _context.SaveChangesAsync();
+
+				using (var commandDelete = _context.Database.GetDbConnection().CreateCommand())
+				{
+					commandDelete.CommandText = "DELETE FROM nouveau_menage WHERE id = @individu";
+					commandDelete.Parameters.Add(new NpgsqlParameter("@individu", id));
+
+					await commandDelete.ExecuteNonQueryAsync();
+				}
+
+					await transaction.CommitAsync();
+
+					var token = Request.Headers["Authorization"].ToString().Substring(7);
+					var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+					var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+					var historiqueApplication = new HistoriqueApplication();
+					historiqueApplication.Action = _configuration["Action:Validate"];
+					historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+					historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+					historiqueApplication.DateAction = DateTime.Now;
+					historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+					_context.HistoriqueApplications.Add(historiqueApplication);
+					await _context.SaveChangesAsync();
+
+					return Ok(new { status = "200", nouveau });
+			}
+			catch (Exception ex)
+			{
+					Console.WriteLine(ex.Message);
+					await transaction.RollbackAsync();
+					return StatusCode(500, new { status = "500", error = ex.Message });
+			}
+			finally
+			{
+				await _context.Database.CloseConnectionAsync();
+			}
+			}
+		}
+
+		[HttpPut("refuser/{id}")]
+		public async Task<ActionResult<string>> RefuserNouveauMenage(int id)
+		{
+				try
+				{
+					await _context.Database.OpenConnectionAsync();
+
+					using (var commandDelete = _context.Database.GetDbConnection().CreateCommand())
+					{
+						commandDelete.CommandText = "DELETE FROM nouveau_menage WHERE id = @individu";
+						commandDelete.Parameters.Add(new NpgsqlParameter("@individu", id));
+
+						await commandDelete.ExecuteNonQueryAsync();
+					}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Reject"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
+				await _context.SaveChangesAsync();
+
+				return Ok(new { status = "200"});
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+					return StatusCode(500, new { status = "500", error = ex.Message });
+				}
+				finally
+				{
+					await _context.Database.CloseConnectionAsync();
+				}
+		}
+
+		[HttpGet("a-valide/{pageNumber}")]
+		public async Task<ActionResult> GetPagedMenages(int pageNumber = 1)
+		{
+			int pageSize = 10;
+			var commandCount = _context.Database.GetDbConnection().CreateCommand();
+			commandCount.CommandText = "SELECT COUNT(*) FROM nouveau_menage";
+
+			await _context.Database.OpenConnectionAsync();
+			var totalItems = (long)await commandCount.ExecuteScalarAsync();
+
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+			var command = _context.Database.GetDbConnection().CreateCommand();
+			command.CommandText = $@"
+				SELECT id, menage, individu 
+				FROM nouveau_menage
+				ORDER BY id
+				OFFSET {(pageNumber - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
+
+			var menages = new List<NouveauMenage>();
+
+			using (var reader = await command.ExecuteReaderAsync())
+			{
+				while (await reader.ReadAsync())
+				{
+					var menage = new NouveauMenage
+					{
+						Id = reader.GetInt32(0),
+						Menage = reader.GetString(1),
+						Individu = reader.GetString(2)
+					};
+
+					menages.Add(menage);
+				}
+			}
+
+			await _context.Database.CloseConnectionAsync();
+
+			return Ok(new { Menages = menages, TotalPages = totalPages });
+		}
+
+		[HttpPost("nouveau")]
+		public async Task<ActionResult<string>> PostNouveauMenage(NouveauMenageDTO nouveauMenageDto)
+		{
+			try
+			{
+				await _context.Database.OpenConnectionAsync();
+
+				using (var command = _context.Database.GetDbConnection().CreateCommand())
+				{
+					command.CommandText = "INSERT INTO nouveau_menage (menage, individu) VALUES (@menage, @individu)";
+					command.Parameters.Add(new NpgsqlParameter("@menage", nouveauMenageDto.menage));
+					command.Parameters.Add(new NpgsqlParameter("@individu", nouveauMenageDto.individu));
+
+					await command.ExecuteNonQueryAsync();
+				}
+
+				var token = Request.Headers["Authorization"].ToString().Substring(7);
+				var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+				var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
+
+				var historiqueApplication = new HistoriqueApplication();
+				historiqueApplication.Action = _configuration["Action:Create"];
+				historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
+				historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
+				historiqueApplication.DateAction = DateTime.Now;
+				historiqueApplication.IdUtilisateur = int.Parse(idu);
+
+				_context.HistoriqueApplications.Add(historiqueApplication);
+
+				await _context.SaveChangesAsync();
+
+				return Ok(new { status = "200" });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { status = "500", error = ex.Message });
+			}
+			finally
+			{
+				await _context.Database.CloseConnectionAsync();
+			}
+		}
+
+		[HttpGet("numero")]
+		public async Task<ActionResult<string>> GetNumeroMenage()
+		{
+			var command = _context.Database.GetDbConnection().CreateCommand();
+			command.CommandText = "SELECT nextval('seq_numero_menage')";
+
+			await _context.Database.OpenConnectionAsync();
+			var nummen = (long)await command.ExecuteScalarAsync();
+			await _context.Database.CloseConnectionAsync();
+
+			var numero = "MENAGE" + nummen.ToString("D6");
+			return Ok(new { Numero = numero });
 		}
 
 		[HttpPost("import/csv")]

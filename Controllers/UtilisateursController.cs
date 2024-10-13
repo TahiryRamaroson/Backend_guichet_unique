@@ -175,7 +175,7 @@ namespace Backend_guichet_unique.Controllers
 			var idu = jsonToken.Claims.First(claim => claim.Type == "idutilisateur").Value;
 
 			var historiqueApplication = new HistoriqueApplication();
-			historiqueApplication.Action = _configuration["Action:Creation"];
+			historiqueApplication.Action = _configuration["Action:Create"];
 			historiqueApplication.Composant = this.ControllerContext.ActionDescriptor.ControllerName;
 			historiqueApplication.UrlAction = Request.Headers["Referer"].ToString();
 			historiqueApplication.DateAction = DateTime.Now;

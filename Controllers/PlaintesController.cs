@@ -43,6 +43,25 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[Authorize(Policy = "ResponsablePolicy")]
+		[HttpGet("nettoyer")]
+		public async Task<ActionResult> DeleteFiles()
+		{
+			string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+
+			if (Directory.Exists(uploadFolder))
+			{
+				DirectoryInfo di = new DirectoryInfo(uploadFolder);
+
+				foreach (FileInfo file in di.GetFiles())
+				{
+					file.Delete();
+				}
+			}
+
+			return Ok(new { status = "200" });
+		}
+
+		[Authorize(Policy = "ResponsablePolicy")]
 		[HttpPost("entrainement")]
 		public async Task<ActionResult> EntrainerModelCsv()
 		{
@@ -1092,12 +1111,8 @@ namespace Backend_guichet_unique.Controllers
 
 				var plainteModel = new PlainteModel { Description = plainteDto.Description };
 
-				Console.WriteLine($"Description : ----------------------------- {plainteModel.Description} -----------------------------");
-
 				var prediction = predictionEngine.Predict(plainteModel);
 				ResultatPrediction = (int)prediction.PredictedLabel;
-
-				Console.WriteLine($"Prédiction : ----------------------------- {prediction.PredictedLabel} -----------------------------");
 
 				if (prediction == null)
 				{
@@ -1106,7 +1121,6 @@ namespace Backend_guichet_unique.Controllers
 			}
 			catch (Exception ex)
 			{
-				// Enregistrer l'erreur
 				Console.WriteLine($"Erreur lors de la prédiction : {ex.Message}");
 				return StatusCode(500, "Erreur interne du serveur.");
 			}

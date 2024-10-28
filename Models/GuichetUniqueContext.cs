@@ -347,8 +347,6 @@ public partial class GuichetUniqueContext : DbContext
 
             entity.ToTable("individu");
 
-            entity.HasIndex(e => e.Cin, "individu_cin_key").IsUnique();
-
             entity.HasIndex(e => e.NumActeNaissance, "individu_num_acte_naissance_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");

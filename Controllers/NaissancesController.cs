@@ -441,50 +441,27 @@ namespace Backend_guichet_unique.Controllers
 		public async Task<ActionResult<IEnumerable<NaissanceDTO>>> GetPagedNaissances(int pageNumber = 1)
 		{
 			int pageSize = 10;
-			var cacheKey = $"Naissances_Page_{pageNumber}";
+			var totalItems = await _context.Naissances.Where(n => n.Statut != -5).CountAsync();
+			var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-			// Vérifier si les résultats paginés sont déjà dans le cache
-			if (!_cache.TryGetValue(cacheKey, out (IEnumerable<NaissanceDTO> Naissances, int TotalPages) cacheEntry))
-			{
-				// Si non, exécuter la requête pour récupérer les données
-				var totalItems = await _context.Naissances.Where(n => n.Statut != -5).CountAsync();
-				var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+			var naissances = await _context.Naissances
+				.Where(n => n.Statut != -5)
+				.Include(n => n.IdFokontanyNavigation)
+					.ThenInclude(f => f.IdCommuneNavigation)
+						.ThenInclude(c => c.IdDistrictNavigation)
+							.ThenInclude(d => d.IdRegionNavigation)
+				.Include(n => n.IdMenageNavigation)
+				.Include(n => n.IdPereNavigation)
+				.Include(n => n.IdMereNavigation)
+				.Include(n => n.IdIntervenantNavigation)
+				.Include(n => n.IdResponsableNavigation)
+				.OrderByDescending(n => n.Id)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToListAsync();
 
-				var naissances = await _context.Naissances
-					.Where(n => n.Statut != -5)
-					.Include(n => n.IdFokontanyNavigation)
-						.ThenInclude(f => f.IdCommuneNavigation)
-							.ThenInclude(c => c.IdDistrictNavigation)
-								.ThenInclude(d => d.IdRegionNavigation)
-					.Include(n => n.IdMenageNavigation)
-					.Include(n => n.IdPereNavigation)
-					.Include(n => n.IdMereNavigation)
-					.Include(n => n.IdIntervenantNavigation)
-					.Include(n => n.IdResponsableNavigation)
-					.OrderByDescending(n => n.Id)
-					.Skip((pageNumber - 1) * pageSize)
-					.Take(pageSize)
-					.ToListAsync();
-
-				var naissancesDto = _mapper.Map<IEnumerable<NaissanceDTO>>(naissances);
-
-				// Créer un cache avec les résultats paginés et le nombre total de pages
-				cacheEntry = (Naissances: naissancesDto, TotalPages: totalPages);
-
-				// Définir les options de cache
-				var cacheEntryOptions = new MemoryCacheEntryOptions
-				{
-					Size = 1, // Taille de l'entrée (facultatif, utile pour limiter la taille du cache)
-					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15), // Expiration absolue après 15 minutes
-					SlidingExpiration = TimeSpan.FromMinutes(5) // Expiration si non accédé pendant 5 minutes
-				};
-
-				// Enregistrer les résultats dans le cache
-				_cache.Set(cacheKey, cacheEntry, cacheEntryOptions);
-			}
-
-			// Retourner les résultats à partir du cache (ou directement si déjà en cache)
-			return Ok(new { Naissances = cacheEntry.Naissances, TotalPages = cacheEntry.TotalPages });
+			var naissancesDto = _mapper.Map<IEnumerable<NaissanceDTO>>(naissances);
+			return Ok(new { Naissances = naissancesDto, TotalPages = totalPages });
 		}
 
 		[HttpGet]
@@ -596,7 +573,7 @@ namespace Backend_guichet_unique.Controllers
 
 						if (grossesse != null)
 						{
-							grossesse.Statut = 5;
+							grossesse.StatutGrossesse = 5;
 							_context.Entry(grossesse).State = EntityState.Modified;
 						}
 					}
@@ -702,7 +679,7 @@ namespace Backend_guichet_unique.Controllers
 
 							if (grossesse != null)
 							{
-								grossesse.Statut = 5;
+								grossesse.StatutGrossesse = 5;
 								_context.Entry(grossesse).State = EntityState.Modified;
 							}
 						}

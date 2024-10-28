@@ -482,7 +482,7 @@ namespace Backend_guichet_unique.Controllers
 
 		[Authorize(Policy = "ResponsablePolicy")]
 		[HttpPut("valider/{id}")]
-		public async Task<IActionResult> ValidateDece(int id)
+		public async Task<IActionResult> ValidateMigrationSortante(int id)
 		{
 			var token = Request.Headers["Authorization"].ToString().Substring(7);
 			var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
@@ -521,7 +521,7 @@ namespace Backend_guichet_unique.Controllers
 						await _context.Database.CloseConnectionAsync();
 
 						var menage = new Menage();
-						menage.NumeroMenage = "MENAGE" + nummen.ToString("D6");
+						menage.NumeroMenage = "MENAGE" + nummen.ToString("D8");
 						menage.Adresse = migrationSortante.Adresse;
 						menage.IdFokontany = (int)migrationSortante.IdFokontanyDestination;
 
@@ -613,7 +613,7 @@ namespace Backend_guichet_unique.Controllers
 							await _context.Database.CloseConnectionAsync();
 
 							var menage = new Menage();
-							menage.NumeroMenage = "MENAGE" + nummen.ToString("D6");
+							menage.NumeroMenage = "MENAGE" + nummen.ToString("D8");
 							menage.Adresse = migrationSortante.Adresse;
 							menage.IdFokontany = (int)migrationSortante.IdFokontanyDestination;
 

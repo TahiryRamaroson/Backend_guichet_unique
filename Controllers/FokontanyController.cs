@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Backend_guichet_unique.Controllers
 {
@@ -23,12 +24,14 @@ namespace Backend_guichet_unique.Controllers
         private readonly GuichetUniqueContext _context;
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _configuration;
+		private readonly IMemoryCache _cache;
 
-		public FokontanyController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration)
+		public FokontanyController(GuichetUniqueContext context, IMapper mapper, IConfiguration configuration, IMemoryCache cache)
 		{
 			_context = context;
 			_mapper = mapper;
 			_configuration = configuration;
+			_cache = cache;
 		}
 
 		[HttpGet("menage/{id}")]
@@ -295,7 +298,7 @@ namespace Backend_guichet_unique.Controllers
 		}
 
 		[HttpGet("page/{pageNumber}")]
-		public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetPagedFokonatnies(int pageNumber = 1)
+		public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetPagedFokontanies(int pageNumber = 1)
 		{
 			int pageSize = 10;
 			var totalItems = await _context.Fokontanies.CountAsync();
@@ -314,16 +317,80 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { Fokontany = fokontanyDto, TotalPages = totalPages });
 		}
 
-		// GET: api/Fokontany
 		[HttpGet]
-        public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetFokontanies()
-        {
-			var fonkotanies = await _context.Fokontanies
-				.ToListAsync();
+		public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetFokontanies()
+		{
+			var cacheKey = "GetFokontanies";
+			if (!_cache.TryGetValue(cacheKey, out IEnumerable<FokontanyDTO> fokontanyDto))
+			{
+				var fokontanies = await _context.Fokontanies.ToListAsync();
+				fokontanyDto = _mapper.Map<IEnumerable<FokontanyDTO>>(fokontanies);
 
-			var fonkotaniesDto = _mapper.Map<IEnumerable<FokontanyDTO>>(fonkotanies);
-			return Ok(fonkotaniesDto);
+				var cacheEntryOptions = new MemoryCacheEntryOptions()
+					.SetSize(1)
+					.SetAbsoluteExpiration(TimeSpan.FromMinutes(10))
+					.SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+				_cache.Set(cacheKey, fokontanyDto, cacheEntryOptions);
+			}
+
+			return Ok(fokontanyDto);
+
 		}
+
+		//[HttpGet]
+		//public async Task<ActionResult<IEnumerable<FokontanyDTO>>> GetFokontanies()
+		//{
+		//	var cacheKey = "GetFokontanies";
+
+		//	// Tentative de récupération dans le cache
+		//	if (!_cache.TryGetValue(cacheKey, out IEnumerable<FokontanyDTO> fokontanyDto))
+		//	{
+		//		// Si le cache est vide, récupération initiale des données
+		//		fokontanyDto = await GetAndCacheFokontanies(cacheKey);
+		//	}
+		//	else
+		//	{
+		//		// Déclenche le rafraîchissement des données en arrière-plan
+		//		_ = RefreshFokontanyCacheAsync(cacheKey);
+		//	}
+
+		//	return Ok(fokontanyDto);
+		//}
+
+		//private async Task<IEnumerable<FokontanyDTO>> GetAndCacheFokontanies(string cacheKey)
+		//{
+		//	var fokontanies = await _context.Fokontanies.ToListAsync();
+		//	var fokontanyDto = _mapper.Map<IEnumerable<FokontanyDTO>>(fokontanies);
+
+		//	var cacheEntryOptions = new MemoryCacheEntryOptions()
+		//		.SetSize(1)
+		//		.SetAbsoluteExpiration(TimeSpan.FromDays(1)) // Expiration longue (ajustable selon la rareté des modifications)
+		//		.SetPriority(CacheItemPriority.High); // Priorité élevée pour limiter l'éviction automatique
+
+		//	_cache.Set(cacheKey, fokontanyDto, cacheEntryOptions);
+
+		//	return fokontanyDto;
+		//}
+
+		//private async Task RefreshFokontanyCacheAsync(string cacheKey)
+		//{
+		//	// Vérifie si une mise à jour est en cours pour éviter les tâches en double
+		//	if (_cache.TryGetValue("RefreshInProgress", out _)) return;
+
+		//	// Indique qu'un rafraîchissement est en cours
+		//	_cache.Set("RefreshInProgress", true, TimeSpan.FromMinutes(1));
+
+		//	try
+		//	{
+		//		await GetAndCacheFokontanies(cacheKey);
+		//	}
+		//	finally
+		//	{
+		//		// Supprime le drapeau de rafraîchissement
+		//		_cache.Remove("RefreshInProgress");
+		//	}
+		//}
 
 		[HttpGet("simple")]
 		public async Task<ActionResult<IEnumerable<Fokontany>>> GetFokontaniesSimple()
@@ -334,7 +401,6 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(fonkotanies);
 		}
 
-		// GET: api/Fokontany/5
 		[HttpGet("{id}")]
         public async Task<ActionResult<FokontanyDTO>> GetFokontany(int id)
         {
@@ -353,7 +419,6 @@ namespace Backend_guichet_unique.Controllers
 			return fokontanyDto;
         }
 
-        // PUT: api/Fokontany/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFokontany(int id, FokontanyFormDTO fokontanyDto)
         {
@@ -398,7 +463,6 @@ namespace Backend_guichet_unique.Controllers
 			return Ok(new { status = "200" });
 		}
 
-        // POST: api/Fokontany
         [HttpPost]
         public async Task<ActionResult<Fokontany>> PostFokontany(FokontanyFormDTO fokontanyDto)
         {
@@ -424,7 +488,6 @@ namespace Backend_guichet_unique.Controllers
 			return CreatedAtAction("GetFokontany", new { id = fokontany.Id }, fokontany);
         }
 
-        // DELETE: api/Fokontany/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFokontany(int id)
         {

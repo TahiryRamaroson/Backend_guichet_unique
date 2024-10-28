@@ -1,0 +1,461 @@
+Description,Label
+"Il n'y a pas assez de médecins dans le centre de santé local.",1
+"Les enfants n'ont pas accès à un nombre suffisant de manuels scolaires.",2
+"Les vols dans notre quartier sont devenus fréquents.",3
+"Le pont reliant les deux quartiers est endommagé depuis des mois.",4
+"Le service d'état civil est toujours en retard dans le traitement des dossiers.",5
+"La déforestation dans la région augmente à un rythme alarmant.",6
+"Le chômage des jeunes est un problème majeur dans notre commune.",7
+"Les loyers dans notre quartier sont devenus inabordables.",8
+"Il y a un retard important dans le traitement des affaires judiciaires.",9
+"Les fonctionnaires de la mairie exigent des pots-de-vin pour délivrer les permis.",10
+"Les infrastructures hospitalières sont insuffisantes pour répondre aux besoins de la population.",1
+"Les écoles publiques manquent cruellement de professeurs qualifiés.",2
+"Il y a de plus en plus de cambriolages dans le quartier.",3
+"Les routes principales sont pleines de nids-de-poule.",4
+"L'eau potable n'est pas disponible régulièrement dans notre quartier.",5
+"La pollution dans les rivières à proximité met en danger la biodiversité.",6
+"Les petites entreprises locales ferment en raison de la crise économique.",7
+"Il est difficile de trouver un logement à loyer modéré dans la ville.",8
+"Les prisonniers ne sont pas traités conformément aux droits de l'homme.",9
+"Les élus locaux sont accusés de mauvaise gestion des fonds publics.",10
+"Les soins d'urgence ne sont pas accessibles à temps pour les habitants.",1
+"Les élèves doivent marcher plusieurs kilomètres pour rejoindre l'école.",2
+"Les violences urbaines sont de plus en plus fréquentes.",3
+"Les travaux de construction de la nouvelle route sont interrompus sans explication.",4
+"Les files d'attente pour obtenir un acte de naissance sont interminables.",5
+"Les déchets sont rarement collectés dans le quartier.",6
+"Les emplois dans le secteur industriel sont en baisse dans notre région.",7
+"Les immeubles sont insalubres et non conformes aux normes.",8
+"Les procédures judiciaires traînent sans justification valable.",9
+"Les fonctionnaires locaux sont impliqués dans des affaires de corruption.",10
+"Le centre de santé manque de médicaments essentiels.",1
+"Les patients attendent plusieurs heures avant d'être pris en charge à l'hôpital.",1
+"Les écoles ne sont pas bien équipées en matériel pédagogique.",2
+"Les frais de scolarité dans les établissements publics sont trop élevés.",2
+"La criminalité augmente de manière inquiétante dans notre quartier.",3
+"Il n'y a pas assez de patrouilles de police dans les zones rurales.",3
+"Les routes sont en mauvais état et provoquent des accidents.",4
+"Les éclairages publics sont défaillants dans plusieurs quartiers.",4
+"Les coupures d'électricité sont fréquentes et sans préavis.",5
+"Le réseau d'assainissement est vieux et nécessite des rénovations.",5
+"Les décharges illégales de déchets sont courantes dans la ville.",6
+"La pollution de l'air est devenue insupportable à cause des usines.",6
+"Les salaires sont bas et les conditions de travail dans les usines sont déplorables.",7
+"Les opportunités d'emploi sont rares dans les zones rurales.",7
+"Les loyers augmentent rapidement forçant les familles à quitter le quartier.",8
+"Les immeubles anciens sont dangereux à cause de l'absence d'entretien.",8
+"Les tribunaux sont saturés ce qui cause des retards dans les jugements.",9
+"Les victimes de violence n'ont pas accès à une assistance juridique adéquate.",9
+"Les élus locaux sont accusés de détournement de fonds.",10
+"Il y a un manque de transparence dans la gestion des projets publics.",10
+"Les centres de santé de proximité sont sous-équipés pour les urgences.",1
+"Les services d'urgence ne peuvent pas couvrir toutes les zones rurales.",1
+"Les élèves sont trop nombreux dans chaque classe rendant l'enseignement difficile.",2
+"Les infrastructures scolaires sont en ruine dans plusieurs villages.",2
+"Les habitants se sentent en insécurité à cause des agressions nocturnes.",3
+"La police ne réagit pas assez rapidement aux appels d'urgence.",3
+"Les chantiers publics restent inachevés bloquant la circulation.",4
+"Il manque des trottoirs sécurisés pour les piétons dans plusieurs quartiers.",4
+"Les lignes téléphoniques sont souvent coupées interrompant les communications.",5
+"Les retards dans la délivrance des documents administratifs sont fréquents.",5
+"Les rivières sont polluées par les industries locales sans contrôle.",6
+"Les forêts disparaissent rapidement à cause de l'exploitation illégale.",6
+"Les jeunes qualifiés quittent la ville faute d'emplois disponibles.",7
+"Les conditions de travail dans les usines textiles sont déplorables.",7
+"Le marché du logement est inaccessible aux familles à faibles revenus.",8
+"Les bidonvilles se développent à cause du manque de logements abordables.",8
+"Les procès civils prennent des années avant d'être jugés.",9
+"Les droits des détenus sont fréquemment bafoués dans les prisons locales.",9
+"Les citoyens dénoncent la corruption dans les appels d'offres publics.",10
+"Les responsables gouvernementaux sont impliqués dans des scandales financiers.",10
+"Les consultations médicales dans les hôpitaux publics sont extrêmement lentes.",1
+"Il y a une pénurie de vaccins dans les centres de santé locaux.",1
+"Les salles de classe sont surchargées et manquent de ventilateurs.",2
+"Les enseignants ne reçoivent pas leurs salaires à temps ce qui perturbe les cours.",2
+"Les vols à la tire sont devenus monnaie courante dans le quartier.",3
+"Les agents de sécurité dans les écoles ne sont pas assez nombreux.",3
+"Les trottoirs sont abîmés rendant les déplacements dangereux pour les piétons.",4
+"Les ponts piétonniers ne sont plus entretenus et deviennent dangereux.",4
+"Les bornes fontaines sont souvent hors service créant des pénuries d'eau.",5
+"Les délais pour l'obtention de passeports sont de plus en plus longs.",5
+"Les décharges publiques sont pleines et l'enlèvement des déchets est irrégulier.",6
+"Les abattages illégaux d'arbres ne sont pas contrôlés par les autorités.",6
+"Les petites entreprises souffrent de la concurrence déloyale des grands groupes.",7
+"Les offres d'emploi diminuent et beaucoup de gens sont au chômage depuis des mois.",7
+"Les quartiers populaires sont de plus en plus confrontés à des expulsions forcées.",8
+"Les conditions de vie dans les logements sociaux sont déplorables.",8
+"Les victimes d'injustice attendent des années avant d'avoir un jugement équitable.",9
+"Les procédures d'adoption sont très lentes causant des problèmes aux familles.",9
+"Les fonds publics destinés aux écoles sont mal utilisés par les responsables locaux.",10
+"Les citoyens dénoncent les détournements de fonds dans les projets d'infrastructure.",10
+"Les hôpitaux manquent de personnel qualifié provoquant des retards dans les soins.",1
+"Les équipements médicaux sont souvent défectueux ou obsolètes dans les centres publics.",1
+"Les écoles rurales n'ont pas accès à internet freinant l'apprentissage des enfants.",2
+"Les enseignants suppléants ne sont pas assez nombreux pour compenser les absences.",2
+"Les gangs locaux prennent le contrôle de certains quartiers la nuit.",3
+"Les alarmes de sécurité dans les bâtiments publics ne fonctionnent pas correctement.",3
+"Les projets de rénovation des routes sont abandonnés sans explication.",4
+"Les infrastructures sportives sont laissées à l'abandon dans les quartiers pauvres.",4
+"Les files d'attente dans les bureaux de poste sont interminables.",5
+"Les citoyens ne reçoivent pas d'aides sociales à temps.",5
+"Les zones protégées sont envahies par des projets de construction illégaux.",6
+"Les rivières sont remplies de déchets toxiques provenant des usines.",6
+"Les jeunes ne trouvent pas d'emplois après avoir terminé leurs études.",7
+"Les programmes de formation professionnelle sont inadaptés aux besoins du marché.",7
+"Les nouvelles constructions sont hors de prix même pour les classes moyennes.",8
+"Les immeubles ne respectent pas les normes de sécurité anti-incendie.",8
+"Les prisons sont surpeuplées et les conditions de détention sont inhumaines.",9
+"Les victimes de violences domestiques ne reçoivent pas de soutien juridique suffisant.",9
+"Les responsables municipaux sont impliqués dans des affaires de pots-de-vin.",10
+"Les élus locaux détournent les budgets alloués à l'éducation.",10
+"Les patients attendent des semaines pour obtenir des rendez-vous médicaux spécialisés.",1
+"Les centres de santé sont à court de fournitures médicales de base comme les gants et les masques.",1
+"Les élèves du primaire n'ont pas de matériel de base comme des cahiers et des stylos.",2
+"Les bâtiments scolaires sont vétustes et risquent de s'effondrer.",2
+"Les quartiers périphériques sont en proie à des cambriolages réguliers.",3
+"Les agents de police ne font pas assez de rondes dans les zones à risque.",3
+"Les lignes de bus sont mal desservies créant des difficultés de transport.",4
+"Les infrastructures d'approvisionnement en électricité sont défectueuses dans certaines zones.",4
+"Les coupures d'eau prolongées perturbent le quotidien des habitants.",5
+"Les bureaux administratifs sont souvent fermés sans préavis retardant les services.",5
+"Les parcs naturels sont détruits pour laisser place à des projets immobiliers.",6
+"Le réchauffement climatique provoque des phénomènes météorologiques extrêmes dans la région.",6
+"Les entreprises locales licencient en masse en raison de la crise économique.",7
+"Les femmes sont particulièrement touchées par le manque d'opportunités d'emploi.",7
+"Les conditions de vie dans les logements sociaux se détériorent rapidement.",8
+"Les constructions non autorisées se multiplient sans intervention des autorités.",8
+"Les abus de pouvoir dans les tribunaux sont fréquents.",9
+"Les enquêtes sur les abus policiers prennent trop de temps à aboutir.",9
+"Les responsables publics font face à des accusations de népotisme.",10
+"Les hauts fonctionnaires impliqués dans la corruption ne sont pas sanctionnés.",10
+"Les patients doivent acheter leurs propres médicaments malgré leur présence en stock à l'hôpital.",1
+"Les centres de vaccination sont souvent fermés sans explication causant des retards.",1
+"Les enseignants ne sont pas formés aux nouvelles technologies limitant l'apprentissage.",2
+"Les écoles manquent de toilettes fonctionnelles ce qui pose des problèmes d'hygiène.",2
+"Les habitants se plaignent du manque de sécurité autour des écoles le soir.",3
+"Les policiers ne sont pas assez visibles dans les quartiers résidentiels.",3
+"Les travaux de rénovation des routes sont mal planifiés et provoquent des embouteillages.",4
+"Les feux de signalisation ne fonctionnent plus rendant la circulation chaotique.",4
+"Les services d'eau sont coupés sans préavis causant de graves désagréments.",5
+"Le bureau des impôts est surchargé avec des files d'attente interminables.",5
+"Les plages sont couvertes de déchets et les autorités locales ne font rien pour les nettoyer.",6
+"Le ramassage des ordures est irrégulier causant des accumulations dans les rues.",6
+"Les travailleurs temporaires sont souvent mal payés et n'ont pas de sécurité sociale.",7
+"Les jeunes diplômés ne trouvent pas de travail en rapport avec leurs études.",7
+"Les familles doivent se battre pour obtenir un logement social les listes d'attente sont trop longues.",8
+"Les prix des loyers ont explosé rendant le logement inaccessible pour les bas revenus.",8
+"Les victimes de vols ne reçoivent pas de soutien adéquat des autorités judiciaires.",9
+"Les droits des enfants ne sont pas bien protégés dans les procédures judiciaires.",9
+"Les fonds alloués aux projets de développement local sont détournés par les responsables.",10
+"Les élections locales sont entachées par des accusations de fraude et de manipulation.",10
+"Les services d'urgence manquent de personnel causant des retards dangereux dans les interventions.",1
+"Les hôpitaux de campagne sont mal équipés pour faire face aux crises sanitaires.",1
+"Les bâtiments scolaires ne respectent pas les normes de sécurité mettant en danger les élèves.",2
+"Le taux d'échec scolaire augmente à cause du manque de professeurs qualifiés.",2
+"Les quartiers éloignés n'ont pas de poste de police à proximité rendant l'accès à la sécurité difficile.",3
+"Les policiers demandent des pots-de-vin pour traiter certains dossiers.",3
+"Les routes non asphaltées deviennent impraticables pendant la saison des pluies.",4
+"Les équipements publics comme les bancs et les lampadaires sont en mauvais état.",4
+"Les interruptions de courant sont fréquentes et prolongées affectant les entreprises.",5
+"Les services postaux prennent des mois pour délivrer les colis.",5
+"Les espaces verts sont rares en ville avec peu d'initiatives pour les protéger.",6
+"La pollution sonore due à la circulation est devenue un problème majeur.",6
+"Le taux de chômage augmente rapidement à cause de la fermeture des usines.",7
+"Les femmes trouvent difficilement des emplois bien rémunérés dans la région.",7
+"Les appartements sont de plus en plus petits et trop chers pour les familles nombreuses.",8
+"Les squats illégaux se multiplient faute de logements abordables.",8
+"Les citoyens n'ont pas accès à des avocats compétents pour défendre leurs droits.",9
+"Les détenus se plaignent de conditions inhumaines dans les prisons surpeuplées.",9
+"Les responsables des marchés publics favorisent leurs proches dans les appels d'offres.",10
+"Les fonctionnaires locaux détournent des fonds destinés à la construction d'écoles.",10
+"Les hôpitaux n'ont pas de lits disponibles forçant les patients à attendre des jours.",1
+"Les médecins refusent de travailler dans les zones rurales à cause du manque de ressources.",1
+"Les salles d'examen dans les écoles sont trop petites pour accueillir tous les élèves.",2
+"Les programmes scolaires ne sont pas mis à jour depuis des années limitant les apprentissages.",2
+"Les autorités locales n'interviennent pas assez rapidement pour résoudre les conflits de voisinage.",3
+"Les services de secours mettent trop de temps à arriver sur place après les accidents.",3
+"Les ponts de la ville sont dangereux à cause de la corrosion et du manque d'entretien.",4
+"Les quartiers éloignés manquent de routes goudronnées isolant les habitants.",4
+"Les factures d'eau ne sont pas correctes et les citoyens sont surchargés.",5
+"Les services publics ne répondent pas aux plaintes des citoyens en temps voulu.",5
+"Les rivières de la région sont polluées par des déchets industriels sans régulation.",6
+"Les zones protégées sont dégradées par l'expansion urbaine non contrôlée.",6
+"Les employés sont sous-payés et travaillent dans des conditions dangereuses.",7
+"Les formations pour adultes ne sont pas adaptées aux besoins du marché du travail.",7
+"Les programmes d'aide au logement sont insuffisants pour répondre à la demande croissante.",8
+"Les immeubles anciens ne respectent pas les normes de sécurité et d'hygiène.",8
+"Les victimes de violence domestique n'ont pas accès à un soutien juridique efficace.",9
+"Les droits des prisonniers sont souvent ignorés notamment en ce qui concerne la santé.",9
+"Les élus locaux ne rendent pas compte de l'utilisation des fonds publics.",10
+"Les projets d'infrastructure sont retardés à cause de la mauvaise gestion des fonds.",10
+"Les centres de santé manquent de seringues et autres équipements essentiels.",1
+"Les délais d'attente pour une consultation médicale peuvent atteindre plusieurs semaines.",1
+"Les infrastructures scolaires dans les zones rurales sont insuffisantes et mal équipées.",2
+"Les manuels scolaires ne sont pas distribués à temps perturbant le programme scolaire.",2
+"Le quartier manque de lampadaires ce qui rend les rues dangereuses la nuit.",3
+"Les patrouilles de police ne couvrent pas toutes les zones sensibles du quartier.",3
+"Les chantiers de construction restent inachevés créant des dangers pour les passants.",4
+"Les routes sont pleines de nids-de-poule et ne sont jamais réparées à temps.",4
+"Les citoyens sont frustrés par la lenteur de la délivrance des documents officiels.",5
+"Les bureaux des services publics ne sont pas accessibles aux personnes handicapées.",5
+"Les fuites d'égouts dans certaines zones contaminent les rivières environnantes.",6
+"Les espaces verts sont détruits pour faire place à des projets commerciaux.",6
+"Les employés sont régulièrement licenciés sans préavis et sans indemnités.",7
+"Les inégalités salariales entre hommes et femmes sont flagrantes dans le secteur public.",7
+"Les prix de l'immobilier continuent de grimper rendant l'accès à la propriété difficile.",8
+"Les logements en mauvais état ne reçoivent pas les réparations nécessaires par les propriétaires.",8
+"Les victimes de crimes attendent des années avant d'obtenir une indemnisation.",9
+"Les délais de traitement des dossiers judiciaires sont excessivement longs.",9
+"Les fonds destinés à la rénovation des écoles sont souvent détournés par des fonctionnaires.",10
+"Les responsables locaux acceptent des pots-de-vin pour accélérer l'approbation des permis de construire.",10
+"Les hôpitaux refusent les patients faute de lits disponibles.",1
+"Les campagnes de sensibilisation sur les soins de santé ne touchent pas les zones rurales.",1
+"Les écoles manquent de professeurs spécialisés pour les matières techniques.",2
+"Le niveau d'éducation diminue à cause du manque de matériel pédagogique adéquat.",2
+"Les habitants se plaignent du nombre croissant de cambriolages.",3
+"Les caméras de surveillance dans les lieux publics ne fonctionnent pas correctement.",3
+"Les ponts vétustes menacent de s'effondrer si des travaux de rénovation ne sont pas réalisés rapidement.",4
+"Les réseaux d'égouts sont saturés provoquant des inondations à chaque pluie.",4
+"Les coupures d'eau prolongées affectent les entreprises locales.",5
+"Les citoyens ne peuvent pas accéder aux services publics en ligne en raison de pannes fréquentes du système.",5
+"La pollution de l'air est de plus en plus préoccupante à cause des usines proches.",6
+"Les forêts environnantes sont illégalement exploitées menaçant la biodiversité.",6
+"Les licenciements abusifs sont devenus monnaie courante dans les entreprises privées.",7
+"Les entreprises locales ferment à cause des politiques économiques instables.",7
+"Les programmes de logements sociaux sont insuffisants pour couvrir la demande croissante.",8
+"Les loyers augmentent plus vite que les revenus forçant de nombreuses familles à quitter leur logement.",8
+"Les prisons sont surpeuplées et les détenus vivent dans des conditions inhumaines.",9
+"Les procédures judiciaires pour les affaires de droits humains traînent en longueur.",9
+"Les élus locaux sont accusés de favoriser leurs amis pour les contrats publics.",10
+"Les responsables des marchés publics sont impliqués dans des affaires de corruption à grande échelle.",10
+"Les centres médicaux sont mal approvisionnés en médicaments de base.",1
+"Les médecins sont trop peu nombreux et beaucoup de patients doivent être redirigés vers des cliniques privées.",1
+"Les enseignants ne sont pas payés régulièrement ce qui perturbe le bon fonctionnement des écoles.",2
+"Les conditions dans les internats des écoles publiques sont déplorables.",2
+"Les citoyens se plaignent de la montée de l'insécurité dans les quartiers résidentiels.",3
+"Les forces de sécurité n'interviennent pas assez rapidement en cas d'incident.",3
+"Les routes principales sont bloquées par des travaux qui n'avancent pas.",4
+"Les infrastructures publiques comme les toilettes et les abris sont délabrées.",4
+"Les services administratifs en ligne sont souvent indisponibles forçant les gens à se déplacer.",5
+"Les pannes d'électricité sont fréquentes et perturbent le fonctionnement des services publics.",5
+"Les écosystèmes côtiers sont détruits par l'urbanisation sans planification.",6
+"Les rivières sont polluées par les déchets plastiques affectant la faune locale.",6
+"Le taux de chômage atteint des niveaux records dans la région.",7
+"Les travailleurs saisonniers ne reçoivent pas les mêmes avantages que les employés permanents.",7
+"Les logements disponibles sont souvent insalubres et non conformes aux normes de sécurité.",8
+"Les squatteurs occupent illégalement des logements vides depuis plusieurs années.",8
+"Les abus policiers ne sont pas suffisamment sanctionnés.",9
+"Les décisions de justice ne sont pas appliquées correctement laissant les victimes sans recours.",9
+"Les détournements de fonds publics freinent la réalisation des projets sociaux importants.",10
+"Les marchés publics sont attribués de manière opaque souvent en dehors des processus légaux.",10
+"Les centres de dialyse manquent de personnel qualifié pour prendre en charge tous les patients.",1
+"Les hôpitaux n'ont pas de matériel pour traiter les urgences cardiovasculaires.",1
+"Les élèves du lycée doivent se partager les livres scolaires car il n'y en a pas assez.",2
+"Les programmes scolaires sont obsolètes et ne correspondent plus aux réalités actuelles.",2
+"Les cambrioleurs profitent de l'absence de rondes de nuit dans certains quartiers.",3
+"Les crimes de rue augmentent à cause de la présence insuffisante des forces de l'ordre.",3
+"Les routes qui relient les villages sont défoncées et très dangereuses.",4
+"Le réseau électrique est obsolète causant de fréquentes pannes dans les infrastructures publiques.",4
+"Les citoyens se plaignent des retards dans le traitement des demandes de passeport.",5
+"Les guichets des services publics sont toujours sous-effectifs créant des files d'attente interminables.",5
+"Les décharges à ciel ouvert polluent l'air et menacent la santé publique.",6
+"Les rivières sont contaminées par des produits chimiques rejetés par les usines avoisinantes.",6
+"Les jeunes sans emploi n'ont accès à aucune aide pour développer leurs compétences.",7
+"Les petites entreprises ferment à cause de la concurrence déloyale et du manque de soutien.",7
+"Les locataires sont expulsés sans motif valable par des propriétaires peu scrupuleux.",8
+"Les appartements sont trop petits pour accueillir les familles nombreuses à des prix abordables.",8
+"Les victimes de violences conjugales n'obtiennent pas de protection judiciaire suffisante.",9
+"Les citoyens se plaignent des lenteurs excessives dans le traitement des affaires judiciaires.",9
+"Les appels d'offres publics sont manipulés pour favoriser certaines entreprises proches du gouvernement.",10
+"Les fonds alloués à la lutte contre la pauvreté sont détournés par des élus corrompus.",10
+"Les hôpitaux manquent de lits forçant les patients à dormir dans les couloirs.",1
+"Les centres de santé ruraux sont mal approvisionnés en médicaments essentiels.",1
+"Les enseignants font grève régulièrement à cause des salaires impayés.",2
+"Les élèves des écoles publiques ne reçoivent pas de repas scolaires ce qui affecte leur concentration.",2
+"Les habitants craignent pour leur sécurité à cause des agressions fréquentes dans les rues.",3
+"Les patrouilles de police sont insuffisantes notamment dans les zones sensibles.",3
+"Les routes sont souvent inondées empêchant la circulation pendant des jours.",4
+"Les chantiers publics sont abandonnés laissant des structures incomplètes et dangereuses.",4
+"Les interruptions d'eau sont fréquentes et prolongées affectant la vie quotidienne des citoyens.",5
+"Les services téléphoniques publics sont souvent hors service ce qui complique les démarches administratives.",5
+"Les zones industrielles polluent les nappes phréatiques rendant l'eau potable dangereuse.",6
+"Les citoyens dénoncent la déforestation massive dans les zones protégées.",6
+"Les ouvriers sont licenciés sans préavis et sans indemnités dans les usines locales.",7
+"Le taux de chômage explose surtout parmi les jeunes diplômés.",7
+"Les loyers augmentent chaque année sans régulation rendant le logement inaccessible.",8
+"Les conditions d'habitation dans les logements sociaux sont insalubres.",8
+"Les accusés passent des mois en détention provisoire sans jugement.",9
+"Les décisions des tribunaux sont souvent influencées par des pressions politiques.",9
+"Les responsables locaux détournent des fonds destinés à des projets sociaux importants.",10
+"Les fonctionnaires locaux exigent des pots-de-vin pour accélérer les procédures administratives.",10
+"Les médecins refusent de travailler dans certaines zones à cause du manque de ressources.",1
+"Les campagnes de vaccination ne sont pas bien organisées laissant des populations vulnérables non couvertes.",1
+"Les écoles dans les zones rurales n'ont pas accès à l'électricité limitant l'apprentissage.",2
+"Les classes sont surchargées avec plus de 60 élèves par salle rendant les cours inefficaces.",2
+"Les citoyens sont préoccupés par l'absence de forces de sécurité dans leur quartier.",3
+"Les crimes mineurs ne sont pas traités par les forces de l'ordre créant un sentiment d'impunité.",3
+"Les routes principales sont jonchées de débris et ne sont pas entretenues.",4
+"Les infrastructures publiques sont laissées à l'abandon posant des risques pour la sécurité.",4
+"Les délais pour obtenir des services publics sont inacceptables allant jusqu'à plusieurs mois.",5
+"Les citoyens doivent se rendre dans d'autres villes pour obtenir des documents administratifs.",5
+"Les projets écologiques sont retardés ou annulés à cause du manque de financement.",6
+"Les autorités ne font rien pour contrôler la pollution croissante dans les zones industrielles.",6
+"Les emplois stables deviennent rares et les contrats précaires se multiplient.",7
+"Les jeunes diplômés se retrouvent sans emploi malgré des études universitaires réussies.",7
+"Les propriétaires refusent de faire des réparations dans les logements qu'ils louent.",8
+"Les immeubles anciens ne respectent plus les normes de sécurité et sont dangereux pour les habitants.",8
+"Les citoyens n'ont pas accès à une défense juridique adéquate lorsqu'ils sont accusés à tort.",9
+"Les prisons sont surpeuplées et les conditions de vie des détenus sont inhumaines.",9
+"Les marchés publics sont attribués sans respecter les procédures légales en place.",10
+"Les autorités locales détournent des fonds destinés à des projets communautaires.",10
+"Les équipements pour les urgences dans les hôpitaux sont insuffisants.",1
+"Les centres de santé ruraux n'ont pas d'ambulances disponibles.",1
+"Les écoles publiques manquent de financement pour les programmes d'éducation spécialisée.",2
+"Les frais de scolarité dans les écoles privées augmentent chaque année sans contrôle.",2
+"Les citoyens se plaignent du manque de patrouilles de sécurité dans les zones résidentielles.",3
+"Les forces de l'ordre mettent trop de temps à intervenir lors d'incidents.",3
+"Les travaux sur les routes principales ont été abandonnés créant des dangers pour les automobilistes.",4
+"Les bâtiments publics nécessitent des rénovations mais les projets restent en suspens.",4
+"Les citoyens attendent plusieurs mois avant de recevoir leurs documents administratifs.",5
+"Les services de distribution d'eau ne fonctionnent pas correctement dans certaines régions.",5
+"Les zones forestières sont illégalement défrichées augmentant les risques d'inondations.",6
+"La qualité de l'air se dégrade à cause des industries voisines qui ne respectent pas les normes.",6
+"Les travailleurs temporaires sont souvent exploités par les employeurs sans compensation adéquate.",7
+"Les entreprises locales ferment à cause de la concurrence étrangère non régulée.",7
+"Les logements dans la ville sont trop chers pour les jeunes familles.",8
+"Les conditions d'hygiène dans certains immeubles sont déplorables mais les propriétaires n'interviennent pas.",8
+"Les victimes d'injustice ont du mal à accéder à un avocat pour les représenter.",9
+"Les citoyens attendent des années avant que leur affaire soit traitée par les tribunaux.",9
+"Les responsables municipaux sont accusés d'abus de pouvoir et de détournement de fonds.",10
+"Les fonctionnaires locaux privilégient leurs proches pour les appels d'offres publics.",10
+"Les pharmacies dans les zones rurales manquent de médicaments de base.",1
+"Les hôpitaux refusent les patients à cause du manque de lits en soins intensifs.",1
+"Les écoles manquent de laboratoires équipés pour les cours scientifiques.",2
+"Les enseignants non qualifiés sont embauchés pour combler le manque de personnel dans les écoles.",2
+"Les habitants signalent une recrudescence des cambriolages dans leur quartier.",3
+"Les services de sécurité ne couvrent pas suffisamment les zones rurales.",3
+"Les ponts et routes sont gravement endommagés rendant la circulation dangereuse.",4
+"Les bâtiments publics tombent en ruine faute de maintenance régulière.",4
+"Les services postaux sont très lents et les colis n'arrivent pas à temps.",5
+"Les guichets uniques pour les démarches administratives sont souvent fermés sans préavis.",5
+"La déforestation illégale affecte les réserves naturelles menaçant les espèces locales.",6
+"Les déchets industriels sont déversés dans les cours d'eau sans contrôle.",6
+"Le taux de chômage chez les jeunes continue de monter en flèche.",7
+"Les travailleurs saisonniers n'ont aucun droit social malgré leur contribution essentielle.",7
+"Les familles n'ont pas accès à des logements abordables et doivent vivre dans des conditions précaires.",8
+"Les bâtiments vétustes représentent un risque pour la sécurité des habitants.",8
+"Les détenus vivent dans des conditions inhumaines à cause de la surpopulation carcérale.",9
+"Les délais de jugement sont trop longs ce qui nuit à la crédibilité du système judiciaire.",9
+"Les fonds publics destinés aux infrastructures sont mal utilisés voire détournés.",10
+"Les fonctionnaires reçoivent des pots-de-vin pour accélérer les processus de délivrance de permis.",10
+"Les cliniques privées sont trop chères et inaccessibles pour la majorité de la population.",1
+"Le personnel des centres de santé est surchargé ce qui affecte la qualité des soins.",1
+"Les infrastructures scolaires ne sont pas adaptées pour accueillir des enfants en situation de handicap.",2
+"Les élèves dans les zones rurales doivent parcourir de longues distances pour se rendre à l'école.",2
+"Les citoyens craignent l'insécurité à cause du manque de caméras de surveillance dans les lieux publics.",3
+"Les incidents de vandalisme dans les écoles augmentent mais aucune mesure n'est prise.",3
+"Les réseaux de transport publics sont vétustes et souvent hors service.",4
+"Les travaux d'entretien des infrastructures publiques sont constamment reportés.",4
+"Les services publics en ligne ne fonctionnent pas correctement forçant les gens à se déplacer.",5
+"Les citoyens doivent se rendre dans des villes éloignées pour obtenir certains documents.",5
+"Les espaces verts sont détruits pour faire place à des zones commerciales.",6
+"Les bruits incessants des industries polluantes affectent la santé des habitants.",6
+"Les contrats de travail à durée déterminée deviennent la norme créant de l'instabilité.",7
+"Les petites entreprises luttent pour survivre face à la fiscalité croissante et à la concurrence déloyale.",7
+"Les logements sociaux sont mal entretenus et les locataires se plaignent des conditions de vie.",8
+"Les augmentations de loyer ne sont pas régulées forçant les familles à quitter leurs maisons.",8
+"Les victimes d'abus policiers ne trouvent pas de recours dans le système judiciaire.",9
+"Les procès pour les affaires de droits de l'homme sont souvent repoussés sans explication.",9
+"Les responsables municipaux sont accusés d'utiliser des fonds publics à des fins personnelles.",10
+"Les contrats publics sont attribués à des entreprises corrompues sans appels d'offres équitables.",10
+"Les équipements médicaux dans les hôpitaux publics sont obsolètes et défaillants.",1
+"Les patients doivent attendre des heures avant de voir un médecin dans les centres de santé.",1
+"Les établissements scolaires ne disposent pas de bibliothèques ou de ressources pédagogiques suffisantes.",2
+"Les parents se plaignent de la qualité médiocre de l'enseignement dans les écoles publiques.",2
+"Les zones résidentielles sont régulièrement victimes de vols sans intervention rapide des forces de l'ordre.",3
+"Les habitants signalent un manque de sécurité la nuit en raison de l'absence de patrouilles de police.",3
+"Les routes principales sont régulièrement embouteillées à cause de l'absence de travaux d'entretien.",4
+"Les infrastructures de transport public sont en mauvais état causant des retards fréquents.",4
+"Les citoyens n'ont pas accès à des services publics essentiels comme l'eau potable.",5
+"Les interruptions de service dans l'approvisionnement en électricité sont récurrentes.",5
+"Les forêts avoisinantes sont détruites illégalement pour des projets de construction.",6
+"Les rivières locales sont contaminées par les déversements d'usines rendant l'eau impropre à la consommation.",6
+"Les jeunes diplômés n'arrivent pas à trouver un emploi malgré leur qualification.",7
+"Les salaires sont gelés dans plusieurs secteurs d'activité rendant la vie difficile pour les employés.",7
+"Les familles doivent vivre dans des logements insalubres car les alternatives sont inaccessibles.",8
+"Les bâtiments résidentiels sont mal entretenus et les propriétaires ne répondent pas aux plaintes.",8
+"Les procès liés aux droits humains traînent en longueur sans justice pour les victimes.",9
+"Les juges sont accusés de partialité dans les affaires de droits de l'homme créant de l'injustice.",9
+"Les responsables locaux sont accusés d'avoir falsifié des documents pour détourner des fonds publics.",10
+"Des projets de développement financés par des fonds publics sont annulés sans justification laissant des fonds non comptabilisés.",10
+"Les hôpitaux n'ont pas assez de personnel pour répondre aux besoins croissants de la population.",1
+"Les centres de santé communautaires manquent de médicaments essentiels pour traiter les patients.",1
+"Les écoles sont en surcapacité forçant les élèves à suivre les cours dans des conditions inadéquates.",2
+"Les enseignants ne reçoivent pas de formation continue pour améliorer leurs méthodes pédagogiques.",2
+"Les habitants ne se sentent pas en sécurité à cause de l'augmentation des actes de vandalisme.",3
+"Les vols dans les quartiers résidentiels augmentent et les forces de sécurité ne réagissent pas assez rapidement.",3
+"Les ponts dans les zones rurales sont en mauvais état et représentent un danger pour les conducteurs.",4
+"Les infrastructures publiques telles que les écoles et les hôpitaux ne reçoivent pas les rénovations nécessaires.",4
+"Les retards dans le traitement des dossiers administratifs ralentissent les projets de développement local.",5
+"Les citoyens doivent parcourir de longues distances pour accéder aux services publics car ils sont centralisés.",5
+"La pollution de l'air causée par les usines locales affecte la santé des résidents.",6
+"Les zones protégées sont menacées par des projets de développement non réglementés.",6
+"Les ouvriers locaux sont sous-payés et travaillent dans des conditions dangereuses.",7
+"Les petites entreprises ferment en raison du manque de soutien gouvernemental.",7
+"Les loyers augmentent rapidement dans les grandes villes rendant le logement inabordable pour beaucoup.",8
+"Les bâtiments dans les zones résidentielles n'ont pas été inspectés depuis des années ce qui les rend dangereux.",8
+"Les affaires de droits de l'homme sont souvent ignorées par le système judiciaire.",9
+"Les victimes de violences n'ont pas accès à une aide juridique suffisante pour défendre leurs droits.",9
+"Les élus locaux sont accusés de manipuler les résultats des élections pour conserver le pouvoir.",10
+"Les fonds destinés à la construction de nouvelles infrastructures sont détournés par les responsables locaux.",10
+"Les maternités manquent de lits et les femmes doivent souvent partager les chambres avec plusieurs autres patients.",1
+"Les soins post-opératoires dans les hôpitaux sont négligés à cause du manque de personnel.",1
+"Les écoles rurales manquent de fournitures de base comme des livres et du matériel pédagogique.",2
+"Les salles de classe sont trop petites pour accueillir tous les élèves dans de bonnes conditions.",2
+"Les citoyens sont inquiets de la montée de la violence dans les quartiers mal desservis par les forces de l'ordre.",3
+"Les rondes de nuit sont insuffisantes laissant les zones résidentielles sans protection contre les crimes.",3
+"Les routes secondaires sont complètement dégradées et deviennent impraticables lors des intempéries.",4
+"Les bâtiments publics sont souvent fermés pour des réparations non programmées perturbant les services.",4
+"Les citoyens dénoncent le manque de transparence dans les processus de délivrance des documents administratifs.",5
+"Les services publics en ligne sont inaccessibles pour les habitants des zones rurales créant des inégalités.",5
+"Les décharges sauvages se multiplient aux abords des villes créant des problèmes sanitaires.",6
+"Les zones côtières sont menacées par des projets industriels affectant la faune marine.",6
+"Les jeunes diplômés se retrouvent sans emploi même après plusieurs mois de recherche.",7
+"Les contrats précaires sont la norme créant de l'instabilité pour les travailleurs.",7
+"Les familles nombreuses sont contraintes de vivre dans des logements inadaptés et trop petits.",8
+"Les propriétaires refusent de faire les réparations nécessaires malgré les plaintes répétées des locataires.",8
+"Les citoyens dénoncent la lenteur excessive des procédures judiciaires retardant l'accès à la justice.",9
+"Les droits des travailleurs ne sont pas respectés et les plaintes liées aux violations des droits de l'homme sont ignorées.",9
+"Les élections locales sont marquées par des irrégularités et des accusations de corruption.",10
+"Les responsables gouvernementaux détournent des fonds alloués à des projets de développement local.",10
+"Le robinet ne fournit pas d'eau potable depuis plusieurs jours.",5
+"Les coupures d'eau sont fréquentes rendant la vie quotidienne difficile.",5
+"Les réservoirs d'eau sont souvent vides et il n'y a pas de solution rapide.",5
+"Il y a une forte odeur d'eau qui coule dans les canalisations.",5
+"Le service d'approvisionnement en eau n'est pas régulier créant des pénuries.",5
+"Les habitants se plaignent de l'absence d'installations sanitaires dans certaines zones.",5
+"Les factures d'eau sont inexplicablement élevées sans explication des autorités.",5
+"Les pannes d'électricité sont fréquentes perturbant les activités quotidiennes.",5
+"Les coupures de courant la nuit sont devenues une routine rendant le sommeil difficile.",5
+"Les habitants signalent des fluctuations de tension qui endommagent leurs appareils électroménagers.",5
+"Les lampadaires dans le quartier ne fonctionnent pas rendant les rues dangereuses la nuit.",5
+"Les réseaux électriques sont obsolètes et souvent sujets à des pannes.",5
+"Les factures d'électricité sont élevées mais le service est irrégulier.",5
+"Les voisins se plaignent de la lenteur du service pour rétablir l'électricité après une panne.",5
+"Les coupures d'électricité sans préavis sont source de stress pour les familles.",5
+"Les tuyaux dans le quartier sont anciens et fuient fréquemment causant des pertes d'eau.",5
+"Les habitants n'ont pas accès à de l'eau potable pendant plusieurs jours consécutifs.",5
+"Le traitement de l'eau n'est pas conforme aux normes de santé publique entraînant des maladies.",5
+"Les branchements d'eau sont souvent mal entretenus entraînant des inondations dans les rues.",5
+"Les horaires de distribution d'eau ne sont pas respectés et la population ne sait pas quand s'attendre à l'eau.",5
+"Les coupures d'eau prolongées pendant les périodes de chaleur sont inacceptables.",5
+"Le système électrique dans les maisons est obsolète et des incendies sont signalés.",5
+"Les coupures d'électricité pendant les heures de pointe causent des désagréments aux entreprises.",5
+"Les résidents signalent que les panneaux électriques de leur quartier sont mal entretenus.",5
+"Le service d'urgence pour les pannes d'électricité met trop de temps à répondre.",5
+"Les câbles électriques dans les rues sont exposés et présentent un danger pour les enfants.",5
+"Les résidents doivent faire la queue pour obtenir de l'eau des points de distribution ce qui prend du temps.",5
+"Les fuites d'eau dans les rues créent des trous et des dégradations sur les routes.",5
+"Le manque d'information sur les coupures d'eau rend les gens frustrés.",5
+"Les factures d'électricité contiennent des erreurs ce qui complique le paiement pour les résidents.",5

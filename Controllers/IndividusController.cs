@@ -114,6 +114,7 @@ namespace Backend_guichet_unique.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
+					Console.WriteLine(ex.Message);
 					var existingIndividuId = ex.Entries.First().Entity is Individu existingIndividu ? existingIndividu.Id : (int?)null;
 					return Ok(new { error = $"L'Individu avec l'id {existingIndividuId} existe déjà" });
 				}

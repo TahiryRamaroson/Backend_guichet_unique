@@ -758,6 +758,7 @@ namespace Backend_guichet_unique.Controllers
 		[HttpPost]
         public async Task<ActionResult<Grossesse>> PostGrossesse(GrossesseFormDTO grossesseDto)
         {
+
 			if (grossesseDto.PieceJustificative.Length < 0  || grossesseDto.PieceJustificative == null)
 			{
 				return Ok(new { error = "La pièce justificative est obligatoire" });

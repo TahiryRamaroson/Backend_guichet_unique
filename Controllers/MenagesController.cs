@@ -438,7 +438,7 @@ namespace Backend_guichet_unique.Controllers
 			var nummen = (long)await command.ExecuteScalarAsync();
 			await _context.Database.CloseConnectionAsync();
 
-			var numero = "MENAGE" + nummen.ToString("D6");
+			var numero = "MENAGE" + nummen.ToString("D8");
 			return Ok(new { Numero = numero });
 		}
 
